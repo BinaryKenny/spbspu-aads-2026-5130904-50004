@@ -111,4 +111,20 @@ int main()
     std::cout << Citer_sum.value() << " ";
   }
   std::cout << "\n";
+
+  Citer_sum = Citer_sum.begin(fake_sum);
+  Citer_sum = Citer_sum.list->cut_fake(fake_sum);
+  Citer_sum.list->clear(Citer_sum.list);
+
+  Citer_str = Citer_str.begin(fake_str);
+  Citer_str = Citer_str.list->cut_fake(fake_str);
+  Citer_str.list->clear(Citer_str.list);
+
+  Citer_LIter = Citer_LIter.begin(fake_CLIter);
+  Citer_LIter = Citer_LIter.list->cut_fake(Citer_LIter.list);
+  Citer_LIter.list->clear(Citer_LIter.list);
+
+  iter_LIter = iter_LIter.begin(fake_LIter);
+  iter_LIter = iter_LIter.list->cut_fake(iter_LIter.list);
+  iter_LIter.list->clear(iter_LIter.list);
 }

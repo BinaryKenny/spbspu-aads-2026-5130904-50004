@@ -6,12 +6,6 @@ struct List
 {
     T val;
     List<T> * next;
-    void swap(List<T> & other);
-    List<T>(const List<T> & other);
-    List<T> & operator=(const List<T> & other);
-    List<T>(List<T> && other);
-    List<T> & operator=(List<T> && other);
-    ~List<T>();
     List<T>(const T& val, List<T> * n);
     List<T> * add(const T& val, List<T> * n);
     List<T> * insert(const T& val, List<T> * n);

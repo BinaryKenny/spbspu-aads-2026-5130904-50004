@@ -72,4 +72,19 @@ int main()
       iter_sum = iter_sum.begin(fake_sum);
     }
   }
+
+  Citer_LIter = Citer_LIter.begin(fake_CLIter);
+
+  if (!Citer_str.hasNext())
+  {
+    std::cout << "0\n";
+    std::cerr << "There is no sequence, the amount can't be calculated\n";
+    return 1;
+  }
+
+  while (Citer_str.hasNext())
+  {
+    Citer_str = Citer_str.next();
+    std::cout << Citer_str.value() << " ";
+  }
 }

@@ -73,6 +73,7 @@ int main()
           else
           {
             overflow = true;
+            break;
           }
         }
       }
@@ -87,7 +88,7 @@ int main()
         return 1;
       }
     }
-    if (std::cin.eof())
+    if (std::cin.eof() || overflow)
     {
       break;
     }

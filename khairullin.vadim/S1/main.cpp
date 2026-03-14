@@ -99,17 +99,6 @@ int main()
     }
   }
 
-  if(overflow)
-  {
-    std::cerr << "Overflow\n";
-    delete_LL(fake_ll);
-    delete_List(fake_sum);
-    delete_List(fake_str);
-    delete_List(fake_CLIter);
-    delete_List(fake_LIter);
-    return 1;
-  }
-
   Citer_LIter = Citer_LIter.begin(fake_CLIter);
 
   while (Citer_str.hasNext())
@@ -149,17 +138,20 @@ int main()
     }
   }
 
-  while(Citer_sum.hasNext())
+  if (!overflow)
   {
-    Citer_sum = Citer_sum.next();
-    std::cout << Citer_sum.value();
-    if (Citer_sum.hasNext())
+    while(Citer_sum.hasNext())
     {
-      std::cout << " ";
-    }
-    else
-    {
-      std::cout << "\n";
+      Citer_sum = Citer_sum.next();
+      std::cout << Citer_sum.value();
+      if (Citer_sum.hasNext())
+      {
+        std::cout << " ";
+      }
+      else
+      {
+        std::cout << "\n";
+      }
     }
   }
 
@@ -168,4 +160,9 @@ int main()
   delete_List(fake_str);
   delete_List(fake_CLIter);
   delete_List(fake_LIter);
+
+  if (overflow)
+  {
+    return 1;
+  }
 }

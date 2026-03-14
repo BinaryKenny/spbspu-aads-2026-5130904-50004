@@ -27,7 +27,6 @@ int main()
 
   CLIter<std::string> Citer_str = CLIter<std::string>(fake_str);
   LIter<LIter<ull>> Citer_LIter = LIter<LIter<ull>>(fake_CLIter);
-  CLIter<List<ull>*> Citer_ll = CLIter<List<ull>*>(fake_ll);
   CLIter<ull> Citer_sum = CLIter<ull>(fake_sum);
 
   const ull MAX = std::numeric_limits<ull>::max();

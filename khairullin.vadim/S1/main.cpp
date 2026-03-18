@@ -11,23 +11,23 @@
 #include <limits>
 
 using ull = unsigned long long;
-
+namespace khair = khairullin;
 int main()
 {
-  List<std::string> * fake_str = List<std::string>::fake(nullptr);
-  List<List<ull>*> * fake_ll = List<List<ull>*>::fake(nullptr);
-  List<LIter<ull>> * fake_LIter = List<LIter<ull>>::fake(nullptr);
-  List<LIter<ull>> * fake_CLIter = List<LIter<ull>>::fake(nullptr);
-  List<ull> * fake_sum = List<ull>::fake(nullptr);
+  khair::List<std::string> * fake_str = khair::List<std::string>::fake(nullptr);
+  khair::List<khair::List<ull>*> * fake_ll = khair::List<khair::List<ull>*>::fake(nullptr);
+  khair::List<khair::LIter<ull>> * fake_LIter = khair::List<khair::LIter<ull>>::fake(nullptr);
+  khair::List<khair::LIter<ull>> * fake_CLIter = khair::List<khair::LIter<ull>>::fake(nullptr);
+  khair::List<ull> * fake_sum = khair::List<ull>::fake(nullptr);
 
-  LIter<std::string> iter_str = LIter<std::string>(fake_str);
-  LIter<List<ull>*> iter_ll = LIter<List<ull>*>(fake_ll);
-  LIter<LIter<ull>> iter_LIter = LIter<LIter<ull>>(fake_LIter);
-  LIter<ull> iter_sum = LIter<ull>(fake_sum);
+  khair::LIter<std::string> iter_str = khair::LIter<std::string>(fake_str);
+  khair::LIter<khair::List<ull>*> iter_ll = khair::LIter<khair::List<ull>*>(fake_ll);
+  khair::LIter<khair::LIter<ull>> iter_LIter = khair::LIter<khair::LIter<ull>>(fake_LIter);
+  khair::LIter<ull> iter_sum = khair::LIter<ull>(fake_sum);
 
-  CLIter<std::string> Citer_str = CLIter<std::string>(fake_str);
-  LIter<LIter<ull>> Citer_LIter = LIter<LIter<ull>>(fake_CLIter);
-  CLIter<ull> Citer_sum = CLIter<ull>(fake_sum);
+  khair::CLIter<std::string> Citer_str = khair::CLIter<std::string>(fake_str);
+  khair::LIter<khair::LIter<ull>> Citer_LIter = khair::LIter<khair::LIter<ull>>(fake_CLIter);
+  khair::CLIter<ull> Citer_sum = khair::CLIter<ull>(fake_sum);
 
   const ull MAX = std::numeric_limits<ull>::max();
   bool overflow = false;
@@ -47,8 +47,8 @@ int main()
       {
         if (!iter_ll.hasNext())
         {
-          List<ull> * fake_ull = List<ull>::fake(nullptr);
-          LIter<ull> iter_ull = LIter<ull>(fake_ull);
+          khair::List<ull> * fake_ull = khair::List<ull>::fake(nullptr);
+          khair::LIter<ull> iter_ull = khair::LIter<ull>(fake_ull);
           iter_ll = iter_ll.insert_value(fake_ull);
           iter_LIter = iter_LIter.insert_value(iter_ull);
           Citer_LIter = Citer_LIter.insert_value(iter_ull);
@@ -78,11 +78,11 @@ int main()
       catch (...)
       {
         std::cerr << "Bad alloc\n";
-        delete_LL(fake_ll);
-        delete_List(fake_sum);
-        delete_List(fake_str);
-        delete_List(fake_CLIter);
-        delete_List(fake_LIter);
+        khair::delete_LL(fake_ll);
+        khair::delete_List(fake_sum);
+        khair::delete_List(fake_str);
+        khair::delete_List(fake_CLIter);
+        khair::delete_List(fake_LIter);
         return 1;
       }
     }
@@ -122,7 +122,7 @@ int main()
   while (Citer_LIter.hasNext())
   {
     Citer_LIter = Citer_LIter.next();
-    LIter<ull> iter_ull = Citer_LIter.value();
+    khair::LIter<ull> iter_ull = Citer_LIter.value();
     while (iter_ull.hasNext())
     {
       iter_ull = iter_ull.next();
@@ -155,11 +155,11 @@ int main()
     }
   }
 
-  delete_LL(fake_ll);
-  delete_List(fake_sum);
-  delete_List(fake_str);
-  delete_List(fake_CLIter);
-  delete_List(fake_LIter);
+  khair::delete_LL(fake_ll);
+  khair::delete_List(fake_sum);
+  khair::delete_List(fake_str);
+  khair::delete_List(fake_CLIter);
+  khair::delete_List(fake_LIter);
 
   if (overflow)
   {

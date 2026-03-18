@@ -1,7 +1,7 @@
 #include "delete_list.hpp"
 
 template<class T>
-void delete_LL(List<T> * fake)
+void khairullin::delete_LL(List<T> * fake)
 {
   List<T> * head = fake->cut_fake(fake);
   while(head)
@@ -16,7 +16,7 @@ void delete_LL(List<T> * fake)
 }
 
 template<class T>
-void delete_List(List<T> * fake)
+void khairullin::delete_List(List<T> * fake)
 {
   List<T> * head = fake->next;
   fake->cut_fake(fake);

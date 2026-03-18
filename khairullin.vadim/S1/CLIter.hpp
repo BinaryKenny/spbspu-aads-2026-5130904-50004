@@ -1,19 +1,20 @@
 #ifndef CLITER_HPP
 #define CLITER_HPP
-
 #include "List.hpp"
-template<class T>
-struct CLIter
+namespace khairullin
 {
-  friend struct List<T>;
-  List<T> * list;
-  CLIter(List<T> * h);
-  static CLIter begin(List<T> * head);
-  static CLIter end();
-  bool hasNext();
-  bool not_empty();
-  CLIter next();
-  T & value();
-};
-
+  template<class T>
+  struct CLIter
+  {
+    friend struct List<T>;
+    List<T> * list;
+    CLIter(List<T> * h);
+    static CLIter begin(List<T> * head);
+    static CLIter end();
+    bool hasNext();
+    bool not_empty();
+    CLIter next();
+    T & value();
+  };
+}
 #endif

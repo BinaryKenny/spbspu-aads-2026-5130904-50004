@@ -15,9 +15,9 @@ BOOST_AUTO_TEST_CASE(List_test)
 {
   int number = 1000;
   int number_2 = 1001;
-  List<int> * head = new List<int>(number, nullptr);
-  LIter<int> iter = LIter<int>(head);
-  CLIter<int> const_iter = CLIter<int>(head);
+  khairullin::List<int> * head = new khairullin::List<int>(number, nullptr);
+  khairullin::LIter<int> iter = khairullin::LIter<int>(head);
+  khairullin::CLIter<int> const_iter = khairullin::CLIter<int>(head);
   BOOST_TEST(iter.value() == number);
   BOOST_TEST(const_iter.value() == number);
   BOOST_TEST(const_iter.hasNext() == false);

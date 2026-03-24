@@ -105,9 +105,9 @@ List<T> & List<T>::operator=(List<T> && other)
 
 template<class T>
 List<T> * List<T>::insert(const T & val, List<T> * h)
-{ 
+{
   try
-  {   
+  {
     h->next = add(val, h->next, h);
   }
   catch (...)
@@ -154,6 +154,26 @@ List<T> * List<T>::clear(List<T> * h)
   return h;
 }
 
+template <class T>
+class Queue
+{
+  public:
+    void push(const T & rhs);
+    T drop();
+    const T & value() const;
+    bool not_empty() const;
+    void swap(Queue & other) noexcept;
+    Queue(const T & rhs);
+    Queue() = default;
+    Queue(Queue & other);
+    Queue & operator=(Queue & other);
+    Queue(Queue && other) noexcept;
+    Queue & operator=(Queue && other) noexcept;
+    ~Queue();
+  private:
+    List<T> * head = nullptr;
+    List<T> * tail = nullptr;
+};
 
 int main(int argc, char ** argv)
 {}

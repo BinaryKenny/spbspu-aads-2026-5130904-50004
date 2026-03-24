@@ -5,9 +5,9 @@ struct List
 {
   T val;
   List<T> * next, * prev;
-  List<T>(const T& val, List<T> * n, List<T> * b);
-  List<T> * add(const T& val, List<T> * n, List<T> * b);
-  List<T> * insert(const T& val, List<T> * h);
+  List<T>(const T & val, List<T> * n, List<T> * b);
+  List<T> * add(const T & val, List<T> * n, List<T> * b);
+  List<T> * insert(const T & val, List<T> * h);
   List<T> * cut(List<T> * h) noexcept;
   List<T> * erase(List<T> * h) noexcept;
   List<T> * clear(List<T> * h);
@@ -86,6 +86,12 @@ prev(other.prev)
   other.prev = nullptr;
 }
 
+template<class T >
+List<T> * List<T>::add(const T & val, List<T> * n, List<T> * b)
+{
+  return new List<T>{val, n, b};
+}
+
 template<class T>
 List<T> & List<T>::operator=(List<T> && other)
 {
@@ -96,6 +102,58 @@ List<T> & List<T>::operator=(List<T> && other)
   }
   return *this;
 }
+
+template<class T>
+List<T> * List<T>::insert(const T & val, List<T> * h)
+{ 
+  try
+  {   
+    h->next = add(val, h->next, h);
+  }
+  catch (...)
+  {
+    clear(h);
+    throw std::bad_alloc();
+  }
+  if (h->next->next)
+  {
+    h->next->next->prev = h->next;
+  }
+  return h->next;
+}
+
+template<class T>
+List<T> * List<T>::cut(List<T> * h) noexcept
+{
+  List<T> * res = h->next;
+  if (h->prev)
+  {
+    h->prev->next = h->next;
+  }
+  if (h->next)
+  {
+    h->next->prev = h->prev;
+  }
+  delete h;
+  return res;
+}
+
+template<class T>
+List<T> * List<T>::erase(List<T> * h) noexcept
+{
+  return h->next = cut(h->next);
+}
+
+template<class T>
+List<T> * List<T>::clear(List<T> * h)
+{
+  while(h)
+  {
+    h = cut(h);
+  }
+  return h;
+}
+
 
 int main(int argc, char ** argv)
 {}

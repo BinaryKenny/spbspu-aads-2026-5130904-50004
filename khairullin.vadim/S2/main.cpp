@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 template <class T>
 struct List
@@ -658,4 +659,14 @@ int reverse(int number)
 }
 
 int main(int argc, char ** argv)
-{}
+{
+  std::string line = "";
+  std::ifstream file;
+  std::istream * in = &std::cin;
+  if (argc > 1)
+  {
+    file.open(argv[1]);
+    in = &file;
+  }
+  Stack<int> output_stack;
+}

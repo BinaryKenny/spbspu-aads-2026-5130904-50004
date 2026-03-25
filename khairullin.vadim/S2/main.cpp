@@ -465,6 +465,46 @@ T Stack<T>::drop()
   }
 }
 
+struct Data
+{
+    Data(const int & temp);
+    Data(const char & temp);
+    Data() = default;
+    const bool is_int() const ;
+    const int value() const ;
+    const char char_value() const ;
+  private:
+    int int_value;
+    bool is_integer;
+    char symbol;
+};
+
+Data::Data(const int & temp):
+int_value(temp),
+is_integer(true),
+symbol(' ')
+{}
+
+Data::Data(const char & temp):
+int_value(0),
+is_integer(false),
+symbol(temp)
+{}
+
+const bool Data::is_int() const
+{
+  return is_integer;
+}
+
+const int Data::value() const
+{
+  return int_value;
+}
+
+const char Data::char_value() const
+{
+  return symbol;
+}
 
 int main(int argc, char ** argv)
 {}

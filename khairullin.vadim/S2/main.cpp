@@ -584,5 +584,44 @@ bool priority(const char & op1, const char & op2)
   return get_priority(op1) >= get_priority(op2);
 }
 
+void postfix(Queue<Data> & q, Queue<Data> & q1) {
+  Stack<Data> s2;
+  while (q.not_empty())
+  {
+    Data val = q.drop();
+    if (val.is_int())
+    {
+      q1.push(val);
+    }
+    else if (val.char_value() == '(')
+    {
+      s2.push(val);
+    }
+    else if (val.char_value() == ')' )
+    {
+      while (s2.not_empty() && s2.value().char_value() != '(')
+      {
+        q1.push(s2.drop());
+      }
+      if (s2.not_empty() && s2.value().char_value() == '(')
+      {
+        s2.drop();
+      }
+      else
+      {
+        while (s2.not_empty() && s2.value().char_value() != '(' && priority(s2.value().char_value(), val.char_value()))
+        {
+          q1.push(s2.drop());
+        }
+        s2.push(val);
+      }
+    }
+    while (s2.not_empty())
+    {
+        q1.push(s2.drop());
+    }
+  }
+}
+
 int main(int argc, char ** argv)
 {}

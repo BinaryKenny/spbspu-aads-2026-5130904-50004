@@ -3,24 +3,29 @@
 #include <fstream>
 #include <cstddef>
 
-template <class T>
-struct List
+namespace khairullin
 {
-  T val;
-  List<T> * next, * prev;
-  List<T>(const T & val, List<T> * n, List<T> * b);
-  List<T> * add(const T & val, List<T> * n, List<T> * b);
-  List<T> * insert(const T & val, List<T> * h);
-  List<T> * cut(List<T> * h) noexcept;
-  List<T> * erase(List<T> * h) noexcept;
-  List<T> * clear(List<T> * h);
-  void swap(List & other);
-  List(List & other);
-  List & operator=(List & other);
-  List(List && other);
-  List & operator=(List && other);
-  ~List() = default;
-};
+  template <class T>
+  struct List
+  {
+    T val;
+    List<T> * next, * prev;
+    List<T>(const T & val, List<T> * n, List<T> * b);
+    List<T> * add(const T & val, List<T> * n, List<T> * b);
+    List<T> * insert(const T & val, List<T> * h);
+    List<T> * cut(List<T> * h) noexcept;
+    List<T> * erase(List<T> * h) noexcept;
+    List<T> * clear(List<T> * h);
+    void swap(List & other);
+    List(List & other);
+    List & operator=(List & other);
+    List(List && other);
+    List & operator=(List && other);
+    ~List() = default;
+  };
+}
+
+using khairullin::List;
 
 template<class T>
 List<T>::List(const T& val, List<T> * n, List<T> * b):
@@ -153,26 +158,32 @@ List<T> * List<T>::clear(List<T> * h)
   return h;
 }
 
-template <class T>
-class Queue
+
+namespace khairullin
 {
-  public:
-    void push(const T & rhs);
-    T drop();
-    const T & value() const;
-    bool not_empty() const;
-    void swap(Queue & other) noexcept;
-    Queue(const T & rhs);
-    Queue() = default;
-    Queue(Queue & other);
-    Queue & operator=(Queue & other);
-    Queue(Queue && other) noexcept;
-    Queue & operator=(Queue && other) noexcept;
-    ~Queue();
-  private:
-    List<T> * head = nullptr;
-    List<T> * tail = nullptr;
-};
+  template <class T>
+  class Queue
+  {
+    public:
+      void push(const T & rhs);
+      T drop();
+      const T & value() const;
+      bool not_empty() const;
+      void swap(Queue & other) noexcept;
+      Queue(const T & rhs);
+      Queue() = default;
+      Queue(Queue & other);
+      Queue & operator=(Queue & other);
+      Queue(Queue && other) noexcept;
+      Queue & operator=(Queue && other) noexcept;
+      ~Queue();
+    private:
+      List<T> * head = nullptr;
+      List<T> * tail = nullptr;
+  };
+}
+
+using khairullin::Queue;
 
 template<class T>
 Queue<T>::Queue(const T & rhs):
@@ -325,25 +336,31 @@ Queue<T>::~Queue()
   }
 }
 
-template <class T>
-class Stack
+
+namespace khairullin
 {
-public:
-  void push(const T & rhs);
-  T drop();
-  const T & value() const;
-  void swap(Stack & other);
-  bool not_empty() const;
-  Stack() = default;
-  Stack(const T & rhs);
-  Stack(Stack & other);
-  Stack & operator=(Stack & other);
-  Stack(Stack && other) noexcept;
-  Stack & operator=(Stack && other) noexcept;
-  ~Stack();
-private:
-  List<T> * head = nullptr;
-};
+  template <class T>
+  class Stack
+  {
+    public:
+      void push(const T & rhs);
+      T drop();
+      const T & value() const;
+      void swap(Stack & other);
+      bool not_empty() const;
+      Stack() = default;
+      Stack(const T & rhs);
+      Stack(Stack & other);
+      Stack & operator=(Stack & other);
+      Stack(Stack && other) noexcept;
+      Stack & operator=(Stack && other) noexcept;
+      ~Stack();
+    private:
+      List<T> * head = nullptr;
+  };
+}
+
+using khairullin::Stack;
 
 template<class T>
 Stack<T>::Stack(const T & rhs):
@@ -482,8 +499,10 @@ T Stack<T>::drop()
   }
 }
 
-struct Data
+namespace khairullin
 {
+  struct Data
+  {
     Data(const int & temp);
     Data(const char & temp);
     Data() = default;
@@ -494,7 +513,10 @@ struct Data
     int int_value;
     bool is_integer;
     char symbol;
-};
+  };
+}
+
+using khairullin::Data;
 
 Data::Data(const int & temp):
 int_value(temp),
@@ -523,53 +545,55 @@ const char Data::char_value() const
   return symbol;
 }
 
-bool is_char(const char c)
+namespace khairullin
 {
-  bool cond = c == '(';
-  cond = cond || c == ')';
-  cond = cond || c == '+';
-  cond = cond || c == '-';
-  cond = cond || c == '*';
-  cond = cond || c == '/';
-  cond = cond || c == '%';
-  cond = cond || c == '#';
-  return cond;
-}
-
-Queue<Data> input(std::string line)
-{
-  Queue<Data> q{};
-  size_t i = 0;
-  while(i < line.length())
+  bool is_char(const char c)
   {
-    if (i >= line.length())
+    bool cond = c == '(';
+    cond = cond || c == ')';
+    cond = cond || c == '+';
+    cond = cond || c == '-';
+    cond = cond || c == '*';
+    cond = cond || c == '/';
+    cond = cond || c == '%';
+    cond = cond || c == '#';
+    return cond;
+  }
+
+  Queue<Data> input(std::string line)
+  {
+    Queue<Data> q{};
+    size_t i = 0;
+    while(i < line.length())
     {
-      break;
-    }
-    char temp = line[i];
-    if (is_char(temp))
-    {
-      q.push(Data(temp));
-      i++;
-    }
-    else
-    {
-      int num = 0;
-      std::string number = "";
-      while(line[i] != ' ' && i < line.length())
+      if (i >= line.length())
       {
-        number += line[i];
+        break;
+      }
+      char temp = line[i];
+      if (is_char(temp))
+      {
+        q.push(Data(temp));
         i++;
       }
-      try
+      else
       {
-        num = std::stoi(number);
-      }
-      catch(...)
-      {
-        throw std::out_of_range("Overflow or undeflow");
-      }
-      q.push(Data(num));
+        int num = 0;
+        std::string number = "";
+        while(line[i] != ' ' && i < line.length())
+        {
+          number += line[i];
+          i++;
+        }
+        try
+        {
+          num = std::stoi(number);
+        }
+        catch(...)
+        {
+          throw std::out_of_range("Overflow or undeflow");
+        }
+          q.push(Data(num));
       }
       if (i < line.length() && line[i] == ' ')
       {
@@ -577,103 +601,103 @@ Queue<Data> input(std::string line)
       }
     }
     return q;
-}
-
-size_t get_priority(const char& op)
-{
-  if (op == '+' || op == '-')
-  {
-    return 1;
   }
-  if (op == '*' || op == '/' || op == '%')
-  {
-    return 2;
-  }
-  if (op == '#')
-  {
-    return 3;
-  }
-  return 0;
-}
 
-bool priority(const char & op1, const char & op2)
-{
-  return get_priority(op1) >= get_priority(op2);
-}
-
-void postfix(Queue<Data> & q, Queue<Data> & q1) {
-  Stack<Data> s2;
-  while (q.not_empty())
+  size_t get_priority(const char& op)
   {
-    Data val = q.drop();
-    if (val.is_int())
+    if (op == '+' || op == '-')
     {
-      q1.push(val);
+      return 1;
     }
-    else if (val.char_value() == '(')
+    if (op == '*' || op == '/' || op == '%')
     {
-      s2.push(val);
+      return 2;
     }
-    else if (val.char_value() == ')' )
+    if (op == '#')
     {
-      while (s2.not_empty() && s2.value().char_value() != '(')
+      return 3;
+    }
+    return 0;
+  }
+
+  bool priority(const char & op1, const char & op2)
+  {
+    return get_priority(op1) >= get_priority(op2);
+  }
+
+  void postfix(Queue<Data> & q, Queue<Data> & q1) {
+    Stack<Data> s2;
+    while (q.not_empty())
+    {
+      Data val = q.drop();
+      if (val.is_int())
       {
-        q1.push(s2.drop());
+        q1.push(val);
       }
-      if (s2.not_empty() && s2.value().char_value() == '(')
+      else if (val.char_value() == '(')
       {
-        s2.drop();
+        s2.push(val);
+      }
+      else if (val.char_value() == ')' )
+      {
+        while (s2.not_empty() && s2.value().char_value() != '(')
+        {
+          q1.push(s2.drop());
+        }
+        if (s2.not_empty() && s2.value().char_value() == '(')
+        {
+          s2.drop();
+        }
+      }
+      else
+      {
+        while (s2.not_empty() && s2.value().char_value() != '(' && priority(s2.value().char_value(), val.char_value()))
+        {
+          q1.push(s2.drop());
+        }
+        s2.push(val);
       }
     }
-    else
+    while (s2.not_empty())
     {
-      while (s2.not_empty() && s2.value().char_value() != '(' && priority(s2.value().char_value(), val.char_value()))
-      {
-        q1.push(s2.drop());
-      }
-      s2.push(val);
+      q1.push(s2.drop());
     }
   }
-  while (s2.not_empty())
-  {
-    q1.push(s2.drop());
-  }
-}
 
-int degree(int n1, int n2)
-{
-  int result = 1;
-  while (n2 != 0)
+  int degree(int n1, int n2)
   {
-    result *= n1;
-    n2--;
+    int result = 1;
+    while (n2 != 0)
+    {
+      result *= n1;
+      n2--;
+    }
+    return result;
   }
-  return result;
+  int reverse(int number)
+  {
+    int result = 0;
+    int sign = number >= 0 ? 1 : -1;
+    number = number * sign;
+    size_t counter = 0;
+    int temp[10] = {0};
+    while (number)
+    {
+      temp[counter] = number % 10;
+      counter++;
+      number = number / 10;
+    }
+    size_t id = 0;
+    int grade = static_cast<int>(counter - 1);
+    while(id < counter)
+    {
+      result += temp[id] * khairullin::degree(10, grade);
+      id++;
+      grade--;
+    }
+    return sign * result;
+  }
 }
-int reverse(int number)
-{
-  int result = 0;
-  int sign = number >= 0 ? 1 : -1;
-  number = number * sign;
-  size_t counter = 0;
-  int temp[10] = {0};
-  while (number)
-  {
-    temp[counter] = number % 10;
-    counter++;
-    number = number / 10;
-  }
-  size_t id = 0;
-  int grade = static_cast<int>(counter - 1);
-  while(id < counter)
-  {
-    result += temp[id] * degree(10, grade);
-    id++;
-    grade--;
-  }
-  return sign * result;
-}
-
 int main(int argc, char ** argv)
 {
   std::string line = "";
@@ -694,7 +718,7 @@ int main(int argc, char ** argv)
     Queue<Data> input_queue;
     try
     {
-      input_queue = input(line);
+      input_queue = khairullin::input(line);
     }
     catch (const std::exception & err)
     {
@@ -708,7 +732,7 @@ int main(int argc, char ** argv)
     Queue<Data> postfix_queue;
     try
     {
-      postfix(input_queue, postfix_queue);
+      khairullin::postfix(input_queue, postfix_queue);
     }
     catch (const std::bad_alloc & err)
     {
@@ -729,7 +753,7 @@ int main(int argc, char ** argv)
         if (oper == '#')
         {
           int number = res_stack.drop().value();
-          res_stack.push(Data(reverse(number)));
+          res_stack.push(Data(khairullin::reverse(number)));
         }
         else if (oper == '+')
         {

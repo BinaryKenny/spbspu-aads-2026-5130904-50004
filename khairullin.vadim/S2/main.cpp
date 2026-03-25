@@ -508,15 +508,58 @@ const char Data::char_value() const
 
 bool is_char(const char c)
 {
-    bool cond = c == '(';
-    cond = cond || c == ')';
-    cond = cond || c == '+';
-    cond = cond || c == '-';
-    cond = cond || c == '*';
-    cond = cond || c == '/';
-    cond = cond || c == '%';
-    cond = cond || c == '#';
-    return cond;
+  bool cond = c == '(';
+  cond = cond || c == ')';
+  cond = cond || c == '+';
+  cond = cond || c == '-';
+  cond = cond || c == '*';
+  cond = cond || c == '/';
+  cond = cond || c == '%';
+  cond = cond || c == '#';
+  return cond;
+}
+
+Queue<Data> input(std::string line)
+{
+  Queue<Data> q{};
+  size_t i = 0;
+  while(i < line.length())
+  {
+    if (i >= line.length())
+    {
+      break;
+    }
+    char temp = line[i];
+    if (is_char(temp))
+    {
+      q.push(Data(temp));
+      i++;
+    }
+    else
+    {
+      int num = 0;
+      std::string number = "";
+      while(line[i] != ' ' && i < line.length())
+      {
+        number += line[i];
+        i++;
+      }
+      try
+      {
+        num = std::stoi(number);
+      }
+      catch(...)
+      {
+        throw std::out_of_range("Overflow or undeflow");
+      }
+      q.push(Data(num));
+      }
+      if (i < line.length() && line[i] == ' ')
+      {
+        i++;
+      }
+    }
+    return q;
 }
 
 int main(int argc, char ** argv)

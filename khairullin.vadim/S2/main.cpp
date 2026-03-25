@@ -1,5 +1,7 @@
 #include <iostream>
 #include <limits>
+#include <fstream>
+#include <cstddef>
 
 template <class T>
 struct List
@@ -53,7 +55,11 @@ prev(nullptr)
     }
     catch(...)
     {
-      clear(head);
+      if (head->next)
+      {
+        head->next->clear(head->next);
+        head->next = nullptr;
+      }
       throw std::bad_alloc();
     }
   }
@@ -71,7 +77,7 @@ List<T> & List<T>::operator=(List<T> & other)
     }
     catch(...)
     {
-      throw std::exception();
+      throw;
     }
   }
   return *this;
@@ -107,15 +113,7 @@ List<T> & List<T>::operator=(List<T> && other)
 template<class T>
 List<T> * List<T>::insert(const T & val, List<T> * h)
 {
-  try
-  {
-    h->next = add(val, h->next, h);
-  }
-  catch (...)
-  {
-    clear(h);
-    throw std::bad_alloc();
-  }
+  h->next = add(val, h->next, h);
   if (h->next->next)
   {
     h->next->next->prev = h->next;
@@ -219,7 +217,11 @@ tail(nullptr)
     }
     catch(...)
     {
-      delete head;
+      if (head)
+      {
+          head->clear(head);
+      }
+      throw;
     }
   }
 }
@@ -281,8 +283,7 @@ void Queue<T>::push(const T & rhs)
   }
   catch(...)
   {
-    head->clear(head);
-    throw std::bad_alloc();
+    throw;
   }
 }
 
@@ -311,7 +312,6 @@ T Queue<T>::drop()
   }
   catch(...)
   {
-    head->clear(head);
     throw;
   }
 }
@@ -346,6 +346,29 @@ private:
 };
 
 template<class T>
+Stack<T>::Stack(const T & rhs):
+head(new List<T>(rhs, nullptr, nullptr))
+{}
+
+template<class T>
+const T & Stack<T>::value() const
+{
+  return head->val;
+}
+
+template<class T>
+void Stack<T>::swap(Stack<T> & other)
+{
+  std::swap(head, other.head);
+}
+
+template<class T>
+bool Stack<T>::not_empty() const
+{
+  return head;
+}
+
+template<class T>
 Stack<T>::Stack(Stack<T> & other):
 head(nullptr)
 {
@@ -365,12 +388,6 @@ head(nullptr)
     }
     catch(...)
     {
-      while (head)
-      {
-        List<T> * prev = head->prev;
-        delete head;
-        head = prev;
-      }
       throw std::bad_alloc();
     }
   }
@@ -436,7 +453,7 @@ void Stack<T>::push(const T & rhs)
   }
   catch(...)
   {
-    throw std::bad_alloc();
+    throw;
   }
 }
 
@@ -461,7 +478,6 @@ T Stack<T>::drop()
   }
   catch(...)
   {
-    head->clear(head);
     throw;
   }
 }
@@ -608,19 +624,19 @@ void postfix(Queue<Data> & q, Queue<Data> & q1) {
       {
         s2.drop();
       }
-      else
-      {
-        while (s2.not_empty() && s2.value().char_value() != '(' && priority(s2.value().char_value(), val.char_value()))
-        {
-          q1.push(s2.drop());
-        }
-        s2.push(val);
-      }
     }
-    while (s2.not_empty())
+    else
     {
+      while (s2.not_empty() && s2.value().char_value() != '(' && priority(s2.value().char_value(), val.char_value()))
+      {
         q1.push(s2.drop());
+      }
+      s2.push(val);
     }
+  }
+  while (s2.not_empty())
+  {
+    q1.push(s2.drop());
   }
 }
 
@@ -673,68 +689,71 @@ int main(int argc, char ** argv)
   constexpr int MAX = std::numeric_limits<int>::max();
   constexpr int MIN = std::numeric_limits<int>::min();
     
-   while (std::getline(*in, line))
-   {
-     Queue<Data> input_queue;
-     try
-     {
-       input_queue = input(line);
-     }
-     catch (const std::exception & err)
-     {
-       std::cerr << err.what() << "\n";
-       return 1;
-     }
-     if (!input_queue.not_empty())
-     {
-        continue;
-     }
-     Queue<Data> postfix_queue;
-     try
-     {
-       postfix(input_queue, postfix_queue);
-     }
-     catch (const std::bad_alloc & err)
-     {
-        std::cerr << err.what() << "\n";
-        return 2;
-     }
-     Stack<Data> res_stack;
-     try
-     {
-       while (postfix_queue.not_empty())
-       {
-         while(postfix_queue.value().is_int())
-         {
-           res_stack.push(postfix_queue.drop());
-         }
-         char oper = postfix_queue.drop().char_value();
-         if (oper == '#')
-         {
-           int number = res_stack.drop().value();
-           res_stack.push(Data(reverse(number)));
-          }
-          else if (oper == '+')
+  while (std::getline(*in, line))
+  {
+    Queue<Data> input_queue;
+    try
+    {
+      input_queue = input(line);
+    }
+    catch (const std::exception & err)
+    {
+      std::cerr << err.what() << "\n";
+      return 1;
+    }
+    if (!input_queue.not_empty())
+    {
+      continue;
+    }
+    Queue<Data> postfix_queue;
+    try
+    {
+      postfix(input_queue, postfix_queue);
+    }
+    catch (const std::bad_alloc & err)
+    {
+      std::cerr << err.what() << "\n";
+      return 2;
+    }
+      
+    Stack<Data> res_stack;
+    try
+    {
+      while (postfix_queue.not_empty())
+      {
+        while(postfix_queue.value().is_int())
+        {
+          res_stack.push(postfix_queue.drop());
+        }
+        char oper = postfix_queue.drop().char_value();
+        if (oper == '#')
+        {
+          int number = res_stack.drop().value();
+          res_stack.push(Data(reverse(number)));
+        }
+        else if (oper == '+')
+        {
+          int val_1 = res_stack.drop().value();
+          int val_2 = res_stack.drop().value();
+          int result = 0;
+          if (MAX - val_1 > val_2)
           {
-            int val_1 = res_stack.drop().value();
-            int val_2 = res_stack.drop().value();
-            int result = 0;
-            if (MAX - val_1 < val_2)
-            {
-              result = val_1 + val_2;
-              res_stack.push(Data(result));
-            }
-            else
-            {
-              std::cerr << "Overflow\n";
-              return 2;
-            }
+            result = val_1 + val_2;
+            res_stack.push(Data(result));
           }
-          else if (oper == '-')
+          else
           {
-            int val_1 = res_stack.drop().value();
-            int val_2 = res_stack.drop().value();
-            int result = 0;
+            std::cerr << "Overflow\n";
+            return 2;
+          }
+        }
+        else if (oper == '-')
+        {
+          int val_1 = res_stack.drop().value();
+          int val_2 = res_stack.drop().value();
+          int result = 0;
+          if (val_1 > 0)
+          {
             if (MIN + val_1 < val_2)
             {
               result = val_2 - val_1;
@@ -746,14 +765,11 @@ int main(int argc, char ** argv)
               return 2;
             }
           }
-          else if (oper == '*')
+          else
           {
-            int val_1 = res_stack.drop().value();
-            int val_2 = res_stack.drop().value();
-            int result = 0;
-            if (MAX / val_1 > val_2)
+            if (MAX + val_1 > val_2 )
             {
-              result = val_1 * val_2;
+              result = val_2 - val_1;
               res_stack.push(Data(result));
             }
             else
@@ -762,63 +778,79 @@ int main(int argc, char ** argv)
               return 2;
             }
           }
-          else if (oper == '/')
+        }
+        else if (oper == '*')
+        {
+          int val_1 = res_stack.drop().value();
+          int val_2 = res_stack.drop().value();
+          int result = 0;
+          if (MAX / val_1 > val_2)
           {
-            int val_1 = res_stack.drop().value();
-            int val_2 = res_stack.drop().value();
-            if (val_1 != 0)
-            {
-              int result = val_2 / val_1;
-              res_stack.push(Data(result));
-            }
-            else
-            {
-              std::cerr << "Divide 0\n";
-              return 1;
-            }
-          }
-          else if (oper == '%')
-          {
-            int val_1 = res_stack.drop().value();
-            int val_2 = res_stack.drop().value();
-            if (val_1 != 0)
-            {
-              int result = val_2 % val_1;
-              res_stack.push(Data(result));
-            }
-            else
-            {
-              std::cerr << "Divide 0\n";
-              return 1;
-            }
+            result = val_1 * val_2;
+            res_stack.push(Data(result));
           }
           else
           {
-            std::cerr << "Fail input\n";
+            std::cerr << "Overflow\n";
+            return 2;
+          }
+        }
+        else if (oper == '/')
+        {
+          int val_1 = res_stack.drop().value();
+          int val_2 = res_stack.drop().value();
+          if (val_1 != 0)
+          {
+            int result = val_2 / val_1;
+            res_stack.push(Data(result));
+          }
+          else
+          {
+            std::cerr << "Divide 0\n";
             return 1;
           }
         }
-        output_stack.push(res_stack.drop().value());
-        if (res_stack.not_empty())
+        else if (oper == '%')
         {
-          std::cerr << "Wrong\n";
-          return 3;
+          int val_1 = res_stack.drop().value();
+          int val_2 = res_stack.drop().value();
+          if (val_1 != 0)
+          {
+            int result = val_2 % val_1;
+            res_stack.push(Data(result));
+          }
+          else
+          {
+            std::cerr << "Divide 0\n";
+            return 1;
+          }
+        }
+        else
+        {
+          std::cerr << "Fail input\n";
+          return 1;
         }
       }
-      catch (...)
+      output_stack.push(res_stack.drop().value());
+      if (res_stack.not_empty())
       {
-        std::cerr << "Exception\n";
-        return 2;
+        std::cerr << "Wrong\n";
+        return 3;
       }
     }
-    if (output_stack.not_empty())
+    catch (...)
     {
-      std::cout << output_stack.drop();
+      std::cerr << "Exception\n";
+      return 2;
     }
-    while (output_stack.not_empty())
-    {
-      std::cout << " " << output_stack.drop();
-    }
-    std::cout << "\n";
   }
+  if (output_stack.not_empty())
+  {
+    std::cout << output_stack.drop();
+  }
+  while (output_stack.not_empty())
+  {
+    std::cout << " " << output_stack.drop();
+  }
+  std::cout << "\n";
 }

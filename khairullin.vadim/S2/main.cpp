@@ -506,5 +506,18 @@ const char Data::char_value() const
   return symbol;
 }
 
+bool is_char(const char c)
+{
+    bool cond = c == '(';
+    cond = cond || c == ')';
+    cond = cond || c == '+';
+    cond = cond || c == '-';
+    cond = cond || c == '*';
+    cond = cond || c == '/';
+    cond = cond || c == '%';
+    cond = cond || c == '#';
+    return cond;
+}
+
 int main(int argc, char ** argv)
 {}

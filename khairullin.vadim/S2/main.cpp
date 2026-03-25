@@ -562,5 +562,27 @@ Queue<Data> input(std::string line)
     return q;
 }
 
+size_t get_priority(const char& op)
+{
+  if (op == '+' || op == '-')
+  {
+    return 1;
+  }
+  if (op == '*' || op == '/' || op == '%')
+  {
+    return 2;
+  }
+  if (op == '#')
+  {
+    return 3;
+  }
+  return 0;
+}
+
+bool priority(const char & op1, const char & op2)
+{
+  return get_priority(op1) >= get_priority(op2);
+}
+
 int main(int argc, char ** argv)
 {}

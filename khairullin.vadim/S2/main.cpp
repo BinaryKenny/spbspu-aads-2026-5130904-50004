@@ -623,5 +623,39 @@ void postfix(Queue<Data> & q, Queue<Data> & q1) {
   }
 }
 
+int degree(int n1, int n2)
+{
+  int result = 1;
+  while (n2 != 0)
+  {
+    result *= n1;
+    n2--;
+  }
+  return result;
+}
+int reverse(int number)
+{
+  int result = 0;
+  int sign = number >= 0 ? 1 : -1;
+  number = number * sign;
+  size_t counter = 0;
+  int temp[10] = {0};
+  while (number)
+  {
+    temp[counter] = number % 10;
+    counter++;
+    number = number / 10;
+  }
+  size_t id = 0;
+  int grade = static_cast<int>(counter - 1);
+  while(id < counter)
+  {
+    result += temp[id] * degree(10, grade);
+    id++;
+    grade--;
+  }
+  return sign * result;
+}
+
 int main(int argc, char ** argv)
 {}

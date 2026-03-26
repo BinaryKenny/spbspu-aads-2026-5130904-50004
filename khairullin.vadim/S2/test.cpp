@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(main_test)
     stack.push(q.drop());
   }
   BOOST_TEST(stack.drop() == last);
-  
+
   Queue<Data> q1;
   Queue<Data> q2;
   std::stringstream in;
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(main_test)
     }
   }
   BOOST_TEST(out.str() == "43*1710/-")
-  
+
   int number = 23546;
   BOOST_TEST(reverse(number) == 64532);
 }

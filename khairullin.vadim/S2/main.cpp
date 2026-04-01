@@ -158,7 +158,6 @@ List<T> * List<T>::clear(List<T> * h)
   return h;
 }
 
-
 namespace khairullin
 {
   template <class T>
@@ -625,7 +624,8 @@ namespace khairullin
     return get_priority(op1) >= get_priority(op2);
   }
 
-  void postfix(Queue<Data> & q, Queue<Data> & q1) {
+  void postfix(Queue<Data> & q, Queue<Data> & q1)
+  {
     Stack<Data> s2;
     while (q.not_empty())
     {
@@ -638,7 +638,7 @@ namespace khairullin
       {
         s2.push(val);
       }
-      else if (val.char_value() == ')' )
+      else if (val.char_value() == ')')
       {
         while (s2.not_empty() && s2.value().char_value() != '(')
         {
@@ -712,7 +712,6 @@ int main(int argc, char ** argv)
 
   constexpr int MAX = std::numeric_limits<int>::max();
   constexpr int MIN = std::numeric_limits<int>::min();
-    
   while (std::getline(*in, line))
   {
     Queue<Data> input_queue;
@@ -739,7 +738,6 @@ int main(int argc, char ** argv)
       std::cerr << err.what() << "\n";
       return 2;
     }
-      
     Stack<Data> res_stack;
     try
     {

@@ -451,8 +451,7 @@ Stack<T>::~Stack()
       head->next = nullptr;
     }
   }
-}
-
+}ø
 template<class T>
 void Stack<T>::push(const T & rhs)
 {

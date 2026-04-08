@@ -10,7 +10,7 @@ namespace khairullin
   {
     T val;
     List<T> * next, * prev;
-    List<T>(const T & val, List<T> * n, List<T> * b);
+    List(const T & val, List<T> * n, List<T> * b);
     List<T> * add(const T & val, List<T> * n, List<T> * b);
     List<T> * insert(const T & val, List<T> * h);
     List<T> * cut(List<T> * h) noexcept;

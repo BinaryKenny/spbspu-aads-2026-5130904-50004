@@ -7,9 +7,9 @@ namespace khairullin
     Data(const int & temp);
     Data(const char & temp);
     Data() = default;
-    const bool is_int() const ;
-    const int value() const ;
-    const char char_value() const ;
+    bool is_int() const noexcept;
+    int value() const noexcept;
+    char char_value() const noexcept;
   private:
     int int_value;
     bool is_integer;

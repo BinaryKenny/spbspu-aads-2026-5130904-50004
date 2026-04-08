@@ -70,7 +70,7 @@ tail(nullptr)
     {
       if (head)
       {
-          head->khairullin::clear(head);
+          head->clear(head);
       }
       throw;
     }

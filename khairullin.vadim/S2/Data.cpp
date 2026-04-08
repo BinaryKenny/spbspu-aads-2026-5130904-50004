@@ -12,17 +12,17 @@ is_integer(false),
 symbol(temp)
 {}
 
-const bool khairullin::Data::is_int() const
+bool khairullin::Data::is_int() const noexcept
 {
   return is_integer;
 }
 
-const int khairullin::Data::value() const
+int khairullin::Data::value() const noexcept
 {
   return int_value;
 }
 
-const char khairullin::Data::char_value() const
+char khairullin::Data::char_value() const noexcept
 {
   return symbol;
 }

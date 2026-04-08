@@ -78,7 +78,7 @@ bool khairullin::priority(const char & op1, const char & op2)
   return khairullin::get_priority(op1) >= khairullin::get_priority(op2);
 }
 
-void khairullin::postfix(khairullin::Queue<khairullin::Data> & q, 
+void khairullin::postfix(khairullin::Queue<khairullin::Data> & q,
   khairullin::Queue<khairullin::Data> & q1)
 {
   khairullin::Stack<khairullin::Data> s2;

@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(main_test)
       out << val.char_value();
     }
   }
-  BOOST_TEST(out.str() == "43*1710/-")
+  BOOST_TEST(out.str() == "43*1710/-");
 
   int number = 23546;
   BOOST_TEST(khairullin::reverse(number) == 64532);

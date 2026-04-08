@@ -1,5 +1,5 @@
 #if defined(__GNUC__) || defined(__clang__)
-__attribute__((weak)) int main(int argc, char** argv);
+__attribute__((weak)) int main(int argc, char* argv[]);
 #endif
 
 #define BOOST_TEST_MODULE S2
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   std::stringstream in;
   std::stringstream out;
   in << "4 * 3 - 17 / 10";
-  q1 = khairullin::input(in);
+  q1 = khairullin::input(in.str());
   khairullin::postfix(q1, q2);
   while (q2.not_empty())
   {

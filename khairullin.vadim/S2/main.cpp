@@ -21,10 +21,10 @@ int main(int argc, char ** argv)
     in = &file;
   }
 
-  khairullin::Stack<int> output_stack;
+  khairullin::Stack<int_ll> output_stack;
 
-  constexpr int MAX = std::numeric_limits<int>::max();
-  constexpr int MIN = std::numeric_limits<int>::min();
+  constexpr int_ll MAX = std::numeric_limits<int_ll>::max();
+  constexpr int_ll MIN = std::numeric_limits<int_ll>::min();
   while (std::getline(*in, line))
   {
     khairullin::Queue<khairullin::Data> input_queue;
@@ -119,7 +119,12 @@ int main(int argc, char ** argv)
           int_ll val_1 = res_stack.drop().value();
           int_ll val_2 = res_stack.drop().value();
           int_ll result = 0;
-          if ((val_1 && MAX / val_1 > val_2) || val_1 == 0)
+          if ((val_1 > 0 && (MAX / val_1 > val_2)) || val_1 == 0)
+          {
+            result = val_1 * val_2;
+            res_stack.push(khairullin::Data(result));
+          }
+          else if ((val_1 < 0 && (MIN / val_1 > val_2)) || val_1 == 0)
           {
             result = val_1 * val_2;
             res_stack.push(khairullin::Data(result));

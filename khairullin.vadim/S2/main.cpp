@@ -56,9 +56,13 @@ int main(int argc, char ** argv)
     {
       while (postfix_queue.not_empty())
       {
-        while(postfix_queue.value().is_int())
+        while(postfix_queue.not_empty() && postfix_queue.value().is_int())
         {
           res_stack.push(postfix_queue.drop());
+        }
+        if (!postfix_queue.not_empty())
+        {
+          break;
         }
         char oper = postfix_queue.drop().char_value();
         if (oper == '#')
@@ -71,7 +75,7 @@ int main(int argc, char ** argv)
           int_ll val_1 = res_stack.drop().value();
           int_ll val_2 = res_stack.drop().value();
           int_ll result = 0;
-          if (MAX - val_1 > val_2)
+          if (MAX - val_1 >= val_2)
           {
             result = val_1 + val_2;
             res_stack.push(khairullin::Data(result));
@@ -89,7 +93,7 @@ int main(int argc, char ** argv)
           int_ll result = 0;
           if (val_1 > 0)
           {
-            if (MIN + val_1 < val_2)
+            if (MIN + val_1 <= val_2)
             {
               result = val_2 - val_1;
               res_stack.push(khairullin::Data(result));
@@ -102,7 +106,7 @@ int main(int argc, char ** argv)
           }
           else
           {
-            if (MAX + val_1 > val_2 )
+            if (MAX + val_1 >= val_2 )
             {
               result = val_2 - val_1;
               res_stack.push(khairullin::Data(result));
@@ -119,12 +123,12 @@ int main(int argc, char ** argv)
           int_ll val_1 = res_stack.drop().value();
           int_ll val_2 = res_stack.drop().value();
           int_ll result = 0;
-          if ((val_1 > 0 && (MAX / val_1 > val_2)) || val_1 == 0)
+          if ((val_1 > 0 && (MAX / val_1 >= val_2)) || val_1 == 0)
           {
             result = val_1 * val_2;
             res_stack.push(khairullin::Data(result));
           }
-          else if ((val_1 < 0 && (MIN / val_1 > val_2)) || val_1 == 0)
+          else if ((val_1 < 0 && (MIN / val_1 >= val_2)) || val_1 == 0)
           {
             result = val_1 * val_2;
             res_stack.push(khairullin::Data(result));

@@ -21,10 +21,6 @@ khairullin::Queue<khairullin::Data> khairullin::input(std::string line)
   size_t i = 0;
   while(i < line.length())
   {
-    if (i >= line.length())
-    {
-      break;
-    }
     char temp = line[i];
     if (khairullin::is_char(temp))
     {
@@ -42,7 +38,7 @@ khairullin::Queue<khairullin::Data> khairullin::input(std::string line)
       }
       try
       {
-        num = std::stoi(number);
+        num = std::stoll(number);
       }
       catch(...)
       {

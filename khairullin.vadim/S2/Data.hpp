@@ -6,7 +6,7 @@ namespace khairullin
 {
   struct Data
   {
-    Data(const int & temp);
+    Data(const int_ll & temp);
     Data(const char & temp);
     Data() = default;
     bool is_int() const noexcept;

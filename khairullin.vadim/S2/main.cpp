@@ -89,7 +89,7 @@ int main(int argc, char ** argv)
             int result = 0;
             if (val_1 > 0)
             {
-              if (MIN + val_1 <= val_2)
+              if (MIN + val_1 =< val_2)
               {
                 result = val_2 - val_1;
                 res_stack.push(khairullin::Data(result));

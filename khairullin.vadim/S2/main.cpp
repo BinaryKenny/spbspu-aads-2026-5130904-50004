@@ -58,51 +58,22 @@ int main(int argc, char ** argv)
         {
           res_stack.push(postfix_queue.drop());
         }
-        char oper = postfix_queue.drop().char_value();
-        if (oper == '#')
+        if (postfix_queue.not_empty())
         {
-          int number = res_stack.drop().value();
-          res_stack.push(khairullin::Data(khairullin::reverse(number)));
-        }
-        else if (oper == '+')
-        {
-          int val_1 = res_stack.drop().value();
-          int val_2 = res_stack.drop().value();
-          int result = 0;
-          if (MAX - val_1 > val_2)
+          char oper = postfix_queue.drop().char_value();
+          if (oper == '#')
           {
-            result = val_1 + val_2;
-            res_stack.push(khairullin::Data(result));
+            int number = res_stack.drop().value();
+            res_stack.push(khairullin::Data(khairullin::reverse(number)));
           }
-          else
+          else if (oper == '+')
           {
-            std::cerr << "Overflow\n";
-            return 2;
-          }
-        }
-        else if (oper == '-')
-        {
-          int val_1 = res_stack.drop().value();
-          int val_2 = res_stack.drop().value();
-          int result = 0;
-          if (val_1 > 0)
-          {
-            if (MIN + val_1 < val_2)
+            int val_1 = res_stack.drop().value();
+            int val_2 = res_stack.drop().value();
+            int result = 0;
+            if (MAX - val_1 > val_2)
             {
-              result = val_2 - val_1;
-              res_stack.push(khairullin::Data(result));
-            }
-            else
-            {
-              std::cerr << "Underflow\n";
-              return 2;
-            }
-          }
-          else
-          {
-            if (MAX + val_1 > val_2 )
-            {
-              result = val_2 - val_1;
+              result = val_1 + val_2;
               res_stack.push(khairullin::Data(result));
             }
             else
@@ -111,64 +82,100 @@ int main(int argc, char ** argv)
               return 2;
             }
           }
-        }
-        else if (oper == '*')
-        {
-          int val_1 = res_stack.drop().value();
-          int val_2 = res_stack.drop().value();
-          int result = 0;
-          if (MAX / val_1 > val_2)
+          else if (oper == '-')
           {
-            result = val_1 * val_2;
-            res_stack.push(khairullin::Data(result));
+            int val_1 = res_stack.drop().value();
+            int val_2 = res_stack.drop().value();
+            int result = 0;
+            if (val_1 > 0)
+            {
+              if (MIN + val_1 <= val_2)
+              {
+                result = val_2 - val_1;
+                res_stack.push(khairullin::Data(result));
+              }
+              else
+              {
+                std::cerr << "Underflow\n";
+                return 2;
+              }
+            }
+            else
+            {
+              if (MAX + val_1 => val_2 )
+              {
+                result = val_2 - val_1;
+                res_stack.push(khairullin::Data(result));
+              }
+              else
+              {
+                std::cerr << "Overflow\n";
+                return 2;
+              }
+            }
+          }
+          else if (oper == '*')
+          {
+            int val_1 = res_stack.drop().value();
+            int val_2 = res_stack.drop().value();
+            int result = 0;
+            if (MAX / val_1 => val_2)
+            {
+              result = val_1 * val_2;
+              res_stack.push(khairullin::Data(result));
+            }
+            else
+            {
+              std::cerr << "Overflow\n";
+              return 2;
+            }
+          }
+          else if (oper == '/')
+          {
+            int val_1 = res_stack.drop().value();
+            int val_2 = res_stack.drop().value();
+            if (val_1 != 0)
+            {
+              int result = val_2 / val_1;
+              res_stack.push(khairullin::Data(result));
+            }
+            else
+            {
+              std::cerr << "Divide 0\n";
+              return 1;
+            }
+          }
+          else if (oper == '%')
+          {
+            int val_1 = res_stack.drop().value();
+            int val_2 = res_stack.drop().value();
+            if (val_1 != 0)
+            {
+              int result = val_2 % val_1;
+              if (result < 0)
+              {
+                result += val_1;
+              }
+              res_stack.push(khairullin::Data(result));
+            }
+            else
+            {
+              std::cerr << "Divide 0\n";
+              return 1;
+            }
           }
           else
           {
-            std::cerr << "Overflow\n";
-            return 2;
-          }
-        }
-        else if (oper == '/')
-        {
-          int val_1 = res_stack.drop().value();
-          int val_2 = res_stack.drop().value();
-          if (val_1 != 0)
-          {
-            int result = val_2 / val_1;
-            res_stack.push(khairullin::Data(result));
-          }
-          else
-          {
-            std::cerr << "Divide 0\n";
+            std::cerr << "Fail input\n";
             return 1;
           }
         }
-        else if (oper == '%')
+        output_stack.push(res_stack.drop().value());
+        if (res_stack.not_empty())
         {
-          int val_1 = res_stack.drop().value();
-          int val_2 = res_stack.drop().value();
-          if (val_1 != 0)
-          {
-            int result = val_2 % val_1;
-            res_stack.push(khairullin::Data(result));
-          }
-          else
-          {
-            std::cerr << "Divide 0\n";
-            return 1;
-          }
+          std::cerr << "Wrong\n";
+          return 3;
         }
-        else
-        {
-          std::cerr << "Fail input\n";
-          return 1;
-        }
-      }
-      output_stack.push(res_stack.drop().value());
-      if (res_stack.not_empty())
-      {
-        std::cerr << "Wrong\n";
-        return 3;
       }
     }
     catch (...)
@@ -176,14 +183,14 @@ int main(int argc, char ** argv)
       std::cerr << "Exception\n";
       return 2;
     }
+    if (output_stack.not_empty())
+    {
+      std::cout << output_stack.drop();
+    }
+    while (output_stack.not_empty())
+    {
+      std::cout << " " << output_stack.drop();
+    }
+    std::cout << "\n";
   }
-  if (output_stack.not_empty())
-  {
-    std::cout << output_stack.drop();
-  }
-  while (output_stack.not_empty())
-  {
-    std::cout << " " << output_stack.drop();
-  }
-  std::cout << "\n";
 }

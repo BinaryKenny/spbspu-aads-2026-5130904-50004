@@ -119,7 +119,7 @@ int main(int argc, char ** argv)
             int val_1 = res_stack.drop().value();
             int val_2 = res_stack.drop().value();
             int result = 0;
-            if (MAX / val_1 => val_2)
+            if (MAX / val_1 >= val_2)
             {
               result = val_1 * val_2;
               res_stack.push(khairullin::Data(result));

@@ -1,5 +1,7 @@
 #include "functions.hpp"
 
+using int_ll = long long int;
+
 bool khairullin::is_char(const char c)
 {
   bool cond = c == '(';
@@ -31,7 +33,7 @@ khairullin::Queue<khairullin::Data> khairullin::input(std::string line)
     }
     else
     {
-      int num = 0;
+      int_ll num = 0;
       std::string number = "";
       while(line[i] != ' ' && i < line.length())
       {
@@ -44,9 +46,9 @@ khairullin::Queue<khairullin::Data> khairullin::input(std::string line)
       }
       catch(...)
       {
-        throw std::out_of_range("Overflow or undeflow");
+        throw std::out_of_range("Some problems with the number");
       }
-        q.push(khairullin::Data(num));
+      q.push(khairullin::Data(num));
     }
     if (i < line.length() && line[i] == ' ')
     {
@@ -120,9 +122,9 @@ void khairullin::postfix(khairullin::Queue<khairullin::Data> & q,
   }
 }
 
-int khairullin::degree(int n1, int n2)
+int_ll khairullin::degree(int_ll n1, int_ll n2)
 {
-  int result = 1;
+  int_ll result = 1;
   while (n2 != 0)
   {
     result *= n1;
@@ -130,13 +132,13 @@ int khairullin::degree(int n1, int n2)
   }
   return result;
 }
-int khairullin::reverse(int number)
+int_ll khairullin::reverse(int_ll number)
 {
-  int result = 0;
-  int sign = number >= 0 ? 1 : -1;
+  int_ll result = 0;
+  int_ll sign = number >= 0 ? 1 : -1;
   number = number * sign;
   size_t counter = 0;
-  int temp[10] = {0};
+  int_ll temp[10] = {0};
   while (number)
   {
     temp[counter] = number % 10;
@@ -144,7 +146,7 @@ int khairullin::reverse(int number)
     number = number / 10;
   }
   size_t id = 0;
-  int grade = static_cast<int>(counter - 1);
+  int_ll grade = static_cast<int_ll>(counter - 1);
   while(id < counter)
   {
     result += temp[id] * khairullin::degree(10, grade);

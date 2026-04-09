@@ -1,6 +1,6 @@
 #include "Data.hpp"
 
-khairullin::Data::Data(const int & temp):
+khairullin::Data::Data(const int_ll & temp):
 int_value(temp),
 is_integer(true),
 symbol(' ')
@@ -17,7 +17,7 @@ bool khairullin::Data::is_int() const noexcept
   return is_integer;
 }
 
-int khairullin::Data::value() const noexcept
+int_ll khairullin::Data::value() const noexcept
 {
   return int_value;
 }

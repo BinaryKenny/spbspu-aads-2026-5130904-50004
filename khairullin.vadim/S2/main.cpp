@@ -123,12 +123,9 @@ int main(int argc, char ** argv)
           int_ll val_1 = res_stack.drop().value();
           int_ll val_2 = res_stack.drop().value();
           int_ll result = 0;
-          if ((val_1 > 0 && (MAX / val_1 >= val_2)) || val_1 == 0)
-          {
-            result = val_1 * val_2;
-            res_stack.push(khairullin::Data(result));
-          }
-          else if ((val_1 < 0 && (MIN / val_1 >= val_2)) || val_1 == 0)
+          bool can_multiply = ((val_1 > 0 && val_2 > 0) && (MAX / val_1 >= val_2)) || ((val_1 < 0 and val_2 < 0) && (MIN / (-val_1) <= val_2)) || (val_1 == 0 || val_2 == 0);
+          can_multiply = can_multiply || (((val_1 > 0 && val_2 < 0) && (MIN / val_1 <= val_2)) || (((val_1 < 0 && val_2 > 0) && (MIN/ val_1 >= val_2)) || (val_1 == 0 || val_2 == 0)));
+          if (can_multiply)
           {
             result = val_1 * val_2;
             res_stack.push(khairullin::Data(result));
@@ -161,6 +158,10 @@ int main(int argc, char ** argv)
           if (val_1 != 0)
           {
             int_ll result = val_2 % val_1;
+            if (result < 0)
+            {
+              result += val_1;
+            }
             res_stack.push(khairullin::Data(result));
           }
           else

@@ -22,6 +22,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   }
   khairullin::Queue<int> new_q(q);
   size_t first = 1;
+  size_t last = (size - 1) * (size - 1) + 1;
   BOOST_TEST(new_q.drop() == first);
 
   khairullin::Stack<int> stack;

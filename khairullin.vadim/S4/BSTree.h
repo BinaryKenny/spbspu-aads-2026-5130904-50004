@@ -1,30 +1,83 @@
 #ifndef BSTREE_H
 #define BSTREE_H
 #include <utility>
+#include <stdexcept>
 
-#include "../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/new"
+namespace khairullin {
+
+  template< class Key, class T, class Compare >
+  struct BSTIterator;
+  template< class Key, class T, class Compare >
+  struct BSTConstIterator;
+
+  template< class Key, class T, class Compare >
+  struct BSTree {
+    BSTree * left, * right, * parent;
+    std::pair< Key, T > data;
+    Compare less;
+
+    BSTree(Key key, T value, BSTree * parent);
+    BSTree();
+    ~BSTree() = default;
+
+    void push(Key key, T value);
+    T get(Key key);
+    T drop(Key key);
+
+    size_t height();
+    size_t height(BSTree * root);
+
+    BSTree * fallLeft();
+    BSTree * fallRight();
+
+    using iterator = BSTIterator< Key, T, Compare >;
+    using const_iterator = BSTConstIterator< Key, T, Compare >;
+  };
+
+  template< class Key, class T, class Compare >
+  struct BSTConstIterator {
+    BSTree< Key, T, Compare> * tree;
+
+    bool hasNext();
+    BSTConstIterator next();
+    T read();
+  };
+
+  template< class Key, class T, class Compare >
+  struct BSTIterator {
+    BSTree< Key, T, Compare> * tree;
+
+    bool hasNext();
+    BSTIterator next();
+    T read();
+    void write(Key key, T value);
+  };
+}
 
 template< class Key, class T, class Compare >
-struct BSTree {
-  BSTree * root;
-  BSTree * left, * right;
-  std::pair< Key, T > data;
-
-  void push(Key key, T value);
-  T get(Key key);
-  T drop(Key key);
-  BSTree *  remove(Key key);
-};
+khairullin::BSTree< Key, T, Compare >::BSTree(Key key, T value, BSTree * parent):
+data(std::make_pair(key, value)),
+parent(parent),
+left(nullptr),
+right(nullptr)
+{}
 
 template< class Key, class T, class Compare >
-void BSTree<Key, T, Compare>::push(Key key, T value)
+khairullin::BSTree< Key, T, Compare >::BSTree():
+parent(nullptr),
+left(nullptr),
+right(nullptr),
+data(std::make_pair(Key(), T()))
+{}
+
+template< class Key, class T, class Compare >
+void khairullin::BSTree<Key, T, Compare>::push(Key key, T value)
 {
-  BSTree * root = *this;
-  BSTree * parent = nullptr;
-  Compare less;
+  BSTree * root = this;
+  BSTree * par = nullptr;
   while (root) {
     Key yakey = root->data.first;
-    parent = root;
+    par = root;
     if (less(key, yakey)) {
       root = root->left;
     }
@@ -35,17 +88,18 @@ void BSTree<Key, T, Compare>::push(Key key, T value)
       throw std::logic_error("This key is already occupied");
     }
   }
+  BSTree * child = nullptr;
   try {
-    BSTree * child = new BSTree(key, value);
+    child = new BSTree(key, value, par);
   }
   catch (std::bad_alloc & e) {
     throw std::bad_alloc();
   }
-  if (less(key, parent->data.first)) {
-    parent->left = child;
+  if (less(key, par->data.first)) {
+    par->left = child;
   }
-  else if (less(parent->data.first, key)) {
-    parent->right = child;
+  else if (less(par->data.first, key)) {
+    par->right = child;
   }
   else {
     throw std::logic_error("This key is already occupied");
@@ -53,9 +107,9 @@ void BSTree<Key, T, Compare>::push(Key key, T value)
 }
 
 template< class Key, class T, class Compare >
-T BSTree<Key, T, Compare>::get(Key key)
+T khairullin::BSTree<Key, T, Compare>::get(Key key)
 {
-  BSTree * root = *this;
+  BSTree * root = this;
   while (root) {
     if (less(key, root->data.first)) {
       root = root->left;
@@ -73,9 +127,9 @@ T BSTree<Key, T, Compare>::get(Key key)
 }
 
 template< class Key, class T, class Compare >
-T BSTree<Key, T, Compare>::drop(Key key)
+T khairullin::BSTree<Key, T, Compare>::drop(Key key)
 {
-  BSTree * root = *this;
+  BSTree * root = this;
   T result = root->data.second;
   while (root) {
     if (less(key, root->data.first)) {
@@ -85,16 +139,76 @@ T BSTree<Key, T, Compare>::drop(Key key)
       root = root->right;
     }
     else {
+
       try {
         result = root->data.second;
       }
       catch (std::bad_alloc & e) {
         throw std::bad_alloc();
       }
-      root = remove(key);
+      BSTree * par = root->parent;
+      bool isLeft = false, isRight = false;
+      if (par->left == root) {
+        isLeft = true;
+      }
+      else if (par->right == root) {
+        isRight = true;
+      }
+
+      BSTree * lt = root->left;
+      BSTree * rt = root->right;
+
+      delete root;
+      if (isLeft) {
+        parent->left = rt;
+      }
+      else {
+        parent->right = rt;
+      }
+      rt->parent = parent;
+      auto newleft = rt->fallLeft();
+      newleft->left = lt;
     }
   }
   return result;
+}
+
+template< class Key, class T, class Compare >
+size_t khairullin::BSTree<Key, T, Compare>::height(BSTree * root)
+{
+  size_t hLeft = 1;
+  size_t hRight = 1;
+  auto lt = root->left;
+  auto rt = root->right;
+  while (lt) {
+    lt = lt->left;
+    hLeft += height(lt);
+  }
+  while (rt) {
+    rt = rt->right;
+    hRight += height(rt);
+  }
+  return std::max(hLeft, hRight);
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::fallLeft()
+{
+  BSTree * root = this;
+  while (root->left) {
+    root = root->left;
+  }
+  return root;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::fallRight()
+{
+  BSTree * root = this;
+  while (root->right) {
+    root = root->right;
+  }
+  return root;
 }
 
 #endif //BSTREE_H

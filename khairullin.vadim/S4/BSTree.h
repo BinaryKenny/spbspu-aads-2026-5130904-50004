@@ -3,6 +3,8 @@
 #include <utility>
 #include <stdexcept>
 
+#include "Compare.h"
+
 namespace khairullin {
 
   template< class Key, class T, class Compare >
@@ -139,35 +141,59 @@ T khairullin::BSTree<Key, T, Compare>::drop(Key key)
       root = root->right;
     }
     else {
-
       try {
         result = root->data.second;
       }
       catch (std::bad_alloc & e) {
         throw std::bad_alloc();
       }
-      BSTree * par = root->parent;
-      bool isLeft = false, isRight = false;
-      if (par->left == root) {
-        isLeft = true;
-      }
-      else if (par->right == root) {
-        isRight = true;
-      }
 
-      BSTree * lt = root->left;
-      BSTree * rt = root->right;
-
-      delete root;
-      if (isLeft) {
-        parent->left = rt;
+      if (root-left) {
+        auto exchange = root->left;
+        exchange = exchange->fallRight();
+        auto exchangeLeft = exchange->left;
+        std::swap(exchange->data, root->data);
+        if (root->left == exchange) {
+          delete exchange;
+          root->left = exchangeLeft;
+          exchangeLeft->parent = root;
+        }
+        else {
+          auto exchangeParent = exchange->parent;
+          delete exchange;
+          exchangeParent->right = exchangeLeft;
+          exchangeLeft->parent = exchangeParent;
+        }
+      }
+      else if (root->right) {
+        auto exchange = root->right;
+        exchange = exchange->fallLeft();
+        auto exchangeRight = exchange->right;
+        std::swap(exchange->data, root->data);
+        if (root->left == exchange) {
+          delete exchange;
+          root->right = exchangeRight;
+          exchangeRight->parent = root;
+        }
+        else {
+          auto exchangeParent = exchange->parent;
+          delete exchange;
+          exchangeParent->left = exchangeRight;
+          exchangeRight->parent = exchangeParent;
+        }
       }
       else {
-        parent->right = rt;
+        auto rootParent = root->parent;
+        if (rootParent) {
+          if (rootParent->left == root) {
+            rootParent->left = nullptr;
+          }
+          else {
+            rootParent->right = nullptr;
+          }
+        }
+        delete root;
       }
-      rt->parent = parent;
-      auto newleft = rt->fallLeft();
-      newleft->left = lt;
     }
   }
   return result;
@@ -176,19 +202,17 @@ T khairullin::BSTree<Key, T, Compare>::drop(Key key)
 template< class Key, class T, class Compare >
 size_t khairullin::BSTree<Key, T, Compare>::height(BSTree * root)
 {
-  size_t hLeft = 1;
-  size_t hRight = 1;
-  auto lt = root->left;
-  auto rt = root->right;
-  while (lt) {
-    lt = lt->left;
-    hLeft += height(lt);
+  if (root == nullptr) {
+    return 0;
   }
-  while (rt) {
-    rt = rt->right;
-    hRight += height(rt);
-  }
-  return std::max(hLeft, hRight);
+  return 1 + std::max(height(root->left), height(root->right));
+}
+
+template< class Key, class T, class Compare >
+size_t khairullin::BSTree<Key, T, Compare>::height()
+{
+  auto root = this;
+  return height(root);
 }
 
 template< class Key, class T, class Compare >

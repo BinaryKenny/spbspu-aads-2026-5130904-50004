@@ -13,10 +13,18 @@ namespace khairullin {
   struct BSTConstIterator;
 
   template< class Key, class T, class Compare >
+  using iterator = BSTIterator< Key, T, Compare >;
+  template< class Key, class T, class Compare >
+  using const_iterator = BSTConstIterator< Key, T, Compare >;
+
+  template< class Key, class T, class Compare >
   struct BSTree {
     BSTree * left, * right, * parent;
     std::pair< Key, T > data;
     Compare less;
+
+    using iterator = BSTIterator< Key, T, Compare >;
+    using const_iterator = BSTConstIterator< Key, T, Compare >;
 
     BSTree(Key key, T value, BSTree * parent);
     BSTree();
@@ -31,18 +39,16 @@ namespace khairullin {
 
     BSTree * fallLeft();
     BSTree * fallRight();
-    BSTree * rotateLeft(BSTree * root);
-    BSTree * rotateRight(BSTree * root);
-    BSTree * bigLeftRotate(BSTree * root);
-    BSTree * bigRightRotate(BSTree * root);
-
-    using iterator = BSTIterator< Key, T, Compare >;
-    using const_iterator = BSTConstIterator< Key, T, Compare >;
+    const_iterator rotateLeft(const_iterator it);
+    const_iterator rotateRight(const_iterator it);
+    const_iterator bigLeftRotate(const_iterator it);
+    const_iterator bigRightRotate(const_iterator it);
   };
 
   template< class Key, class T, class Compare >
   struct BSTConstIterator {
-    BSTree< Key, T, Compare> * tree;
+    BSTree< Key, T, Compare> * root;
+    BSTConstIterator(BSTree< Key, T, Compare > * root);
 
     bool hasNext();
     BSTConstIterator next();
@@ -51,7 +57,8 @@ namespace khairullin {
 
   template< class Key, class T, class Compare >
   struct BSTIterator {
-    BSTree< Key, T, Compare> * tree;
+    BSTree< Key, T, Compare> * root;
+    BSTIterator(BSTree< Key, T, Compare > * root);
 
     bool hasNext();
     BSTIterator next();
@@ -80,6 +87,9 @@ template< class Key, class T, class Compare >
 void khairullin::BSTree<Key, T, Compare>::push(Key key, T value)
 {
   BSTree * root = this;
+  if (!root) {
+    throw std::logic_error("<EMPTY>");
+  }
   BSTree * par = nullptr;
   while (root) {
     Key yakey = root->data.first;
@@ -116,6 +126,9 @@ template< class Key, class T, class Compare >
 T khairullin::BSTree<Key, T, Compare>::get(Key key)
 {
   BSTree * root = this;
+  if (!root) {
+    throw std::logic_error("<EMPTY>");
+  }
   while (root) {
     if (less(key, root->data.first)) {
       root = root->left;
@@ -136,6 +149,9 @@ template< class Key, class T, class Compare >
 T khairullin::BSTree<Key, T, Compare>::drop(Key key)
 {
   BSTree * root = this;
+  if (!root) {
+    throw std::logic_error("<EMPTY>");
+  }
   T result = root->data.second;
   while (root) {
     if (less(key, root->data.first)) {
@@ -244,49 +260,103 @@ khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::fallR
 }
 
 template< class Key, class T, class Compare >
-khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::rotateLeft(BSTree * root)
+khairullin::const_iterator<Key, T, Compare> khairullin::BSTree<Key, T, Compare>::rotateLeft(const_iterator it)
 {
-  BSTree * result = root->left;
+  BSTree * result = it.root->left;
   if (!result) {
-    return root;
+    return it.root;
   }
   BSTree * rt = result->right;
-  result->parent = root->parent;
-  root->parent = result;
-  result->right = root;
-  root->left = rt;
+  result->parent = it.root->parent;
+  it.root->parent = result;
+  result->right = it.root;
+  it.root->left = rt;
   return result;
 }
 
 template< class Key, class T, class Compare >
-khairullin::BSTree< Key, T, Compare> * khairullin::BSTree< Key, T, Compare>::rotateRight(BSTree * root)
+khairullin::const_iterator<Key, T, Compare> khairullin::BSTree< Key, T, Compare>::rotateRight(const_iterator it)
 {
-  BSTree * result = root->right;
+  BSTree * result = it.root->right;
   if (!result) {
-    return root;
+    return it.root;
   }
   BSTree * lt = result->left;
-  result->parent = root->parent;
-  root->parent = result;
-  result->left = root;
-  root->right = lt;
+  result->parent = it.root->parent;
+  it.root->parent = result;
+  result->left = it.root;
+  it.root->right = lt;
+  return const_iterator{result};
+}
+
+template< class Key, class T, class Compare >
+khairullin::const_iterator<Key, T, Compare> khairullin::BSTree< Key, T, Compare>::bigLeftRotate(const_iterator it)
+{
+  const_iterator result = it;
+  result = rotateRight(result);
+  result = rotateLeft(result);
   return result;
 }
 
 template< class Key, class T, class Compare >
-khairullin::BSTree< Key, T, Compare > * khairullin::BSTree< Key, T, Compare>::bigLeftRotate(BSTree * root)
+khairullin::const_iterator<Key, T, Compare> khairullin::BSTree< Key, T, Compare>::bigRightRotate(const_iterator it)
 {
-  root = rotateRight(root);
-  root = rotateLeft(root);
-  return root;
+  const_iterator result = it;
+  result = rotateLeft(result);
+  result = rotateRight(result);
+  return result;
 }
 
 template< class Key, class T, class Compare >
-khairullin::BSTree< Key, T, Compare > * khairullin::BSTree< Key, T, Compare>::bigRightRotate(BSTree * root)
+khairullin::BSTConstIterator<Key, T, Compare>::BSTConstIterator(BSTree<Key, T, Compare> * root):
+root(root)
+{}
+
+template< class Key, class T, class Compare >
+khairullin::const_iterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::next()
 {
-  root = rotateLeft(root);
-  root = rotateRight(root);
-  return root;
+  auto list = (*this).root;
+  auto original = list;
+  if (!list) {
+    throw std::out_of_range("Iterator was gone out");
+  }
+  if (list->right) {
+    list = list->right->fallLeft();
+    return const_iterator<Key, T, Compare>{list};
+  }
+  while (list && !list->less(original->data.first, list->data.first)) {
+    list = list->parent;
+  }
+  return const_iterator<Key, T, Compare>{list};
 }
 
+template< class Key, class T, class Compare >
+bool khairullin::BSTConstIterator<Key, T, Compare>::hasNext()
+{
+  return (*this).next().root;
+}
+
+template< class Key, class T, class Compare >
+khairullin::iterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::next()
+{
+  auto list = (*this).root;
+  auto original = list;
+  if (!list) {
+    throw std::out_of_range("Iterator was gone out");
+  }
+  if (list->right) {
+    list = list->right->fallLeft();
+    return iterator<Key, T, Compare>{list};
+  }
+  while (list && !list->less(original->data.first, list->data.first)) {
+    list = list->parent;
+  }
+  return iterator<Key, T, Compare>{list};
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTIterator<Key, T, Compare>::hasNext()
+{
+  return (*this).next().root;
+}
 #endif //BSTREE_H

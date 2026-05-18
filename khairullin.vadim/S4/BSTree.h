@@ -31,6 +31,10 @@ namespace khairullin {
 
     BSTree * fallLeft();
     BSTree * fallRight();
+    BSTree * rotateLeft(BSTree * root);
+    BSTree * rotateRight(BSTree * root);
+    BSTree * bigLeftRotate(BSTree * root);
+    BSTree * bigRightRotate(BSTree * root);
 
     using iterator = BSTIterator< Key, T, Compare >;
     using const_iterator = BSTConstIterator< Key, T, Compare >;
@@ -148,7 +152,7 @@ T khairullin::BSTree<Key, T, Compare>::drop(Key key)
         throw std::bad_alloc();
       }
 
-      if (root-left) {
+      if (root->left) {
         auto exchange = root->left;
         exchange = exchange->fallRight();
         auto exchangeLeft = exchange->left;
@@ -188,13 +192,17 @@ T khairullin::BSTree<Key, T, Compare>::drop(Key key)
           if (rootParent->left == root) {
             rootParent->left = nullptr;
           }
-          else {
+          else if (rootParent->right == root) {
             rootParent->right = nullptr;
           }
         }
         delete root;
+        return result;
       }
     }
+  }
+  if (root == nullptr) {
+    throw std::logic_error("No such element");
   }
   return result;
 }
@@ -232,6 +240,52 @@ khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::fallR
   while (root->right) {
     root = root->right;
   }
+  return root;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::rotateLeft(BSTree * root)
+{
+  BSTree * result = root->left;
+  if (!result) {
+    return root;
+  }
+  BSTree * rt = result->right;
+  result->parent = root->parent;
+  root->parent = result;
+  result->right = root;
+  root->left = rt;
+  return result;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree< Key, T, Compare> * khairullin::BSTree< Key, T, Compare>::rotateRight(BSTree * root)
+{
+  BSTree * result = root->right;
+  if (!result) {
+    return root;
+  }
+  BSTree * lt = result->left;
+  result->parent = root->parent;
+  root->parent = result;
+  result->left = root;
+  root->right = lt;
+  return result;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree< Key, T, Compare > * khairullin::BSTree< Key, T, Compare>::bigLeftRotate(BSTree * root)
+{
+  root = rotateRight(root);
+  root = rotateLeft(root);
+  return root;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree< Key, T, Compare > * khairullin::BSTree< Key, T, Compare>::bigRightRotate(BSTree * root)
+{
+  root = rotateLeft(root);
+  root = rotateRight(root);
   return root;
 }
 

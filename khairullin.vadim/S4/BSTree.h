@@ -32,7 +32,7 @@ namespace khairullin {
 
     void push(Key key, T value);
     T get(Key key);
-    T drop(Key key);
+    BSTree * drop(Key key);
 
     size_t height();
     size_t height(BSTree * root);
@@ -146,13 +146,10 @@ T khairullin::BSTree<Key, T, Compare>::get(Key key)
 }
 
 template< class Key, class T, class Compare >
-T khairullin::BSTree<Key, T, Compare>::drop(Key key)
+khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::drop(Key key)
 {
   BSTree * root = this;
-  if (!root) {
-    throw std::logic_error("<EMPTY>");
-  }
-  T result = root->data.second;
+  BSTree * tree = this;
   while (root) {
     if (less(key, root->data.first)) {
       root = root->left;
@@ -161,66 +158,129 @@ T khairullin::BSTree<Key, T, Compare>::drop(Key key)
       root = root->right;
     }
     else {
-      try {
-        result = root->data.second;
-      }
-      catch (std::bad_alloc & e) {
-        throw std::bad_alloc();
-      }
-
       if (root->left) {
-        auto exchange = root->left;
-        exchange = exchange->fallRight();
-        auto exchangeLeft = exchange->left;
-        std::swap(exchange->data, root->data);
-        if (root->left == exchange) {
-          delete exchange;
-          root->left = exchangeLeft;
-          exchangeLeft->parent = root;
-        }
-        else {
-          auto exchangeParent = exchange->parent;
-          delete exchange;
-          exchangeParent->right = exchangeLeft;
-          exchangeLeft->parent = exchangeParent;
-        }
-      }
-      else if (root->right) {
-        auto exchange = root->right;
-        exchange = exchange->fallLeft();
-        auto exchangeRight = exchange->right;
-        std::swap(exchange->data, root->data);
-        if (root->left == exchange) {
-          delete exchange;
-          root->right = exchangeRight;
-          exchangeRight->parent = root;
-        }
-        else {
-          auto exchangeParent = exchange->parent;
-          delete exchange;
-          exchangeParent->left = exchangeRight;
-          exchangeRight->parent = exchangeParent;
-        }
-      }
-      else {
-        auto rootParent = root->parent;
-        if (rootParent) {
-          if (rootParent->left == root) {
-            rootParent->left = nullptr;
+        auto instead = root->left->fallRight();
+        if (root->left == instead) {
+          instead->parent = root->parent;
+          if (!root->parent) {
+            tree = instead;
           }
-          else if (rootParent->right == root) {
-            rootParent->right = nullptr;
+          else if (root->parent->left == root) {
+            root->parent->left = instead;
           }
+          else if (root->parent->right == root) {
+            root->parent->right = instead;
+          }
+          root->parent = nullptr;
+          instead->right = root->right;
+          if (root->right) {
+            root->right->parent = instead;
+          }
+          root->left = nullptr;
+          root->right = nullptr;
+          delete root;
+          return tree;
+        }
+        auto lt = instead->left;
+        auto pr = instead->parent;
+        pr->right = lt;
+        if (lt) {
+          lt->parent = pr;
+        }
+        instead->parent = root->parent;
+        if (!root->parent) {
+          tree = instead;
+        }
+        else if (root->parent->left == root){
+          root->parent->left = instead;
+        }
+        else if (root->parent->right == root) {
+          root->parent->right = instead;
+        }
+        instead->right = root->right;
+        instead->left = root->left;
+        root->left = nullptr;
+        root->right = nullptr;
+        root->parent = nullptr;
+        instead->left->parent = instead;
+        if (instead->right) {
+          instead->right->parent = instead;
         }
         delete root;
-        return result;
+        return tree;
+      }
+      else if (root->right) {
+        auto instead = root->right->fallLeft();
+        if (root->right == instead) {
+          instead->parent = root->parent;
+          if (!root->parent) {
+            tree = instead;
+          }
+          else if (root->parent->left == root) {
+            root->parent->left = instead;
+          }
+          else if (root->parent->right == root) {
+            root->parent->right = instead;
+          }
+          root->parent = nullptr;
+          instead->left = root->left;
+          if (root->left) {
+            root->left->parent = instead;
+          }
+          root->left = nullptr;
+          root->right = nullptr;
+          delete root;
+          return tree;
+        }
+        auto rt = instead->right;
+        auto pr = instead->parent;
+        pr->left = rt;
+        if (rt) {
+          rt->parent = pr;
+        }
+        instead->parent = root->parent;
+        if (!root->parent) {
+          tree = instead;
+        }
+        else if (root->parent->left == root){
+          root->parent->left = instead;
+        }
+        else if (root->parent->right == root) {
+          root->parent->right = instead;
+        }
+        instead->right = root->right;
+        instead->left = root->left;
+        root->left = nullptr;
+        root->right = nullptr;
+        root->parent = nullptr;
+        instead->right->parent = instead;
+        if (instead->left) {
+          instead->left->parent = instead;
+        }
+        delete root;
+        return tree;
+      }
+      else {
+        if (root->parent) {
+          if (root->parent->left == root) {
+            root->parent->left = nullptr;
+          }
+          else {
+            root->parent->right = nullptr;
+          }
+          delete root;
+          return tree;
+        }
+        else {
+          return root;
+        }
       }
     }
   }
   if (root == nullptr) {
     throw std::logic_error("No such element");
   }
-  return result;
+  return tree;
 }
 
 template< class Key, class T, class Compare >

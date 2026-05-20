@@ -391,6 +391,12 @@ khairullin::const_iterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T,
 }
 
 template< class Key, class T, class Compare >
+T khairullin::BSTConstIterator<Key, T, Compare>::read()
+{
+  return root->data.second;
+}
+
+template< class Key, class T, class Compare >
 bool khairullin::BSTConstIterator<Key, T, Compare>::hasNext()
 {
   return (*this).next().root;
@@ -412,6 +418,19 @@ khairullin::iterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::
     list = list->parent;
   }
   return iterator<Key, T, Compare>{list};
+}
+
+template< class Key, class T, class Compare >
+T khairullin::BSTIterator<Key, T, Compare>::read()
+{
+  return root->data.second;
+}
+
+template< class Key, class T, class Compare >
+void khairullin::BSTIterator<Key, T, Compare>::write(Key key, T value)
+{
+  std::pair< Key, T > newData = std::make_pair(key, value);
+  std::swap(root->data, newData);
 }
 
 template< class Key, class T, class Compare >

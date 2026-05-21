@@ -459,6 +459,9 @@ template< class Key, class T, class Compare >
 khairullin::BSTConstIterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::begin()
 {
   BSTree< Key, T, Compare > * list = (*this).root;
+  while (list->parent) {
+    list = list->parent;
+  }
   list = list->fallLeft();
   return const_iterator<Key, T, Compare>{list};
 }
@@ -467,6 +470,9 @@ template< class Key, class T, class Compare >
 khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::begin()
 {
   BSTree< Key, T, Compare > * list = (*this).root;
+  while (list->parent) {
+    list = list->parent;
+  }
   list = list->fallLeft();
   return iterator<Key, T, Compare>{list};
 }
@@ -475,6 +481,9 @@ template< class Key, class T, class Compare >
 khairullin::BSTConstIterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::end()
 {
   BSTree< Key, T, Compare > * list = (*this).root;
+  while (list->parent) {
+    list = list->parent;
+  }
   list = list->fallRight();
   return const_iterator<Key, T, Compare>{list};
 }
@@ -483,6 +492,9 @@ template< class Key, class T, class Compare >
 khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::end()
 {
   BSTree< Key, T, Compare > * list = (*this).root;
+  while (list->parent) {
+    list = list->parent;
+  }
   list = list->fallRight();
   return iterator<Key, T, Compare>{list};
 }
@@ -502,7 +514,7 @@ bool khairullin::BSTConstIterator<Key, T, Compare>::has(Key key)
 template< class Key, class T, class Compare >
 bool khairullin::BSTConstIterator<Key, T, Compare>::exists()
 {
-  return root;
+  return root != nullptr;
 }
 
 template< class Key, class T, class Compare >
@@ -514,7 +526,7 @@ khairullin::BSTree<Key, T, Compare> * khairullin::BSTConstIterator<Key, T, Compa
 template< class Key, class T, class Compare >
 bool khairullin::BSTIterator<Key, T, Compare>::exists()
 {
-  return root;
+  return root != nullptr;
 }
 
 template< class Key, class T, class Compare >

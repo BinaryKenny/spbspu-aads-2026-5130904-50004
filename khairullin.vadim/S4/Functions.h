@@ -18,7 +18,7 @@ namespace khairullin {
       return token;
     }
     new_start += 2;
-    for (size_t i = new_start; i < line.length() && line[i] != '\0'; i++) {
+    for (size_t i = new_start; i < line.length() && (line[i] != '\0' && line[i] != '\n'); i++) {
       result += line[i];
     }
     line = result;

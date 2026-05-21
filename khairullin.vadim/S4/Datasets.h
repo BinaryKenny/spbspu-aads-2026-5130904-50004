@@ -96,7 +96,7 @@ std::pair< bool, size_t > khairullin::Datasets::hasDataset(std::string name)
 void khairullin::Datasets::print(std::istream & is)
 {
   std::string name = "";
-  is >> name;
+  std::getline(is, name);
   auto info = hasDataset(name);
   if (name.empty() || !info.first) {
     throw std::logic_error("<INVALID COMMAND>");
@@ -138,18 +138,33 @@ void khairullin::Datasets::complement(std::istream & is)
   BSTIterator< size_t, std::string, Compare< size_t > > iterator(tree);
   BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree1(tree1);
   BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree2(tree2);
+  auto root_tree1 = iter_tree1;
+  auto root_tree2 = iter_tree2;
   iter_tree1 = iter_tree1.begin();
   iter_tree2 = iter_tree2.begin();
-  while (iter_tree1.exists() && iter_tree2.exists()) {
+  while (iter_tree1.exists()) {
     std::pair< size_t, std::string > data = iter_tree1.read();
     size_t key = data.first;
-    if (iter_tree2.has(key)) {
+    if (root_tree2.has(key)) {
+      iter_tree1 = iter_tree1.next();
       continue;
     }
     iterator = iterator.write(key, data.second);
+    iter_tree1 = iter_tree1.next();
+  }
+  while (iter_tree2.exists()) {
+    std::pair< size_t, std::string > data = iter_tree2.read();
+    size_t key = data.first;
+    if (root_tree1.has(key)) {
+      iter_tree2 = iter_tree2.next();
+      continue;
+    }
+    iterator = iterator.write(key, data.second);
+    iter_tree2 = iter_tree2.next();
   }
   addDataset(newSet, *iterator);
 }
+
 
 
 #endif //DATASETS_H

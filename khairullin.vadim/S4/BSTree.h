@@ -33,6 +33,7 @@ namespace khairullin {
     void push(Key key, T value);
     T get(Key key);
     BSTree * drop(Key key);
+    bool has(Key key);
 
     size_t height();
     size_t height(BSTree * root);
@@ -49,21 +50,42 @@ namespace khairullin {
   struct BSTConstIterator {
     BSTree< Key, T, Compare> * root;
     BSTConstIterator(BSTree< Key, T, Compare > * root);
+    BSTConstIterator(const BSTConstIterator & iter);
+    BSTConstIterator & operator=(const BSTConstIterator & iter);
+
+
+    BSTConstIterator(BSTIterator<Key, T, Compare> iter);
+    BSTConstIterator & operator=(BSTIterator<Key, T, Compare> * iter);
 
     bool hasNext();
     BSTConstIterator next();
-    T read();
+    BSTConstIterator begin();
+    BSTConstIterator end();
+    std::pair< Key, T > read();
+    bool has(Key key);
+    bool exists();
+    BSTree< Key, T, Compare > * operator*();
   };
 
   template< class Key, class T, class Compare >
   struct BSTIterator {
     BSTree< Key, T, Compare> * root;
     BSTIterator(BSTree< Key, T, Compare > * root);
+    BSTIterator(const BSTIterator & iter);
+    BSTIterator & operator=(const BSTIterator & iter);
+
+    BSTIterator(BSTConstIterator<Key, T, Compare> iter);
+    BSTIterator & operator=(BSTConstIterator<Key, T, Compare> * iter);
 
     bool hasNext();
     BSTIterator next();
-    T read();
-    void write(Key key, T value);
+    BSTIterator begin();
+    BSTIterator end();
+    std::pair< Key, T > read();
+    BSTIterator write(Key key, T value);
+    bool has(Key key);
+    bool exists();
+    BSTree< Key, T, Compare > * operator*();
   };
 }
 
@@ -86,10 +108,7 @@ data(std::make_pair(Key(), T()))
 template< class Key, class T, class Compare >
 void khairullin::BSTree<Key, T, Compare>::push(Key key, T value)
 {
-  BSTree * root = this;
-  if (!root) {
-    throw std::logic_error("<EMPTY>");
-  }
+  auto root = this;
   BSTree * par = nullptr;
   while (root) {
     Key yakey = root->data.first;
@@ -284,6 +303,24 @@ khairullin::BSTree<Key, T, Compare> * khairullin::BSTree<Key, T, Compare>::drop(
 }
 
 template< class Key, class T, class Compare >
+bool khairullin::BSTree<Key, T, Compare>::has(Key key)
+{
+  BSTree * tree = this;
+  while (tree) {
+    if (less(tree->data.first, key)) {
+      tree = tree->right;
+    }
+    else if (less(key, tree->data.first)) {
+      tree = tree->left;
+    }
+    else {
+      return true;
+    }
+  }
+  return false;
+}
+
+template< class Key, class T, class Compare >
 size_t khairullin::BSTree<Key, T, Compare>::height(BSTree * root)
 {
   if (root == nullptr) {
@@ -373,6 +410,34 @@ root(root)
 {}
 
 template< class Key, class T, class Compare >
+khairullin::BSTConstIterator<Key, T, Compare>::BSTConstIterator(const BSTConstIterator & iter):
+root(iter.root)
+{}
+
+template< class Key, class T, class Compare >
+khairullin::BSTConstIterator<Key, T, Compare> & khairullin::BSTConstIterator<Key, T, Compare>::
+operator=(const BSTConstIterator & iter)
+{
+  auto temp(iter);
+  std::swap(root, temp.root);
+  return *this;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTConstIterator<Key, T, Compare>::BSTConstIterator(BSTIterator<Key, T, Compare> iter):
+root(iter.root)
+{}
+
+template< class Key, class T, class Compare >
+khairullin::BSTConstIterator<Key, T, Compare> & khairullin::BSTConstIterator<Key, T, Compare>::
+operator=(BSTIterator<Key, T, Compare> * iter)
+{
+  auto temp(iter);
+  std::swap(root, temp.root);
+  return *this;
+}
+
+template< class Key, class T, class Compare >
 khairullin::const_iterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::next()
 {
   auto list = (*this).root;
@@ -391,9 +456,77 @@ khairullin::const_iterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T,
 }
 
 template< class Key, class T, class Compare >
-T khairullin::BSTConstIterator<Key, T, Compare>::read()
+khairullin::BSTConstIterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::begin()
 {
-  return root->data.second;
+  BSTree< Key, T, Compare > * list = (*this).root;
+  list = list->fallLeft();
+  return const_iterator<Key, T, Compare>{list};
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::begin()
+{
+  BSTree< Key, T, Compare > * list = (*this).root;
+  list = list->fallLeft();
+  return iterator<Key, T, Compare>{list};
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTConstIterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::end()
+{
+  BSTree< Key, T, Compare > * list = (*this).root;
+  list = list->fallRight();
+  return const_iterator<Key, T, Compare>{list};
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::end()
+{
+  BSTree< Key, T, Compare > * list = (*this).root;
+  list = list->fallRight();
+  return iterator<Key, T, Compare>{list};
+}
+
+template< class Key, class T, class Compare >
+std::pair< Key, T > khairullin::BSTConstIterator<Key, T, Compare>::read()
+{
+  return root->data;
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTConstIterator<Key, T, Compare>::has(Key key)
+{
+  return root->has(key);
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTConstIterator<Key, T, Compare>::exists()
+{
+  return root;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree<Key, T, Compare> * khairullin::BSTConstIterator<Key, T, Compare>::operator*()
+{
+  return root;
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTIterator<Key, T, Compare>::exists()
+{
+  return root;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTree<Key, T, Compare> * khairullin::BSTIterator<Key, T, Compare>::operator*()
+{
+  return root;
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTIterator<Key, T, Compare>::has(Key key)
+{
+  return root->has(key);
 }
 
 template< class Key, class T, class Compare >
@@ -421,16 +554,60 @@ khairullin::iterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::
 }
 
 template< class Key, class T, class Compare >
-T khairullin::BSTIterator<Key, T, Compare>::read()
+std::pair< Key, T > khairullin::BSTIterator<Key, T, Compare>::read()
 {
-  return root->data.second;
+  return root->data;
 }
 
 template< class Key, class T, class Compare >
-void khairullin::BSTIterator<Key, T, Compare>::write(Key key, T value)
+khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::write(Key key, T value)
 {
-  std::pair< Key, T > newData = std::make_pair(key, value);
-  std::swap(root->data, newData);
+  if (root == nullptr) {
+    try {
+      root = new BSTree< Key, T, Compare >{key, value, nullptr};
+    }
+    catch (...) {
+      std::bad_alloc;
+    }
+  }
+  else {
+    root->push(key, value);
+  }
+  return iterator<Key, T, Compare>{root};
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTIterator<Key, T, Compare>::BSTIterator(BSTree<Key, T, Compare> * root):
+root(root)
+{}
+
+template< class Key, class T, class Compare >
+khairullin::BSTIterator<Key, T, Compare>::BSTIterator(const BSTIterator & iter):
+root(iter.root)
+{}
+
+template< class Key, class T, class Compare >
+khairullin::BSTIterator< Key, T, Compare> &
+  khairullin::BSTIterator<Key, T, Compare>::operator=(const BSTIterator<Key, T, Compare> & iter)
+{
+  auto temp(iter);
+  std::swap(root, temp.root);
+  return *this;
+}
+
+template< class Key, class T, class Compare >
+khairullin::BSTIterator<Key, T, Compare>::BSTIterator(BSTConstIterator<Key, T, Compare> iter):
+root(iter.root)
+{}
+
+
+template< class Key, class T, class Compare >
+khairullin::BSTIterator<Key, T, Compare> & khairullin::BSTIterator<Key, T, Compare>::operator=(
+    BSTConstIterator<Key, T, Compare> * iter)
+{
+  auto temp(iter);
+  std::swap(root, temp.root);
+  return *this;
 }
 
 template< class Key, class T, class Compare >

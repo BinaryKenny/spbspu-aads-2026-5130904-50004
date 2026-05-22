@@ -649,4 +649,4 @@ bool khairullin::BSTIterator<Key, T, Compare>::hasNext()
 {
   return (*this).next().root;
 }
-#endif //BSTREE_H
+#endif

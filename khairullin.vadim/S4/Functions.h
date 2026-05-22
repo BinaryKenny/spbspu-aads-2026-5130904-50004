@@ -25,4 +25,4 @@ namespace khairullin {
     return token;
   }
 }
-#endif //FUNCTIONS_H
+#endif

@@ -258,6 +258,4 @@ void khairullin::Datasets::union_set(std::string & line)
   }
   addDataset(newSet, *iterator);
 }
-
-
-#endif //DATASETS_H
+#endif

@@ -2,9 +2,8 @@
 #define FUNCTIONS_H
 #include <string>
 
-
 namespace khairullin {
-  std::string getToken(std::string & line)
+  inline std::string getToken(std::string & line)
   {
     std::string token = "";
     std::string result = "";

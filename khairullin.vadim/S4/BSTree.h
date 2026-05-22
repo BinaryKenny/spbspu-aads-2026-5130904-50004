@@ -54,6 +54,8 @@ namespace khairullin {
     BSTConstIterator(const BSTConstIterator & iter);
     BSTConstIterator & operator=(const BSTConstIterator & iter);
 
+    bool operator==(const BSTConstIterator & other);
+    bool operator!=(const BSTConstIterator & other);
 
     BSTConstIterator(BSTIterator<Key, T, Compare> iter);
     BSTConstIterator & operator=(BSTIterator<Key, T, Compare> * iter);
@@ -77,6 +79,9 @@ namespace khairullin {
 
     BSTIterator(BSTConstIterator<Key, T, Compare> iter);
     BSTIterator & operator=(BSTConstIterator<Key, T, Compare> * iter);
+
+    bool operator==(const BSTIterator & other);
+    bool operator!=(const BSTIterator & other);
 
     bool hasNext();
     BSTIterator next();
@@ -371,7 +376,7 @@ khairullin::const_iterator<Key, T, Compare> khairullin::BSTree<Key, T, Compare>:
   it.root->parent = result;
   result->right = it.root;
   it.root->left = rt;
-  return result;
+  return const_iterator{result};
 }
 
 template< class Key, class T, class Compare >
@@ -395,7 +400,7 @@ khairullin::const_iterator<Key, T, Compare> khairullin::BSTree< Key, T, Compare>
   const_iterator result = it;
   result = rotateRight(result);
   result = rotateLeft(result);
-  return result;
+  return const_iterator{result};
 }
 
 template< class Key, class T, class Compare >
@@ -404,7 +409,7 @@ khairullin::const_iterator<Key, T, Compare> khairullin::BSTree< Key, T, Compare>
   const_iterator result = it;
   result = rotateLeft(result);
   result = rotateRight(result);
-  return result;
+  return const_iterator{result};
 }
 
 template< class Key, class T, class Compare >
@@ -424,6 +429,18 @@ operator=(const BSTConstIterator & iter)
   auto temp(iter);
   std::swap(root, temp.root);
   return *this;
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTConstIterator<Key, T, Compare>::operator==(const BSTConstIterator & other)
+{
+  return root == other.root;
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTConstIterator<Key, T, Compare>::operator!=(const BSTConstIterator & other)
+{
+  return !(*this == other);
 }
 
 template< class Key, class T, class Compare >
@@ -483,23 +500,13 @@ khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare
 template< class Key, class T, class Compare >
 khairullin::BSTConstIterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::end()
 {
-  BSTree< Key, T, Compare > * list = (*this).root;
-  while (list->parent) {
-    list = list->parent;
-  }
-  list = list->fallRight();
-  return const_iterator<Key, T, Compare>{list};
+  return const_iterator<Key, T, Compare>{nullptr};
 }
 
 template< class Key, class T, class Compare >
 khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::end()
 {
-  BSTree< Key, T, Compare > * list = (*this).root;
-  while (list->parent) {
-    list = list->parent;
-  }
-  list = list->fallRight();
-  return iterator<Key, T, Compare>{list};
+  return iterator<Key, T, Compare>{nullptr};
 }
 
 template< class Key, class T, class Compare >
@@ -623,6 +630,18 @@ khairullin::BSTIterator<Key, T, Compare> & khairullin::BSTIterator<Key, T, Compa
   auto temp(iter);
   std::swap(root, temp.root);
   return *this;
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTIterator<Key, T, Compare>::operator==(const BSTIterator & other)
+{
+  return root == other.root;
+}
+
+template< class Key, class T, class Compare >
+bool khairullin::BSTIterator<Key, T, Compare>::operator!=(const BSTIterator & other)
+{
+  return !(*this == other);
 }
 
 template< class Key, class T, class Compare >

@@ -126,8 +126,9 @@ void khairullin::Datasets::print(std::string & line)
   }
   auto iterator = BSTIterator< size_t, std::string, Compare< size_t > >{tree};
   iterator = iterator.begin();
+  auto endIterator = iterator.end();
   std::cout << vectorOfDatasets[info.second].first;
-  while (iterator.root) {
+  while (iterator != endIterator) {
     std::pair < size_t, std::string > data = iterator.read();
     std::cout << " " << data.first << " " << data.second;
     iterator = iterator.next();
@@ -159,7 +160,9 @@ void khairullin::Datasets::complement(std::string & line)
   auto root_tree2 = iter_tree2;
   iter_tree1 = iter_tree1.begin();
   iter_tree2 = iter_tree2.begin();
-  while (iter_tree1.exists()) {
+  auto endIterator1 = iter_tree1.end();
+  auto endIterator2 = iter_tree2.end();
+  while (iter_tree1 != endIterator1) {
     std::pair< size_t, std::string > data = iter_tree1.read();
     size_t key = data.first;
     if (root_tree2.has(key)) {
@@ -169,7 +172,7 @@ void khairullin::Datasets::complement(std::string & line)
     iterator = iterator.write(key, data.second);
     iter_tree1 = iter_tree1.next();
   }
-  while (iter_tree2.exists()) {
+  while (iter_tree2 != endIterator2) {
     std::pair< size_t, std::string > data = iter_tree2.read();
     size_t key = data.first;
     if (root_tree1.has(key)) {
@@ -203,7 +206,8 @@ void khairullin::Datasets::intersect(std::string & line)
   BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree1(tree1);
   BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree2(tree2);
   iter_tree1 = iter_tree1.begin();
-  while (iter_tree1.exists()) {
+  auto endIterator = iter_tree1.end();
+  while (iter_tree1 != endIterator) {
     std::pair< size_t, std::string > data = iter_tree1.read();
     if (iter_tree2.has(data.first)) {
       iterator = iterator.write(data.first, data.second);
@@ -236,12 +240,14 @@ void khairullin::Datasets::union_set(std::string & line)
   auto root_tree1 = iter_tree1;
   iter_tree1 = iter_tree1.begin();
   iter_tree2 = iter_tree2.begin();
-  while (iter_tree1.exists()) {
+  auto endIterator1 = iter_tree1.end();
+  auto endIterator2 = iter_tree2.end();
+  while (iter_tree1 != endIterator1) {
     std::pair< size_t, std::string > data = iter_tree1.read();
     iterator = iterator.write(data.first, data.second);
     iter_tree1 = iter_tree1.next();
   }
-  while (iter_tree2.exists()) {
+  while (iter_tree2 != endIterator2) {
     std::pair< size_t, std::string > data = iter_tree2.read();
     if (root_tree1.has(data.first)) {
       iter_tree2 = iter_tree2.next();

@@ -10,6 +10,16 @@ commands(new BSTree< std::string, func_t, Compare< std::string > >())
   commands->push("union", &Datasets::union_set);
 }
 
+khairullin::Datasets::~Datasets()
+{
+  commands->clear(commands);
+  for (size_t i = 0; i < vectorOfDatasets.getSize(); i++) {
+    if (vectorOfDatasets[i].second) {
+      vectorOfDatasets[i].second->clear(vectorOfDatasets[i].second);
+    }
+  }
+}
+
 void khairullin::Datasets::function(std::string & line)
 {
   std::string functionName = getToken(line);

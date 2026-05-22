@@ -35,6 +35,7 @@ namespace khairullin {
     T get(Key key);
     BSTree * drop(Key key);
     bool has(Key key);
+    void clear(BSTree * root);
 
     size_t height();
     size_t height(BSTree * root);
@@ -331,6 +332,21 @@ bool khairullin::BSTree<Key, T, Compare>::has(Key key)
 }
 
 template< class Key, class T, class Compare >
+void khairullin::BSTree<Key, T, Compare>::clear(BSTree * root)
+{
+  if (!root) {
+    return;
+  }
+  if (root->left) {
+    clear(root->left);
+  }
+  if (root->right) {
+    clear(root->right);
+  }
+  delete root;
+}
+
+template< class Key, class T, class Compare >
 size_t khairullin::BSTree<Key, T, Compare>::height(BSTree * root)
 {
   if (root == nullptr) {
@@ -481,6 +497,9 @@ template< class Key, class T, class Compare >
 khairullin::BSTConstIterator<Key, T, Compare> khairullin::BSTConstIterator<Key, T, Compare>::begin()
 {
   BSTree< Key, T, Compare > * list = (*this).root;
+  if (!list) {
+    return const_iterator<Key, T, Compare>{list};
+  }
   while (list->parent) {
     list = list->parent;
   }
@@ -492,6 +511,9 @@ template< class Key, class T, class Compare >
 khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare>::begin()
 {
   BSTree< Key, T, Compare > * list = (*this).root;
+  if (!list) {
+    return const_iterator<Key, T, Compare>{list};
+  }
   while (list->parent) {
     list = list->parent;
   }
@@ -520,6 +542,9 @@ std::pair< Key, T > khairullin::BSTConstIterator<Key, T, Compare>::read()
 template< class Key, class T, class Compare >
 bool khairullin::BSTConstIterator<Key, T, Compare>::has(Key key)
 {
+  if (!root) {
+    return false;
+  }
   return root->has(key);
 }
 
@@ -550,6 +575,9 @@ khairullin::BSTree<Key, T, Compare> * khairullin::BSTIterator<Key, T, Compare>::
 template< class Key, class T, class Compare >
 bool khairullin::BSTIterator<Key, T, Compare>::has(Key key)
 {
+  if (!root) {
+    return false;
+  }
   return root->has(key);
 }
 

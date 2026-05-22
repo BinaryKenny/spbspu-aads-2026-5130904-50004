@@ -12,7 +12,7 @@ namespace khairullin {
     BSTree< std::string, func_t, Compare< std::string > > * commands;
 
     Datasets();
-    ~Datasets() = default;
+    ~Datasets();
 
     void function(std::string & line);
 

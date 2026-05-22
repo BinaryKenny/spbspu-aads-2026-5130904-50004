@@ -7,7 +7,7 @@ __attribute__((weak)) int main(int argc, char * argv[]);
 #include "GraphSystem.h"
 #include <sstream>
 
-BOOST_AUTO_TEST_SUITE (main_test)
+BOOST_AUTO_TEST_CASE(main_test)
 {
   khairullin::HashTable< int, std::string, khairullin::Hash, khairullin::Equal< std::pair< int,
         std::string > > > hashTable;

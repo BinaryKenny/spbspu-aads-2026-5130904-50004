@@ -57,8 +57,13 @@ void khairullin::GraphSystem::func(std::string & line)
 
 void khairullin::GraphSystem::graphs(std::string & line)
 {
-  for (size_t i = 0; i < vectorOfGraphs.getSize(); i++) {
-    std::cout << vectorOfGraphs[i].name << "\n";
+  if (line.empty()) {
+    for (size_t i = 0; i < vectorOfGraphs.getSize(); i++) {
+      std::cout << vectorOfGraphs[i].name << "\n";
+    }
+  }
+  else {
+    throw std::logic_error("<INVALID COMMAND>");
   }
 }
 
@@ -244,7 +249,7 @@ void khairullin::GraphSystem::merge(std::string & line)
     throw std::logic_error("<INVALID COMMAND>");
   }
   Graph result;
-  Graph & gr1 = vectorOfGraphs[infoGraph1.second];;
+  //Graph & gr1 = vectorOfGraphs[infoGraph1.second];
   Graph & gr2 = vectorOfGraphs[infoGraph2.second];
   try {
     result = vectorOfGraphs[infoGraph1.second];

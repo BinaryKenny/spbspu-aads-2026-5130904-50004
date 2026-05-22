@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include "HashTable.h"
+#include <iostream>
 
 namespace khairullin {
   struct Graph {
@@ -149,4 +150,10 @@ void khairullin::Graph::addVertex(const std::string & vert)
   }
 }
 
+namespace khairullin {
+  std::ostream& operator<<(std::ostream& os, const Graph& g) {
+    os << g.name;
+    return os;
+  }
+}
 #endif

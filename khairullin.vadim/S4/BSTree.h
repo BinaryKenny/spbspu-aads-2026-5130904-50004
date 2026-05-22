@@ -145,6 +145,7 @@ template< class Key, class T, class Compare >
 T khairullin::BSTree<Key, T, Compare>::get(Key key)
 {
   BSTree * root = this;
+  T result = root->data.second;
   if (!root) {
     throw std::logic_error("<EMPTY>");
   }
@@ -162,6 +163,7 @@ T khairullin::BSTree<Key, T, Compare>::get(Key key)
   if (!root) {
     throw std::logic_error("No such element");
   }
+  return result;
 }
 
 template< class Key, class T, class Compare >
@@ -579,7 +581,7 @@ khairullin::BSTIterator<Key, T, Compare> khairullin::BSTIterator<Key, T, Compare
       root = new BSTree< Key, T, Compare >{key, value, nullptr};
     }
     catch (...) {
-      std::bad_alloc;
+      throw std::bad_alloc();
     }
   }
   else {

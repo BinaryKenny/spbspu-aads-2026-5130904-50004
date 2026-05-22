@@ -7,39 +7,58 @@
 namespace khairullin {
   struct Datasets {
     Vector< std::pair<std::string, BSTree< size_t, std::string, Compare< size_t > > * > > vectorOfDatasets;
-    using func_t = void(Datasets::*)(std::istream &);
-    BSTree< std::string, func_t, Compare< std::string > > commands;
+    using func_t = void(Datasets::*)(std::string & line);
+    BSTree< std::string, func_t, Compare< std::string > > * commands;
 
     Datasets();
     ~Datasets() = default;
 
-    void function(std::istream &);
+    void function(std::string & line);
 
-    void addDataset(std::istream &);
+    void addDataset(std::istream & file);
     void addDataset(std::string name, BSTree< size_t, std::string, Compare< size_t > > * tree);
     std::pair< bool, size_t > hasDataset(std::string name);
 
-    void print(std::istream &);
-    void complement(std::istream &);
-    void intersect(std::istream &);
-    void union_set(std::istream &);
+    void print(std::string & line);
+    void complement(std::string & line);
+    void intersect(std::string & line);
+    void union_set(std::string & line);
 
   };
 }
 
 khairullin::Datasets::Datasets():
 vectorOfDatasets(Vector< std::pair< std::string, BSTree< size_t, std::string, Compare< size_t > > * > >()),
-commands(BSTree< std::string, func_t, Compare< std::string > >())
-{}
+commands(new BSTree< std::string, func_t, Compare< std::string > >())
+{
+  commands->push("print", &Datasets::print);
+  commands->push("complement", &Datasets::complement);
+  commands->push("intersect", &Datasets::intersect);
+  commands->push("union", &Datasets::union_set);
+}
+
+void khairullin::Datasets::function(std::string & line)
+{
+  std::string functionName = "";
+  functionName = getToken(line);
+  func_t function = nullptr;
+  try {
+    function = commands->get(functionName);
+  }
+  catch (...) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  (this->*function)(line);
+}
 
 void khairullin::Datasets::addDataset(std::istream & file)
 {
   std::string line = "";
   std::getline(file, line);
-  std::string name = getToken(line);
-  if (name == "") {
-    throw std::logic_error("<INVALID COMMAND>");
+  if (line.empty()) {
+    return;
   }
+  std::string name = getToken(line);
   BSTree< size_t, std::string, Compare< size_t > > * tree = nullptr;
   std::string str_key = getToken(line);
   std::string value = getToken(line);
@@ -93,10 +112,9 @@ std::pair< bool, size_t > khairullin::Datasets::hasDataset(std::string name)
   return std::make_pair(false, 0);
 }
 
-void khairullin::Datasets::print(std::istream & is)
+void khairullin::Datasets::print(std::string & line)
 {
-  std::string name = "";
-  std::getline(is, name);
+  std::string name = getToken(line);
   auto info = hasDataset(name);
   if (name.empty() || !info.first) {
     throw std::logic_error("<INVALID COMMAND>");
@@ -116,10 +134,8 @@ void khairullin::Datasets::print(std::istream & is)
   std::cout << "\n";
 }
 
-void khairullin::Datasets::complement(std::istream & is)
+void khairullin::Datasets::complement(std::string & line)
 {
-  std::string line = "";
-  std::getline(is, line);
   std::string newSet = getToken(line);
   std::string first = getToken(line);
   std::string second = getToken(line);
@@ -165,10 +181,8 @@ void khairullin::Datasets::complement(std::istream & is)
   addDataset(newSet, *iterator);
 }
 
-void khairullin::Datasets::intersect(std::istream & is)
+void khairullin::Datasets::intersect(std::string & line)
 {
-  std::string line = "";
-  std::getline(is, line);
   std::string newSet = getToken(line);
   std::string firstName = getToken(line);
   std::string secondName = getToken(line);
@@ -198,10 +212,8 @@ void khairullin::Datasets::intersect(std::istream & is)
   addDataset(newSet, *iterator);
 }
 
-void khairullin::Datasets::union_set(std::istream & is)
+void khairullin::Datasets::union_set(std::string & line)
 {
-  std::string line = "";
-  std::getline(is, line);
   std::string newSet = getToken(line);
   std::string firstName = getToken(line);
   std::string secondName = getToken(line);

@@ -164,6 +164,8 @@ void khairullin::Datasets::complement(std::string & line)
     iter_tree2 = iter_tree2.next();
   }
   if (infoNewSet.first) {
+    auto root = vectorOfDatasets[infoNewSet.second].second;
+    root->clear(root);
     vectorOfDatasets[infoNewSet.second].second = *iterator;
   }
   else {
@@ -201,6 +203,8 @@ void khairullin::Datasets::intersect(std::string & line)
     iter_tree1 = iter_tree1.next();
   }
   if (infoNewSet.first) {
+    auto root = vectorOfDatasets[infoNewSet.second].second;
+    root->clear(root);
     vectorOfDatasets[infoNewSet.second].second = *iterator;
   }
   else{
@@ -248,6 +252,8 @@ void khairullin::Datasets::union_set(std::string & line)
     iter_tree2 = iter_tree2.next();
   }
   if (infoNewSet.first) {
+    auto root = vectorOfDatasets[infoNewSet.second].second;
+    root->clear(root);
     vectorOfDatasets[infoNewSet.second].second = *iterator;
   }
   else{

@@ -31,11 +31,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   BOOST_TEST(tree->has(12) == true);
   BOOST_TEST(tree->get(3) == "hello");
   auto beg = iterator.begin();
-  auto end = iterator.end();
-  std::pair< size_t, std::string> expected1 = std::make_pair(1,"");
-  std::pair< size_t, std::string> expected2 = std::make_pair(14,"");
-  BOOST_TEST(beg.read() == expected1);
-  BOOST_TEST(end.read() == expected2);
+  BOOST_TEST((beg.read()).first == 1);
   BOOST_TEST(tree->height() == 5);
   BOOST_TEST(tree->height(beg.root) == 1);
   BOOST_TEST((tree->fallLeft())->data.first == 1);

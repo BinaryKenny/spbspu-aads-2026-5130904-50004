@@ -12,8 +12,7 @@ commands(new BSTree< std::string, func_t, Compare< std::string > >())
 
 void khairullin::Datasets::function(std::string & line)
 {
-  std::string functionName = "";
-  functionName = getToken(line);
+  std::string functionName = getToken(line);
   func_t function = nullptr;
   try {
     function = commands->get(functionName);
@@ -35,7 +34,7 @@ void khairullin::Datasets::addDataset(std::istream & file)
   BSTree< size_t, std::string, Compare< size_t > > * tree = nullptr;
   std::string str_key = getToken(line);
   std::string value = getToken(line);
-  if (str_key == "" || value == "") {
+  if (str_key.empty() || value.empty()) {
     vectorOfDatasets.pushBack(std::make_pair(name, tree));
     return;
   }
@@ -119,7 +118,7 @@ void khairullin::Datasets::complement(std::string & line)
   auto infoFirst = hasDataset(first);
   auto infoSecond = hasDataset(second);
   auto infoNewSet = hasDataset(newSet);
-  if (!infoFirst.first || !infoSecond.first || infoNewSet.first) {
+  if (!infoFirst.first || !infoSecond.first) {
     throw std::logic_error("<INVALID COMMAND>");
   }
   BSTree< size_t, std::string, Compare< size_t > > * tree = nullptr;
@@ -154,7 +153,12 @@ void khairullin::Datasets::complement(std::string & line)
     iterator = iterator.write(key, data.second);
     iter_tree2 = iter_tree2.next();
   }
-  addDataset(newSet, *iterator);
+  if (infoNewSet.first) {
+    vectorOfDatasets[infoNewSet.second].second = *iterator;
+  }
+  else {
+    addDataset(newSet, *iterator);
+  }
 }
 
 void khairullin::Datasets::intersect(std::string & line)
@@ -168,7 +172,7 @@ void khairullin::Datasets::intersect(std::string & line)
   auto infoFirst = hasDataset(firstName);
   auto infoSecond = hasDataset(secondName);
   auto infoNewSet = hasDataset(newSet);
-  if (!infoFirst.first || !infoSecond.first || infoNewSet.first) {
+  if (!infoFirst.first || !infoSecond.first) {
     throw std::logic_error("<INVALID COMMAND>");
   }
   BSTree< size_t, std::string, Compare< size_t > > * tree = nullptr;
@@ -186,7 +190,12 @@ void khairullin::Datasets::intersect(std::string & line)
     }
     iter_tree1 = iter_tree1.next();
   }
-  addDataset(newSet, *iterator);
+  if (infoNewSet.first) {
+    vectorOfDatasets[infoNewSet.second].second = *iterator;
+  }
+  else{
+    addDataset(newSet, *iterator);
+  }
 }
 
 void khairullin::Datasets::union_set(std::string & line)
@@ -200,7 +209,7 @@ void khairullin::Datasets::union_set(std::string & line)
   auto infoFirst = hasDataset(firstName);
   auto infoSecond = hasDataset(secondName);
   auto infoNewSet = hasDataset(newSet);
-  if (!infoFirst.first || !infoSecond.first || infoNewSet.first) {
+  if (!infoFirst.first || !infoSecond.first) {
     throw std::logic_error("<INVALID COMMAND>");
   }
   BSTree< size_t, std::string, Compare< size_t > > * tree = nullptr;
@@ -228,5 +237,10 @@ void khairullin::Datasets::union_set(std::string & line)
     iterator = iterator.write(data.first, data.second);
     iter_tree2 = iter_tree2.next();
   }
-  addDataset(newSet, *iterator);
+  if (infoNewSet.first) {
+    vectorOfDatasets[infoNewSet.second].second = *iterator;
+  }
+  else{
+    addDataset(newSet, *iterator);
+  }
 }

@@ -1,4 +1,5 @@
 #include "Datasets.h"
+#include "Datasets.cpp"
 #include <iostream>
 #include <fstream>
 int main(int argc, char ** argv)

@@ -26,5 +26,7 @@ namespace khairullin {
     void cutEdge(const std::string & vert1, const std::string & vert2, size_t weight);
     void addVertex(const std::string & vert);
   };
+
+  std::ostream & operator<<(std::ostream & os, const Graph & g);
 }
 #endif

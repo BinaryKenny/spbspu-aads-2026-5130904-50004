@@ -122,9 +122,7 @@ void khairullin::Graph::addVertex(const std::string & vert)
   }
 }
 
-namespace khairullin {
-  std::ostream& operator<<(std::ostream& os, const Graph& g) {
-    os << g.name;
-    return os;
-  }
+std::ostream& khairullin::operator<<(std::ostream& os, const Graph& g) {
+  os << g.name;
+  return os;
 }

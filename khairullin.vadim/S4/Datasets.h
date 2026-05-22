@@ -68,11 +68,11 @@ void khairullin::Datasets::addDataset(std::istream & file)
     }
     try {
       key = std::stoi(str_key);
+      tree->push(key, value);
     }
     catch (...) {
       throw std::logic_error("<INVALID COMMAND>");
     }
-    tree->push(key, value);
   }
   vectorOfDatasets.pushBack(std::make_pair(name, tree));
 }
@@ -165,6 +165,80 @@ void khairullin::Datasets::complement(std::istream & is)
   addDataset(newSet, *iterator);
 }
 
+void khairullin::Datasets::intersect(std::istream & is)
+{
+  std::string line = "";
+  std::getline(is, line);
+  std::string newSet = getToken(line);
+  std::string firstName = getToken(line);
+  std::string secondName = getToken(line);
+  if (newSet.empty() || firstName.empty() || secondName.empty()) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  auto infoFirst = hasDataset(firstName);
+  auto infoSecond = hasDataset(secondName);
+  auto infoNewSet = hasDataset(newSet);
+  if (!infoFirst.first || !infoSecond.first || infoNewSet.first) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  BSTree< size_t, std::string, Compare< size_t > > * tree = nullptr;
+  auto tree1 = vectorOfDatasets[infoFirst.second].second;
+  auto tree2 = vectorOfDatasets[infoSecond.second].second;
+  BSTIterator< size_t, std::string, Compare< size_t > > iterator(tree);
+  BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree1(tree1);
+  BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree2(tree2);
+  iter_tree1 = iter_tree1.begin();
+  while (iter_tree1.exists()) {
+    std::pair< size_t, std::string > data = iter_tree1.read();
+    if (iter_tree2.has(data.first)) {
+      iterator = iterator.write(data.first, data.second);
+    }
+    iter_tree1 = iter_tree1.next();
+  }
+  addDataset(newSet, *iterator);
+}
+
+void khairullin::Datasets::union_set(std::istream & is)
+{
+  std::string line = "";
+  std::getline(is, line);
+  std::string newSet = getToken(line);
+  std::string firstName = getToken(line);
+  std::string secondName = getToken(line);
+  if (newSet.empty() || firstName.empty() || secondName.empty()) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  auto infoFirst = hasDataset(firstName);
+  auto infoSecond = hasDataset(secondName);
+  auto infoNewSet = hasDataset(newSet);
+  if (!infoFirst.first || !infoSecond.first || infoNewSet.first) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  BSTree< size_t, std::string, Compare< size_t > > * tree = nullptr;
+  auto tree1 = vectorOfDatasets[infoFirst.second].second;
+  auto tree2 = vectorOfDatasets[infoSecond.second].second;
+  BSTIterator< size_t, std::string, Compare< size_t > > iterator(tree);
+  BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree1(tree1);
+  BSTConstIterator< size_t, std::string, Compare< size_t > > iter_tree2(tree2);
+  auto root_tree1 = iter_tree1;
+  iter_tree1 = iter_tree1.begin();
+  iter_tree2 = iter_tree2.begin();
+  while (iter_tree1.exists()) {
+    std::pair< size_t, std::string > data = iter_tree1.read();
+    iterator = iterator.write(data.first, data.second);
+    iter_tree1 = iter_tree1.next();
+  }
+  while (iter_tree2.exists()) {
+    std::pair< size_t, std::string > data = iter_tree2.read();
+    if (root_tree1.has(data.first)) {
+      iter_tree2 = iter_tree2.next();
+      continue;
+    }
+    iterator = iterator.write(data.first, data.second);
+    iter_tree2 = iter_tree2.next();
+  }
+  addDataset(newSet, *iterator);
+}
 
 
 #endif //DATASETS_H

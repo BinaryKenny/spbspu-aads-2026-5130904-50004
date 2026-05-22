@@ -9,7 +9,7 @@ __attribute__((weak)) int main(int argc, char * argv[]);
 
 using namespace khairullin;
 
-BOOST_AUTO_TEST_SUITE (main_test)
+BOOST_AUTO_TEST_CASE(main_test)
 {
   khairullin::BSTree< size_t, std::string, khairullin::Compare< size_t > > * tree =
     new khairullin::BSTree< size_t, std::string,

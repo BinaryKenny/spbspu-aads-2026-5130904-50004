@@ -97,18 +97,20 @@ namespace khairullin {
 
 template< class Key, class T, class Compare >
 khairullin::BSTree< Key, T, Compare >::BSTree(Key key, T value, BSTree * parent):
-data(std::make_pair(key, value)),
-parent(parent),
 left(nullptr),
-right(nullptr)
+right(nullptr),
+parent(parent),
+data(std::make_pair(key, value)),
+less(Compare())
 {}
 
 template< class Key, class T, class Compare >
 khairullin::BSTree< Key, T, Compare >::BSTree():
-parent(nullptr),
 left(nullptr),
 right(nullptr),
-data(std::make_pair(Key(), T()))
+parent(nullptr),
+data(std::make_pair(Key(), T())),
+less(Compare())
 {}
 
 template< class Key, class T, class Compare >

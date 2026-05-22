@@ -2,6 +2,7 @@
 #define BSTREE_H
 #include <utility>
 #include <stdexcept>
+#include <algorithm>
 
 #include "Compare.h"
 

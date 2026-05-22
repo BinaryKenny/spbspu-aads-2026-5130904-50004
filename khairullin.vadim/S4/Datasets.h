@@ -3,6 +3,7 @@
 #include "BSTree.h"
 #include "Vector.h"
 #include "Functions.h"
+#include <iostream>
 
 namespace khairullin {
   struct Datasets {

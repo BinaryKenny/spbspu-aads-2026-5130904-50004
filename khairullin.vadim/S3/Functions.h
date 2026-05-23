@@ -10,7 +10,7 @@ namespace khairullin {
     std::string token = "";
     std::string result = "";
     size_t new_start = 0;
-    for (size_t i = 0; i < line.length() && (line[i] != ' ' || line[i] != '\r'); i++) {
+    for (size_t i = 0; i < line.length() && line[i] != ' ' && line[i] != '\r' && line[i] != '\n'; i++) {
       token += line[i];
       new_start = i;
     }
@@ -19,7 +19,7 @@ namespace khairullin {
       return token;
     }
     new_start += 2;
-    for (size_t i = new_start; i < line.length() && (line[i] != '\0' && line[i] != '\r'); i++) {
+    for (size_t i = new_start; i < line.length() && line[i] != '\0' && line[i] != '\r' && line[i] != '\n'; i++) {
       result += line[i];
     }
     line = result;

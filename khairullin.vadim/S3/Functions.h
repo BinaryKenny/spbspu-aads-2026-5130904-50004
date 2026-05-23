@@ -9,16 +9,17 @@ namespace khairullin {
   {
     std::string token = "";
     std::string result = "";
-    size_t i = 0;
-    for (; i < line.length() && line[i] != ' ' && line[i] != '\n'; i++) {
+    size_t new_start = 0;
+    for (size_t i = 0; i < line.length() && line[i] != ' ' && line[i] != '\n'; i++) {
       token += line[i];
+      new_start = i;
     }
-    if (i >= line.length()) {
-      line.clear();
+    if (new_start == line.length() - 1) {
+      line = result;
       return token;
     }
-    i++;
-    for (; i < line.length() && line[i] != '\n' && line[i] != '\r'; i++) {
+    new_start += 2;
+    for (size_t i = new_start; i < line.length() && (line[i] != '\0' && line[i] != '\n'); i++) {
       result += line[i];
     }
     line = result;

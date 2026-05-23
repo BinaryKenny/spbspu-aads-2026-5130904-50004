@@ -1,6 +1,4 @@
 #include "Hash.h"
-#include <boost/hash2/hmac.hpp>
-#include <boost/hash2/sha2.hpp>
 
 size_t khairullin::Hash::operator()(const std::string & key) const {
   static const std::string secret_key = "Sipulka";

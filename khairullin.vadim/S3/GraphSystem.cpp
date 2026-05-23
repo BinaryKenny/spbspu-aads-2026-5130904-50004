@@ -198,27 +198,12 @@ void khairullin::GraphSystem::create(std::string & line)
   }
   Graph graph(nameGraph);
   for (size_t i = 0; i < count; i++) {
-    std::string vertex1 = getToken(line);
-    std::string vertex2 = getToken(line);
-    std::string weight = getToken(line);
-    size_t w = 0;
+    std::string vertex = getToken(line);
     try {
-      w = std::stoi(weight);
-    }
-    catch (...) {
-      throw std::logic_error("<INVALID COMMAND>");
-    }
-    try {
-      if (vertex1 == "" || vertex2 == "") {
+      if (vertex == "") {
         throw std::logic_error("<INVALID COMMAND>");
       }
-      if (!graph.hasVertex(vertex1).first) {
-        graph.addVertex(vertex1);
-      }
-      if (!graph.hasVertex(vertex2).first) {
-        graph.addVertex(vertex2);
-      }
-      graph.addEdge(vertex1, vertex2, w);
+      graph.addVertex(vertex);
     } catch (std::logic_error & e) {
       throw std::logic_error("<INVALID COMMAND>");
     }

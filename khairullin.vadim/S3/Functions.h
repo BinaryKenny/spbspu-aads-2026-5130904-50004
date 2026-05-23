@@ -7,10 +7,6 @@
 namespace khairullin {
   inline std::string getToken(std::string & line)
   {
-    if (line == " " || line == "\n" || line == "\0") {
-      line = "";
-      return line;
-    }
     std::string token = "";
     std::string result = "";
     size_t new_start = 0;

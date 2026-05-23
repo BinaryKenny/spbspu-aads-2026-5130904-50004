@@ -82,9 +82,7 @@ void khairullin::GraphSystem::outbound(std::string & line)
     throw std::logic_error("<INVALID COMMAND>");
   }
   size_t count = graph.vertexes.getSize();
-  if (count == 0) {
-    std::cout << "\n";
-  }
+  size_t outputed = 0;
   for (size_t i = 0; i < count; i++) {
     if (!graph.hasConnection(vertex, graph.vertexes[i])) {
       continue;
@@ -95,11 +93,17 @@ void khairullin::GraphSystem::outbound(std::string & line)
     } catch (...) {
       throw std::bad_alloc();
     }
+    if (weights.getSize() != 0) {
+      outputed++;
+    }
     sortVector(weights);
     std::cout << graph.vertexes[i];
     for (size_t j = 0; j < weights.getSize(); j++) {
       std::cout << " " << weights[j];
     }
+    std::cout << "\n";
+  }
+  if (outputed == 0) {
     std::cout << "\n";
   }
 }

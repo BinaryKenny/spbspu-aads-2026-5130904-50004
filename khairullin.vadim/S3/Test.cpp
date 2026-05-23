@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   BOOST_TEST(graph.hasConnection("a", "b") == false);
 
   khairullin::GraphSystem system;
-  std::string command = "graph1 4 a b c d";
+  std::string command = "graph1 4 a b c d\n";
   system.create(command);
   BOOST_TEST(system.vectorOfGraphs.getSize() == 1);
   khairullin::Graph testGraph("graph1");

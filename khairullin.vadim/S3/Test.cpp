@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   std::stringstream stream;
   std::streambuf * buffer = std::cout.rdbuf(stream.rdbuf());
   system.graphs(null);
-  BOOST_TEST(stream.str() == "graph1");
+  BOOST_TEST(stream.str() == "graph1\n");
   stream.str(null);
   stream.clear();
   std::string temp = "graph1";
@@ -85,6 +85,8 @@ BOOST_AUTO_TEST_CASE(main_test)
   std::string mergeTemp = "gr3 graph1 gr2";
   system.merge(mergeTemp);
   std::string gr3 = "gr3";
+  stream.str("");
+  stream.clear();
   system.vertexes(gr3);
   BOOST_TEST(stream.str() == "a\nb\nc\nd\ne\n");
   std::cout.rdbuf(buffer);

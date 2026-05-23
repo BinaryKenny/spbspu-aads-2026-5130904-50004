@@ -1,9 +1,6 @@
 #include <iostream>
 #include "GraphSystem.h"
 #include "fstream"
-#include "GraphSystem.cpp"
-#include "Hash.cpp"
-#include "Graph.cpp"
 
 int main(int argc, char ** argv)
 {

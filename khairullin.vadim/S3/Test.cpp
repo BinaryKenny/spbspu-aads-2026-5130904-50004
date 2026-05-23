@@ -64,7 +64,8 @@ BOOST_AUTO_TEST_CASE(main_test)
   std::string boundTemp = "graph1 a";
   stream.clear();
   system.outbound(boundTemp);
-  BOOST_TEST(stream.str() == null);
+  std::string n = "\n";
+  BOOST_TEST(stream.str() == n);
   stream.str(null);
   stream.clear();
   boundTemp = "graph1 a";

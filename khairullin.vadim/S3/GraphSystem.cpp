@@ -22,7 +22,12 @@ void khairullin::GraphSystem::func(std::string & line)
   std::string function = getToken(line);
   auto methods = functions.drop(function);
   func_t method = nullptr;
-  method = methods[0];
+  if (methods.getSize() > 0) {
+    method = methods[0];
+  }
+  else {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
   (this->*method)(line);
 }
 
@@ -220,7 +225,6 @@ void khairullin::GraphSystem::merge(std::string & line)
     throw std::logic_error("<INVALID COMMAND>");
   }
   Graph result;
-  //Graph & gr1 = vectorOfGraphs[infoGraph1.second];
   Graph & gr2 = vectorOfGraphs[infoGraph2.second];
   try {
     result = vectorOfGraphs[infoGraph1.second];

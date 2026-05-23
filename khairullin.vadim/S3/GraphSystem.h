@@ -13,6 +13,7 @@ namespace khairullin {
     functions;
 
     GraphSystem();
+    ~GraphSystem() = default;
 
     void func(std::string & line);
     std::pair< bool, size_t > graphExists(std::string & name);

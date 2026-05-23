@@ -4,8 +4,8 @@
 
 int main(int argc, char ** argv)
 {
-  if (argc == 1) {
-    std::cerr << "No file\n";
+  if (argc != 1) {
+    std::cerr << "No file or too many arguments\n";
     return 1;
   }
   const char * filename = argv[1];

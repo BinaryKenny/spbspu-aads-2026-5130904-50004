@@ -81,7 +81,11 @@ void khairullin::GraphSystem::outbound(std::string & line)
   if (!infoVertex.first) {
     throw std::logic_error("<INVALID COMMAND>");
   }
-  for (size_t i = 0; i < graph.vertexes.getSize(); i++) {
+  size_t count = graph.vertexes.getSize();
+  if (count == 0) {
+    std::cout << "\n";
+  }
+  for (size_t i = 0; i < count; i++) {
     if (!graph.hasConnection(vertex, graph.vertexes[i])) {
       continue;
     }

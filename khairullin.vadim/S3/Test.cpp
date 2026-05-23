@@ -51,19 +51,25 @@ BOOST_AUTO_TEST_CASE(main_test)
   BOOST_TEST(system.vectorOfGraphs[0] == testGraph);
   std::stringstream stream;
   std::streambuf * buffer = std::cout.rdbuf(stream.rdbuf());
-  system.graphs(command);
+  system.graphs("");
   BOOST_TEST(stream.str() == "graph1");
+  stream.str("");
   stream.clear();
-  std::string temp = "";
+  std::string temp = "graph1";
   system.vertexes(temp);
   BOOST_TEST(stream.str() == "a\nb\nc\nd\n");
+  stream.str("");
+  stream.clear();
   std::string boundTemp = "graph1 a";
   stream.clear();
   system.outbound(boundTemp);
   BOOST_TEST(stream.str() == "");
-  system.inbound(boundTemp);
+  stream.str("");
   stream.clear();
+  system.inbound(boundTemp);
   BOOST_TEST(stream.str() == "");
+  stream.str("");
+  stream.clear();
 
   std::string bindTemp = "graph1 a b 100";
   system.bind(bindTemp);

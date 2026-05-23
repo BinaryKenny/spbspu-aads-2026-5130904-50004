@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   BOOST_TEST(graph.hasConnection("a", "b") == false);
 
   khairullin::GraphSystem system;
-  std::string command = "graph1 4 a b c d\n";
+  std::string command = "graph1 4 a b c d";
   system.create(command);
   BOOST_TEST(system.vectorOfGraphs.getSize() == 1);
   khairullin::Graph testGraph("graph1");
@@ -67,6 +67,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   BOOST_TEST(stream.str() == null);
   stream.str(null);
   stream.clear();
+  boundTemp = "graph1 a";
   system.inbound(boundTemp);
   BOOST_TEST(stream.str() == null);
   stream.str(null);
@@ -75,6 +76,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   std::string bindTemp = "graph1 a b 100";
   system.bind(bindTemp);
   BOOST_TEST(system.vectorOfGraphs[0].hasConnection("a", "b") == true);
+  bindTemp = "graph1 a b 100";
   system.cut(bindTemp);
   BOOST_TEST(system.vectorOfGraphs[0].hasConnection("a", "b") == false);
 

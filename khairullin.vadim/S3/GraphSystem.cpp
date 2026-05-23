@@ -31,15 +31,10 @@ void khairullin::GraphSystem::func(std::string & line)
   (this->*method)(line);
 }
 
-void khairullin::GraphSystem::graphs(std::string & line)
+void khairullin::GraphSystem::graphs(std::string & )
 {
-  if (line.empty()) {
-    for (size_t i = 0; i < vectorOfGraphs.getSize(); i++) {
-      std::cout << vectorOfGraphs[i].name << "\n";
-    }
-  }
-  else {
-    throw std::logic_error("<INVALID COMMAND>");
+  for (size_t i = 0; i < vectorOfGraphs.getSize(); i++) {
+    std::cout << vectorOfGraphs[i].name << "\n";
   }
 }
 
@@ -144,6 +139,13 @@ void khairullin::GraphSystem::bind(std::string & line)
   std::string Vertex2 = getToken(line);
   size_t weight = 0;
   auto infoGraph = graphExists(graph);
+  Graph & gr = vectorOfGraphs[infoGraph.second];
+  if (!gr.hasVertex(Vertex1).first) {
+    gr.addVertex(Vertex1);
+  }
+  if (!gr.hasVertex(Vertex2).first) {
+    gr.addVertex(Vertex2);
+  }
   if (!infoGraph.first) {
     throw std::logic_error("<INVALID COMMAND>");
   }
@@ -196,12 +198,27 @@ void khairullin::GraphSystem::create(std::string & line)
   }
   Graph graph(nameGraph);
   for (size_t i = 0; i < count; i++) {
-    std::string vertex = getToken(line);
+    std::string vertex1 = getToken(line);
+    std::string vertex2 = getToken(line);
+    std::string weight = getToken(line);
+    size_t w = 0;
     try {
-      if (vertex == "") {
+      w = std::stoi(weight);
+    }
+    catch (...) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    try {
+      if (vertex1 == "" || vertex2 == "") {
         throw std::logic_error("<INVALID COMMAND>");
       }
-      graph.addVertex(vertex);
+      if (!graph.hasVertex(vertex1).first) {
+        graph.addVertex(vertex1);
+      }
+      if (!graph.hasVertex(vertex2).first) {
+        graph.addVertex(vertex2);
+      }
+      graph.addEdge(vertex1, vertex2, w);
     } catch (std::logic_error & e) {
       throw std::logic_error("<INVALID COMMAND>");
     }

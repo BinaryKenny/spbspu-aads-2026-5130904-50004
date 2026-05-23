@@ -2,7 +2,7 @@
 __attribute__((weak)) int main(int argc, char * argv[]);
 #endif
 
-#define BOOST_TEST_MODULE S2
+#define BOOST_TEST_MODULE S4
 #include <boost/test/included/unit_test.hpp>
 #include "GraphSystem.h"
 #include <sstream>

@@ -6,11 +6,13 @@ size_t khairullin::Hash::operator()(const std::string & key) const {
       reinterpret_cast<const unsigned char*>(secret_key.data()),
       secret_key.size());
   hmac.update(reinterpret_cast<const unsigned char*>(key.data()), key.size());
-  unsigned char digest[32];
-  boost::hash2::get_digest(hmac.result(), digest);
+  auto result = hmac.result();
   size_t hash = 0;
-  for (int i = 0; i < sizeof(size_t) && i < 32; ++i) {
-    hash = (hash << 8) | digest[i];
+  // Если result имеет метод data() (Boost ≥1.84)
+  const unsigned char* bytes = result.data();
+  size_t len = result.size();
+  for (size_t i = 0; i < std::min(sizeof(size_t), len); ++i) {
+    hash = (hash << 8) | bytes[i];
   }
   return hash;
 }

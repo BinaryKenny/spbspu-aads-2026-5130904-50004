@@ -490,7 +490,7 @@ T khairullin::Vector< T >::min()
 template< class T >
 std::pair< bool, size_t > khairullin::Vector< T >::has(const T & value)
 {
-  for (size_t i = 0; i < size_ - 1; i++) {
+  for (size_t i = 0; i < size_; i++) {
     if (data[i] == value) {
       return std::make_pair(true, i);
     }

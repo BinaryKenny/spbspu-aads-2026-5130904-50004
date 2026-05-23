@@ -11,10 +11,9 @@ int main(int argc, char ** argv)
   const char * filename = argv[1];
   std::ifstream input(filename);
   khairullin::Vector< std::string > lines;
-  while (input) {
-    std::string line = "";
-    std::getline(input, line);
-    if (line != "") {
+  std::string line = "";
+  while (std::getline(input, line)) {
+    if (!line.empty()) {
       try {
         lines.pushBack(line);
       } catch (const std::bad_alloc & error) {

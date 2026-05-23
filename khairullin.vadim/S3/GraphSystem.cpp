@@ -22,7 +22,7 @@ void khairullin::GraphSystem::func(std::string & line)
   std::string function = getToken(line);
   auto methods = functions.drop(function);
   func_t method = nullptr;
-  if (methods.getSize() > 0) {
+  if (!methods.isEmpty()) {
     method = methods[0];
   }
   else {

@@ -36,6 +36,9 @@ void khairullin::GraphSystem::graphs(std::string & )
   for (size_t i = 0; i < vectorOfGraphs.getSize(); i++) {
     std::cout << vectorOfGraphs[i].name << "\n";
   }
+  if (vectorOfGraphs.getSize() == 0) {
+    std::cout << "\n";
+  }
 }
 
 std::pair< bool, size_t > khairullin::GraphSystem::graphExists(std::string & name)
@@ -55,7 +58,11 @@ void khairullin::GraphSystem::vertexes(std::string & line)
     throw std::logic_error("<INVALID COMMAND>");
   }
   Graph graph = vectorOfGraphs[result.second];
-  for (size_t i = 0; i < graph.vertexes.getSize(); i++) {
+  size_t count = graph.vertexes.getSize();
+  if (count == 0) {
+    std::cout << "\n";
+  }
+  for (size_t i = 0; i < count; i++) {
     std::cout << graph.vertexes[i] << "\n";
   }
 }
@@ -68,12 +75,7 @@ void khairullin::GraphSystem::outbound(std::string & line)
   if (!index.first) {
     throw std::logic_error("<INVALID COMMAND>");
   }
-  Graph graph;
-  try {
-    graph = vectorOfGraphs[index.second];
-  } catch (std::bad_alloc & e) {
-    throw std::bad_alloc();
-  }
+  Graph & graph = vectorOfGraphs[index.second];
 
   std::pair< bool, size_t > infoVertex = graph.hasVertex(vertex);
   if (!infoVertex.first) {
@@ -106,13 +108,11 @@ void khairullin::GraphSystem::inbound(std::string & line)
   if (!index.first) {
     throw std::logic_error("<INVALID COMMAND>");
   }
-  Graph graph;
-  try {
-    graph = vectorOfGraphs[index.second];
-  } catch (std::bad_alloc & e) {
-    throw std::bad_alloc();
+  Graph & graph = vectorOfGraphs[index.second];
+  auto infoVertex = graph.hasVertex(vertex);
+  if (!infoVertex.first) {
+    throw std::logic_error("<INVALID COMMAND>");
   }
-
   for (size_t i = 0; i < graph.vertexes.getSize(); i++) {
     if (!graph.hasConnection(graph.vertexes[i], vertex)) {
       continue;

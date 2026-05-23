@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   BOOST_TEST(system.vectorOfGraphs[0] == testGraph);
   std::stringstream stream;
   std::streambuf * buffer = std::cout.rdbuf(stream.rdbuf());
-  system.graphs("");
+  system.graphs(null);
   BOOST_TEST(stream.str() == "graph1");
   stream.str(null);
   stream.clear();

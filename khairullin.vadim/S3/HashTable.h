@@ -47,7 +47,8 @@ template< class T, class Key, class Hash, class Equal >
 khairullin::HashTable< T, Key, Hash, Equal >::HashTable(size_t size):
   table(Vector< List< std::pair< T, Key > > * >(size, nullptr)),
   equal(Equal()),
-  hasher(Hash())
+  hasher(Hash()),
+  size(size)
 {}
 
 template< class T, class Key, class Hash, class Equal >

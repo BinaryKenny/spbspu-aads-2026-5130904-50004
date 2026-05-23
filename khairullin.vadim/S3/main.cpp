@@ -12,7 +12,7 @@ int main(int argc, char ** argv)
   std::ifstream input(filename);
   khairullin::Vector< std::string > lines;
   std::string line = "";
-  while (std::getline(input, line)) {
+  while (std::getline(input, line, '\r')) {
     if (!line.empty()) {
       try {
         lines.pushBack(line);

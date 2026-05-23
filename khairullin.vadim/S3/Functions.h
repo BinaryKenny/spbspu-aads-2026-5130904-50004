@@ -10,7 +10,7 @@ namespace khairullin {
     std::string token = "";
     std::string result = "";
     size_t i = 0;
-    for (; i < line.length() && line[i] != ' ' && line[i] != '\n' && line[i] != '\r'; i++) {
+    for (; i < line.length() && line[i] != ' ' && line[i] != '\n'; i++) {
       token += line[i];
     }
     if (i >= line.length()) {

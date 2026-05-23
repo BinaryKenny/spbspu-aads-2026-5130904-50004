@@ -22,7 +22,7 @@ void khairullin::GraphSystem::func(std::string & line)
   std::string function = getToken(line);
   auto methods = functions.drop(function);
   func_t method = nullptr;
-  if (!methods.isEmpty()) {
+  if (methods.getSize() == 1) {
     method = methods[0];
   }
   else {
@@ -139,6 +139,9 @@ void khairullin::GraphSystem::bind(std::string & line)
   std::string Vertex2 = getToken(line);
   size_t weight = 0;
   auto infoGraph = graphExists(graph);
+  if (!infoGraph.first) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
   Graph & gr = vectorOfGraphs[infoGraph.second];
   if (!gr.hasVertex(Vertex1).first) {
     gr.addVertex(Vertex1);

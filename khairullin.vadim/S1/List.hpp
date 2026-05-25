@@ -6,7 +6,7 @@
 
 namespace khairullin{
 
-    template< class T >
+  template< class T >
   struct ConstListIterator;
   template< class T >
   struct ListIterator;

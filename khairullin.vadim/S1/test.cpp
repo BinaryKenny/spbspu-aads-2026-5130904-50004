@@ -3,17 +3,17 @@
 #include "List.hpp"
 BOOST_AUTO_TEST_CASE(List_test)
 {
-  khairullin::List< int > list;
-  list.addBegin(6);
-  list.addBegin(7);
-  list.addEnd(89);
-  list.addBegin(10);
-  list.addBegin(20);
-  list.addBegin(30);
-  list.addEnd(1321);
+  khairullin::List< int > intList;
+  intList.addBegin(6);
+  intList.addBegin(7);
+  intList.addEnd(89);
+  intList.addBegin(10);
+  intList.addBegin(20);
+  intList.addBegin(30);
+  intList.addEnd(1321);
 
-  auto iter = list.begin();
-  auto citer = list.cbegin();
+  auto iter = intList.begin();
+  auto citer = intList.cbegin();
   BOOST_TEST(*iter == *citer);
   BOOST_TEST(*iter == 30);
   iter++;
@@ -21,18 +21,18 @@ BOOST_AUTO_TEST_CASE(List_test)
   iter++;
   BOOST_TEST(*iter == 39);
 
-  khairullin::List< int > otherList(list);
-  BOOST_TEST(list == otherList);
+  khairullin::List< int > otherList(intList);
+  BOOST_TEST(intList == otherList);
   otherList.clear();
 
-  otherList = list;
-  BOOST_TEST(list == otherList);
+  otherList = intList;
+  BOOST_TEST(intList == otherList);
 
-  khairullin::List< int > copy(std::move(list));
-  BOOST_TEST(list == copy);
+  khairullin::List< int > copy(std::move(intList));
+  BOOST_TEST(intList == copy);
   copy.clear();
-  copy = std::move(list);
-  BOOST_TEST(list == copy);
+  copy = std::move(intList);
+  BOOST_TEST(intList == copy);
 }
 
 BOOST_AUTO_TEST_CASE(List_test2)
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(List_test2)
   BOOST_TEST(list1 == list2);
 
   list1.cut(7);
-  BOOST_TEST(*(list.begin()) == 6);
+  BOOST_TEST(*(list1.begin()) == 6);
 
   list1.addEnd(2143);
   list1.addEnd(2144);

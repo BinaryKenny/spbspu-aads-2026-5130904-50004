@@ -22,16 +22,16 @@ namespace khairullin{
     void addBegin(const T &val);
     void addEnd(const T &val);
     void insert(const T &val, const T &after);
-    void cut(const T &val);
+    void cut(const T & val);
     void clear();
-    ConstListIterator< T > сbegin() const;
-    ConstListIterator< T > сend() const;
+    ConstListIterator< T > cbegin() const;
+    ConstListIterator< T > cend() const;
     ListIterator< T > begin() const;
     ListIterator< T > end() const;
     void swap(List &other);
     void show();
     private:
-      Node< T > *fake = static_cast< Node< T > * >(::operator new[](sizeof(Node< T >)));
+      Node< T > *fake = new Node< T >(T{});
       Node< T > *head = nullptr;
   };
 
@@ -46,7 +46,8 @@ namespace khairullin{
     ListIterator & operator=(ListIterator && other);
     ListIterator operator++();
     ListIterator operator++(int);
-    T operator*();
+    T & operator*();
+    bool hasNext() const;
     void insert(const T &val);
     bool operator==(const ListIterator & other);
     bool operator!=(const ListIterator & other);
@@ -65,7 +66,8 @@ namespace khairullin{
     ConstListIterator & operator=(ConstListIterator && other);
     ConstListIterator operator++();
     ConstListIterator operator++(int);
-    T operator*();
+    T & operator*();
+    bool hasNext() const;
     bool operator==(const ConstListIterator & other);
     bool operator!=(const ConstListIterator & other);
     private:
@@ -93,7 +95,10 @@ khairullin::List< T >::~List() {
 }
 
 template< class T >
-khairullin::List< T >::List(const List & other) {
+khairullin::List< T >::List(const List & other):
+fake(new Node< T >(T{})),
+head(nullptr)
+{
   Node< T > * beg = other.head;
   while (beg) {
     addEnd(beg->val);
@@ -103,23 +108,44 @@ khairullin::List< T >::List(const List & other) {
 
 template< class T >
 khairullin::List< T > & khairullin::List< T >::operator=(const List & other) {
-  List< T > temp(other);
-  swap(temp);
+  if (this == &other) {
+    return *this;
+  }
+  clear();
+  fake = new Node<T>(T{});
+  head = nullptr;
+  Node<T>* cur = other.head;
+  while (cur) {
+    addEnd(cur->val);
+    cur = cur->next;
+  }
+
   return *this;
 }
 
 template< class T >
 khairullin::List< T >::List(List &&other) noexcept:
   head(other.head),
-  fake(other.fake) {
+  fake(other.fake)
+{
   other.head = nullptr;
-  other.fake = nullptr;
+  other.fake = new Node< T >(T{});
 }
 
 template< class T >
 khairullin::List< T > & khairullin::List< T >::operator=(List &&other) {
-  List< T > temp(std::move(other));
-  swap(temp);
+  if (this == &other) {
+    return *this;
+  }
+
+  clear();
+
+  head = other.head;
+  fake = other.fake;
+
+  other.head = nullptr;
+  other.fake = new Node<T>(T{});
+
   return *this;
 }
 
@@ -162,7 +188,7 @@ void khairullin::List< T >::insert(const T &val, const T &after) {
 }
 
 template< class T >
-void khairullin::List< T >::cut(const T &val) {
+void khairullin::List< T >::cut(const T & val) {
   Node< T > *curr = head;
   Node< T > *prev = fake;
   while (curr && curr->val != val) {
@@ -179,21 +205,23 @@ void khairullin::List< T >::cut(const T &val) {
 
 template< class T >
 void khairullin::List< T >::clear() {
-  ::operator delete[](fake);
   while (head != nullptr) {
     auto next = head->next;
     delete head;
     head = next;
   }
+  delete fake;
+  fake = nullptr;
 }
 
 template< class T >
-khairullin::ConstListIterator< T > khairullin::List< T >::сbegin() const {
-  return ConstListIterator(head);
+khairullin::ConstListIterator<T> khairullin::List<T>::cbegin() const
+{
+  return ConstListIterator< T >(head);
 }
 
 template< class T >
-khairullin::ConstListIterator< T > khairullin::List< T >::сend() const
+khairullin::ConstListIterator< T > khairullin::List< T >::cend() const
 {
   return ConstListIterator< T >(nullptr);
 }
@@ -213,7 +241,7 @@ khairullin::ListIterator< T > khairullin::List< T >::end() const
 template< class T >
 void khairullin::List< T >::swap(List & other) {
   std::swap(head, other.head);
-  std::swap(fake->next, other.fake->next);
+  std::swap(fake, other.fake);
 }
 
 template< class T >
@@ -277,11 +305,20 @@ khairullin::ListIterator< T > khairullin::ListIterator< T >::operator++(int) {
 }
 
 template< class T >
-T khairullin::ListIterator< T >::operator*() {
+T & khairullin::ListIterator< T >::operator*() {
   if (current == nullptr) {
     throw std::logic_error("ListIterator::operator*() called on empty list");
   }
   return current->val;
+}
+
+template< class T >
+bool khairullin::ListIterator<T>::hasNext() const
+{
+  if (current) {
+    return current->next;
+  }
+  return false;
 }
 
 template< class T >
@@ -366,11 +403,20 @@ khairullin::ConstListIterator< T > khairullin::ConstListIterator< T >::operator+
 }
 
 template< class T >
-T khairullin::ConstListIterator< T >::operator*() {
+T & khairullin::ConstListIterator< T >::operator*() {
   if (current == nullptr) {
     throw std::logic_error("ListIterator::operator*() called on empty list");
   }
   return current->val;
+}
+
+template< class T >
+bool khairullin::ConstListIterator<T>::hasNext() const
+{
+  if (current) {
+    return current->next;
+  }
+  return false;
 }
 
 template< class T >

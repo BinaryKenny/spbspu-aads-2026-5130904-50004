@@ -22,17 +22,29 @@ BOOST_AUTO_TEST_CASE(List_test)
   BOOST_TEST(*iter == 39);
 
   khairullin::List< int > otherList(intList);
-  BOOST_TEST(intList == otherList);
+  auto it1 = intList.begin();
+  auto it2 = otherList.begin();
+  while (it1 != intList.end()) {
+    BOOST_TEST(*it1 == *it2);
+  }
   otherList.clear();
 
   otherList = intList;
-  BOOST_TEST(intList == otherList);
+  it1 = intList.begin();
+  it2 = otherList.begin();
+  while (it1 != intList.end()) {
+    BOOST_TEST(*it1 == *it2);
+  }
 
   khairullin::List< int > copy(std::move(intList));
   BOOST_TEST(intList == copy);
   copy.clear();
   copy = std::move(intList);
-  BOOST_TEST(intList == copy);
+  it1 = intList.begin();
+  it2 = copy.begin();
+  while (it1 != intList.end()) {
+    BOOST_TEST(*it1 == *it2);
+  }
 }
 
 BOOST_AUTO_TEST_CASE(List_test2)
@@ -45,8 +57,13 @@ BOOST_AUTO_TEST_CASE(List_test2)
   list2.addBegin(6);
   list2.addBegin(7);
   list2.addEnd(89);
-  BOOST_TEST(list1 == list2);
-
+  auto it1 = list1.begin();
+  auto it2 = list2.begin();
+  for (size_t i = 0; i < 3; i++) {
+    BOOST_TEST(it1 == it2);
+    it1++;
+    it2++;
+  }
   list1.cut(7);
   BOOST_TEST(*(list1.begin()) == 6);
 

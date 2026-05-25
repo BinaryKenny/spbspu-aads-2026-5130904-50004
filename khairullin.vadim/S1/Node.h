@@ -1,9 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 #include <cstddef>
-
-#include "../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/future"
-
+#include <algorithm>
 namespace khairullin {
   template< class T >
   struct Node {

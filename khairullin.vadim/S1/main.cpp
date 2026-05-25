@@ -98,6 +98,11 @@ int main()
     sum.addEnd(amount);
     std::cout << "\n";
   }
+  if (overflow) {
+    std::cerr << "<OVERFLOW>\n";
+    return 1;
+    delete [] iterators;
+  }
   const_iterator citer = sum.cbegin();
   std::cout << *citer;
   citer++;
@@ -106,4 +111,5 @@ int main()
     citer++;
   }
   std::cout << "\n";
+  delete [] iterators;
 }

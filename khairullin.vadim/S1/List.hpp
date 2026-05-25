@@ -19,6 +19,8 @@ namespace khairullin{
     List & operator=(const List &other);
     List(List &&other) noexcept;
     List & operator=(List &&other);
+    bool operator==(const List &other);
+    bool operator!=(const List &other);
     void addBegin(const T &val);
     void addEnd(const T &val);
     void insert(const T &val, const T &after);
@@ -29,7 +31,6 @@ namespace khairullin{
     ListIterator< T > begin() const;
     ListIterator< T > end() const;
     void swap(List &other);
-    void show();
     private:
       Node< T > *fake = new Node< T >(T{});
       Node< T > *head = nullptr;
@@ -73,15 +74,6 @@ namespace khairullin{
     private:
       Node< T > * current;
   };
-}
-
-template< class T >
-void khairullin::List< T >::show() {
-  auto curr = head;
-  while (curr) {
-    std::cout << curr->val << "\n";
-    curr = curr->next;
-  }
 }
 
 template< class T >
@@ -147,6 +139,28 @@ khairullin::List< T > & khairullin::List< T >::operator=(List &&other) {
   other.fake = new Node<T>(T{});
 
   return *this;
+}
+
+template< class T >
+bool khairullin::List<T>::operator==(const List & other)
+{
+  auto iter1 = begin();
+  auto iter2 = other.begin();
+  while (iter1 != end() && iter2 != other.end()) {
+    if (*iter1 != *iter2) {
+      return false;
+    }
+  }
+  if (iter1 == end() && iter2 == other.end()) {
+    return true;
+  }
+  return false;
+}
+
+template< class T >
+bool khairullin::List<T>::operator!=(const List & other)
+{
+  return !(*this == other);
 }
 
 template< class T >

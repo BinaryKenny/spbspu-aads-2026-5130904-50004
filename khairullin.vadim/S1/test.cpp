@@ -60,11 +60,11 @@ BOOST_AUTO_TEST_CASE(List_test2)
   BOOST_TEST(*iter == 2144);
 
   list2.cut(7);
-  BOOST_TEST(*(list.cbegin()) == 6);
+  BOOST_TEST(*(list2.cbegin()) == 6);
 
-  list1.addEnd(2143);
-  list1.addEnd(2144);
-  auto citer = list1.cbegin();
+  list2.addEnd(2143);
+  list2.addEnd(2144);
+  auto citer = list2.cbegin();
   BOOST_TEST(citer.hasNext() == true);
   while (citer.hasNext()) {
     citer++;

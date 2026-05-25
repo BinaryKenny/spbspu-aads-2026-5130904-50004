@@ -100,8 +100,8 @@ int main()
   }
   if (overflow) {
     std::cerr << "<OVERFLOW>\n";
-    return 1;
     delete [] iterators;
+    return 1;
   }
   const_iterator citer = sum.cbegin();
   std::cout << *citer;

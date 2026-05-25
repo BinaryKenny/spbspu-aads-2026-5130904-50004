@@ -67,7 +67,7 @@ namespace khairullin{
     ConstListIterator & operator=(ConstListIterator && other);
     ConstListIterator operator++();
     ConstListIterator operator++(int);
-    T & operator*();
+    const T & operator*();
     bool hasNext() const;
     bool operator==(const ConstListIterator & other);
     bool operator!=(const ConstListIterator & other);
@@ -84,6 +84,7 @@ khairullin::List< T >::List() {
 template< class T >
 khairullin::List< T >::~List() {
   clear();
+  delete fake;
 }
 
 template< class T >
@@ -117,8 +118,8 @@ khairullin::List< T > & khairullin::List< T >::operator=(const List & other) {
 
 template< class T >
 khairullin::List< T >::List(List &&other) noexcept:
-  head(other.head),
-  fake(other.fake)
+  fake(other.fake),
+  head(other.head)
 {
   other.head = nullptr;
   other.fake = new Node< T >(T{});
@@ -150,6 +151,8 @@ bool khairullin::List<T>::operator==(const List & other)
     if (*iter1 != *iter2) {
       return false;
     }
+    iter1++;
+    iter2++;
   }
   if (iter1 == end() && iter2 == other.end()) {
     return true;
@@ -224,8 +227,6 @@ void khairullin::List< T >::clear() {
     delete head;
     head = next;
   }
-  delete fake;
-  fake = nullptr;
 }
 
 template< class T >
@@ -417,7 +418,7 @@ khairullin::ConstListIterator< T > khairullin::ConstListIterator< T >::operator+
 }
 
 template< class T >
-T & khairullin::ConstListIterator< T >::operator*() {
+const T & khairullin::ConstListIterator< T >::operator*() {
   if (current == nullptr) {
     throw std::logic_error("ListIterator::operator*() called on empty list");
   }

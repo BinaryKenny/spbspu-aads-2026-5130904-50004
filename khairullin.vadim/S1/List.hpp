@@ -50,8 +50,8 @@ namespace khairullin{
     T & operator*();
     bool hasNext() const;
     void insert(const T &val);
-    bool operator==(const ListIterator & other);
-    bool operator!=(const ListIterator & other);
+    bool operator==(const ListIterator & other) const;
+    bool operator!=(const ListIterator & other) const;
     private:
       Node< T > * current;
   };
@@ -69,11 +69,28 @@ namespace khairullin{
     ConstListIterator operator++(int);
     const T & operator*();
     bool hasNext() const;
-    bool operator==(const ConstListIterator & other);
-    bool operator!=(const ConstListIterator & other);
+    bool operator==(const ConstListIterator & other) const;
+    bool operator!=(const ConstListIterator & other) const;
     private:
       Node< T > * current;
   };
+
+  template< class T >
+  std::ostream & operator<<(std::ostream & os, const ListIterator< T > & iter);
+
+  template< class T >
+  std::ostream & operator<<(std::ostream & os, const ConstListIterator< T > & iter);
+}
+
+template< class T >
+std::ostream& khairullin::operator<<(std::ostream& os, const ListIterator< T > & iter) {
+  return os << *iter;
+}
+
+template< class T >
+std::ostream & khairullin::operator<<(std::ostream& os, const ConstListIterator< T > & iter)
+{
+  return os << *iter;
 }
 
 template< class T >
@@ -345,13 +362,13 @@ void khairullin::ListIterator< T >::insert(const T &val) {
 }
 
 template< class T >
-bool khairullin::ListIterator<T>::operator==(const ListIterator & other)
+bool khairullin::ListIterator<T>::operator==(const ListIterator & other) const
 {
   return current == other.current;
 }
 
 template< class T >
-bool khairullin::ListIterator<T>::operator!=(const ListIterator & other)
+bool khairullin::ListIterator<T>::operator!=(const ListIterator & other) const
 {
   return !(*this == other);
 }
@@ -435,13 +452,13 @@ bool khairullin::ConstListIterator<T>::hasNext() const
 }
 
 template< class T >
-bool khairullin::ConstListIterator<T>::operator==(const ConstListIterator & other)
+bool khairullin::ConstListIterator<T>::operator==(const ConstListIterator & other) const
 {
   return current == other.current;
 }
 
 template< class T >
-bool khairullin::ConstListIterator<T>::operator!=(const ConstListIterator & other)
+bool khairullin::ConstListIterator<T>::operator!=(const ConstListIterator & other) const
 {
   return !(*this == other);
 }

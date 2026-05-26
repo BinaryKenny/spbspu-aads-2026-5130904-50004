@@ -26,6 +26,8 @@ BOOST_AUTO_TEST_CASE(List_test)
   auto it2 = otherList.begin();
   while (it1 != intList.end()) {
     BOOST_TEST(*it1 == *it2);
+    it1++;
+    it2++;
   }
   otherList.clear();
 
@@ -34,6 +36,8 @@ BOOST_AUTO_TEST_CASE(List_test)
   it2 = otherList.begin();
   while (it1 != intList.end()) {
     BOOST_TEST(*it1 == *it2);
+    it1++;
+    it2++;
   }
 
   khairullin::List< int > copy(std::move(intList));
@@ -44,6 +48,8 @@ BOOST_AUTO_TEST_CASE(List_test)
   it2 = copy.begin();
   while (it1 != intList.end()) {
     BOOST_TEST(*it1 == *it2);
+    it1++;
+    it2++;
   }
 }
 

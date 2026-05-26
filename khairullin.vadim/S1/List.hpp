@@ -3,6 +3,7 @@
 #include "Node.h"
 #include <iostream>
 #include <stdexcept>
+#include <iterator>
 
 namespace khairullin{
 
@@ -38,6 +39,13 @@ namespace khairullin{
 
   template< class T >
   struct ListIterator {
+
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T *;
+    using reference = T &;
+    using iterator_category = std::forward_iterator_tag;
+
     ListIterator();
     ListIterator(Node< T > * curr);
     ~ListIterator() = default;
@@ -47,7 +55,7 @@ namespace khairullin{
     ListIterator & operator=(ListIterator && other);
     ListIterator operator++();
     ListIterator operator++(int);
-    T & operator*();
+    T & operator*() const;
     bool hasNext() const;
     void insert(const T &val);
     bool operator==(const ListIterator & other) const;
@@ -58,6 +66,13 @@ namespace khairullin{
 
   template< class T >
   struct ConstListIterator {
+
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const T *;
+    using reference = const T &;
+    using iterator_category = std::forward_iterator_tag;
+
     ConstListIterator();
     ConstListIterator(Node< T > * curr);
     ~ConstListIterator() = default;
@@ -67,7 +82,7 @@ namespace khairullin{
     ConstListIterator & operator=(ConstListIterator && other);
     ConstListIterator operator++();
     ConstListIterator operator++(int);
-    const T & operator*();
+    const T & operator*() const;
     bool hasNext() const;
     bool operator==(const ConstListIterator & other) const;
     bool operator!=(const ConstListIterator & other) const;
@@ -337,7 +352,7 @@ khairullin::ListIterator< T > khairullin::ListIterator< T >::operator++(int) {
 }
 
 template< class T >
-T & khairullin::ListIterator< T >::operator*() {
+T & khairullin::ListIterator< T >::operator*() const {
   if (current == nullptr) {
     throw std::logic_error("ListIterator::operator*() called on empty list");
   }
@@ -435,7 +450,7 @@ khairullin::ConstListIterator< T > khairullin::ConstListIterator< T >::operator+
 }
 
 template< class T >
-const T & khairullin::ConstListIterator< T >::operator*() {
+const T & khairullin::ConstListIterator< T >::operator*() const {
   if (current == nullptr) {
     throw std::logic_error("ListIterator::operator*() called on empty list");
   }

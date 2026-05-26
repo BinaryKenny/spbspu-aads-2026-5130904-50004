@@ -248,6 +248,10 @@ void khairullin::List< T >::cut(const T & val) {
     throw std::logic_error("This value doesn't exist");
   }
   prev->next = curr->next;
+  if (curr == head) {
+    head = curr->next;
+    fake->next = head;
+  }
   curr->next = nullptr;
   delete curr;
 }
@@ -259,6 +263,8 @@ void khairullin::List< T >::clear() {
     delete head;
     head = next;
   }
+  head = nullptr;
+  fake->next = nullptr;
 }
 
 template< class T >

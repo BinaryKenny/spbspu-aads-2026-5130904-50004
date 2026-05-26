@@ -21,7 +21,9 @@ int main()
   size_t count = 0;
   while (std::cin) {
     std::string str = "";
-    std::cin >> str;
+    if (!(std::cin >> str)) {
+      break;
+    }
     try {
       stringList.addEnd(str);
     }

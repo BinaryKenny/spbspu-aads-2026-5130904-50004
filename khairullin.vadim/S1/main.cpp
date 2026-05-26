@@ -3,6 +3,7 @@
 #include <string>
 #include <limits>
 
+#ifndef BOOST_TEST_MODULE
 using ull = unsigned long long;
 namespace khair = khairullin;
 using strList = khairullin::List<std::string>;
@@ -113,3 +114,4 @@ int main()
   std::cout << "\n";
   delete [] iterators;
 }
+#endif

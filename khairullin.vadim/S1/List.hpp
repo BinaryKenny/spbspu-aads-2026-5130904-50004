@@ -16,15 +16,15 @@ namespace khairullin{
   struct List {
     List();
     ~List();
-    List(const List &other);
-    List & operator=(const List &other);
+    List(const List & other);
+    List & operator=(const List & other);
     List(List &&other) noexcept;
-    List & operator=(List &&other);
-    bool operator==(const List &other) const;
-    bool operator!=(const List &other) const;
-    void addBegin(const T &val);
-    void addEnd(const T &val);
-    void insert(const T &val, const T &after);
+    List & operator=(List && other);
+    bool operator==(const List & other) const;
+    bool operator!=(const List & other) const;
+    void addBegin(const T & val);
+    void addEnd(const T & val);
+    void insert(const T & val, const T & after);
     void cut(const T & val);
     void clear();
     ConstListIterator< T > cbegin() const;
@@ -137,6 +137,7 @@ khairullin::List< T > & khairullin::List< T >::operator=(const List & other) {
     return *this;
   }
   clear();
+  delete fake;
   fake = new Node<T>(T{});
   head = nullptr;
   Node<T>* cur = other.head;
@@ -162,15 +163,12 @@ khairullin::List< T > & khairullin::List< T >::operator=(List &&other) {
   if (this == &other) {
     return *this;
   }
-
   clear();
-
+  delete fake;
   head = other.head;
   fake = other.fake;
-
   other.head = nullptr;
   other.fake = new Node<T>(T{});
-
   return *this;
 }
 

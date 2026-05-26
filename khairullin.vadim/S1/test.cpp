@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(List_test2)
   auto it1 = list1.begin();
   auto it2 = list2.begin();
   for (size_t i = 0; i < 3; i++) {
-    BOOST_TEST(it1 == it2);
+    BOOST_TEST(*it1 == *it2);
     it1++;
     it2++;
   }

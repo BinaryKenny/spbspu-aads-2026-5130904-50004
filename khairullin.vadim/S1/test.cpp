@@ -47,8 +47,9 @@ BOOST_AUTO_TEST_CASE(List_test)
   }
 
   khairullin::List< int > copy(std::move(intList));
-  BOOST_TEST(intList == copy);
+  BOOST_TEST(intList == otherList);
   copy.clear();
+  intList = otherList;
   copy = std::move(intList);
   BOOST_TEST(intList == copy);
   it1 = intList.begin();

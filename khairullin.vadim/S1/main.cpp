@@ -56,13 +56,20 @@ int main()
     listOfListsIterator++;
   }
   stringIterator strIter = stringList.begin();
-  std::cout << *strIter;
-  strIter++;
-  while (strIter != stringList.end()) {
-    std::cout << " " << *strIter;
+  if (strIter != stringList.end()) {
+    std::cout << *strIter;
     strIter++;
+    while (strIter != stringList.end()) {
+      std::cout << " " << *strIter;
+      strIter++;
+    }
   }
-  std::cout << "\n";
+  else {
+    delete [] iterators;
+    std::cout << 0 << '\n';
+    return 0;
+  }
+  std::cout << '\n';
   numberList sum;
   bool overflow = false;
   while (true) {
@@ -88,7 +95,7 @@ int main()
       break;
     }
     sum.addEnd(amount);
-    std::cout << "\n";
+    std::cout << '\n';
   }
   if (overflow) {
     std::cerr << "<OVERFLOW>\n";

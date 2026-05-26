@@ -49,10 +49,6 @@ int main()
       std::cin.clear();
     }
   }
-  if (count == 0) {
-    std::cout << 0;
-    return 0;
-  }
   iterator * iterators = new iterator[count];
   listsIterator listOfListsIterator = listOfLists.begin();
   for (size_t i = 0; i < count; i++) {
@@ -71,26 +67,22 @@ int main()
   bool overflow = false;
   while (true) {
     size_t amount = 0;
+    bool first = true;
     bool hasActive = false;
-    for (size_t i = 0; i < count - 1; i++) {
+    for (size_t i = 0; i < count; i++) {
       if (iterators[i] != iterator{}) {
+        if (!first) {
+          std::cout << ' ';
+        }
+        std::cout << *iterators[i];
+        first = false;
         hasActive = true;
-        std::cout << *iterators[i] << " ";
         if (MAX - amount < *(iterators[i])) {
           overflow = true;
         }
         amount += *(iterators[i]);
         iterators[i]++;
       }
-    }
-    size_t temp = count - 1;
-    if (iterators[temp] != iterator{}) {
-      std::cout << *iterators[temp];
-      if (MAX - amount < *(iterators[temp])) {
-        overflow = true;
-      }
-      amount += *(iterators[temp]);
-      iterators[temp]++;
     }
     if (!hasActive) {
       break;
@@ -104,13 +96,17 @@ int main()
     return 1;
   }
   const_iterator citer = sum.cbegin();
-  std::cout << *citer;
-  citer++;
-  while (citer != sum.cend()) {
-    std::cout << " " << *citer;
+  if (citer != sum.cend()) {
+    std::cout << *citer;
     citer++;
+    while (citer != sum.cend()) {
+      std::cout << " " << *citer;
+      citer++;
+    }
+    std::cout << "\n";
   }
-  std::cout << "\n";
+  else {
+    std::cout << 0 << '\n';
+  }
   delete [] iterators;
 }
-

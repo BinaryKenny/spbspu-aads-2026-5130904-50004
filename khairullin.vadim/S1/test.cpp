@@ -47,11 +47,11 @@ BOOST_AUTO_TEST_CASE(List_test)
   }
 
   khairullin::List< int > copy(std::move(intList));
-  BOOST_TEST(intList == otherList);
+  BOOST_TEST(copy == otherList);
   copy.clear();
   intList = otherList;
   copy = std::move(intList);
-  BOOST_TEST(intList == copy);
+  BOOST_TEST(otherList == copy);
   it1 = intList.begin();
   it2 = copy.begin();
   while (it1 != intList.end()) {

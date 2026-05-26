@@ -20,8 +20,8 @@ namespace khairullin{
     List & operator=(const List &other);
     List(List &&other) noexcept;
     List & operator=(List &&other);
-    bool operator==(const List &other);
-    bool operator!=(const List &other);
+    bool operator==(const List &other) const;
+    bool operator!=(const List &other) const;
     void addBegin(const T &val);
     void addEnd(const T &val);
     void insert(const T &val, const T &after);
@@ -175,7 +175,7 @@ khairullin::List< T > & khairullin::List< T >::operator=(List &&other) {
 }
 
 template< class T >
-bool khairullin::List<T>::operator==(const List & other)
+bool khairullin::List<T>::operator==(const List & other) const
 {
   auto iter1 = begin();
   auto iter2 = other.begin();
@@ -193,7 +193,7 @@ bool khairullin::List<T>::operator==(const List & other)
 }
 
 template< class T >
-bool khairullin::List<T>::operator!=(const List & other)
+bool khairullin::List<T>::operator!=(const List & other) const
 {
   return !(*this == other);
 }

@@ -76,25 +76,27 @@ int main()
   bool overflow = false;
   while (true) {
     size_t amount = 0;
-    bool first = true;
-    bool hasActive = false;
-    for (size_t i = 0; i < count; i++) {
+    size_t temp = 0;
+    while (temp != count && iterators[temp] == iterator{}) {
+      temp++;
+    }
+    if (temp == count) {
+      break;
+    }
+    else {
+      std::cout << *iterators[temp];
+      amount += *iterators[temp];
+      iterators[temp]++;
+    }
+    for (size_t i = temp + 1; i < count; i++) {
       if (iterators[i] != iterator{}) {
-        if (!first) {
-          std::cout << ' ';
-        }
-        std::cout << *iterators[i];
-        first = false;
-        hasActive = true;
+        std::cout << " " << *iterators[i];
         if (MAX - amount < *(iterators[i])) {
           overflow = true;
         }
         amount += *(iterators[i]);
         iterators[i]++;
       }
-    }
-    if (!hasActive) {
-      break;
     }
     sum.addEnd(amount);
     std::cout << '\n';

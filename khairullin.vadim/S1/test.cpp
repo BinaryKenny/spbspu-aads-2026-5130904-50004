@@ -81,8 +81,8 @@ BOOST_AUTO_TEST_CASE(List_test2)
   list1.cut(7);
   BOOST_TEST(*(list1.begin()) == 6);
 
-  list1.addEnd(2143);
-  list1.addEnd(2144);
+  list1.push_back(2143);
+  list1.push_back(2144);
   auto iter = list1.begin();
   BOOST_TEST(iter.hasNext() == true);
   while (iter.hasNext()) {
@@ -93,8 +93,8 @@ BOOST_AUTO_TEST_CASE(List_test2)
   list2.cut(7);
   BOOST_TEST(*(list2.cbegin()) == 6);
 
-  list2.addEnd(2143);
-  list2.addEnd(2144);
+  list2.push_back(2143);
+  list2.push_back(2144);
   auto citer = list2.cbegin();
   BOOST_TEST(citer.hasNext() == true);
   while (citer.hasNext()) {

@@ -96,7 +96,6 @@ khairullin::List< T >::List(List && other) noexcept:
   head(nullptr)
 {
   swap(other);
-  return *this;
 }
 
 template< class T >

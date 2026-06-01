@@ -68,7 +68,7 @@ int main()
   }
   else {
     delete [] iterators;
-    std::cout << 0 << '\n';
+    std::cout << 0 << "\n";
     return 0;
   }
   std::cout << '\n';

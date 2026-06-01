@@ -20,7 +20,7 @@ namespace khairullin {
     void push_front(const T & val);
     void push_back(const T & val);
     void insert(const T & val, const T & after);
-    void cut(const T & val) noexcept;
+    void cut(const T & val);
     void clear();
     ConstListIterator< T > cbegin() const noexcept;
     ConstListIterator< T > cend() const noexcept;
@@ -86,7 +86,7 @@ khairullin::List< T > & khairullin::List< T >::operator=(const List & other)
     return *this;
   }
   auto temp(other);
-  swap(other);
+  swap(temp);
   return *this;
 }
 
@@ -105,7 +105,7 @@ khairullin::List< T > & khairullin::List< T >::operator=(List && other) noexcept
     return *this;
   }
   List temp(std::move(other));
-  swap(other);
+  swap(temp);
   return *this;
 }
 
@@ -175,7 +175,7 @@ void khairullin::List< T >::insert(const T & val, const T & after)
 }
 
 template< class T >
-void khairullin::List< T >::cut(const T & val) noexcept
+void khairullin::List< T >::cut(const T & val)
 {
   Node< T > * curr = head;
   Node< T > * prev = fake;

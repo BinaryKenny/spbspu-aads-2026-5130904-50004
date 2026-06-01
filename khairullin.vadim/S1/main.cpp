@@ -25,7 +25,7 @@ int main()
       break;
     }
     try {
-      stringList.addEnd(str);
+      stringList.push_back(str);
     }
     catch (std::exception & e) {
       std::cerr << e.what() << "\n";
@@ -35,14 +35,14 @@ int main()
     numberList ullList;
     while (std::cin >> temp) {
       try {
-        ullList.addEnd(temp);
+        ullList.push_back(temp);
       }
       catch (std::exception & e) {
         std::cerr << e.what() << "\n";
         return 2;
       }
     }
-    listOfLists.addEnd(ullList);
+    listOfLists.push_back(ullList);
     count++;
     if (std::cin.eof()) {
       break;
@@ -98,7 +98,7 @@ int main()
         iterators[i]++;
       }
     }
-    sum.addEnd(amount);
+    sum.push_back(amount);
     std::cout << '\n';
   }
   if (overflow) {

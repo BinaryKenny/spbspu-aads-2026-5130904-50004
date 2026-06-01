@@ -8,13 +8,13 @@ __attribute__((weak)) int main(int argc, char * argv[]);
 BOOST_AUTO_TEST_CASE(List_test)
 {
   khairullin::List< int > intList;
-  intList.addBegin(6);
-  intList.addBegin(7);
-  intList.addEnd(89);
-  intList.addBegin(10);
-  intList.addBegin(20);
-  intList.addBegin(30);
-  intList.addEnd(1321);
+  intList.push_front(6);
+  intList.push_front(7);
+  intList.push_back(89);
+  intList.push_front(10);
+  intList.push_front(20);
+  intList.push_front(30);
+  intList.push_back(1321);
 
   auto iter = intList.begin();
   auto citer = intList.cbegin();
@@ -65,12 +65,12 @@ BOOST_AUTO_TEST_CASE(List_test2)
 {
   khairullin::List< int > list1;
   khairullin::List< int > list2;
-  list1.addBegin(6);
-  list1.addBegin(7);
-  list1.addEnd(89);
-  list2.addBegin(6);
-  list2.addBegin(7);
-  list2.addEnd(89);
+  list1.push_front(6);
+  list1.push_front(7);
+  list1.push_back(89);
+  list2.push_front(6);
+  list2.push_front(7);
+  list2.push_back(89);
   auto it1 = list1.begin();
   auto it2 = list2.begin();
   for (size_t i = 0; i < 3; i++) {

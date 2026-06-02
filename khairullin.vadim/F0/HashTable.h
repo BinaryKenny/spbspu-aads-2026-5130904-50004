@@ -1,6 +1,7 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 #include <cstddef>
+#include <utility>
 #include "Vector.h"
 #include "Slot.h"
 namespace khairullin
@@ -18,7 +19,7 @@ namespace khairullin
 
     size_t findHomeSlot(const Key & key) const;
     Key find(const T & val) const;
-    void write(const T & val, const Key & key);
+    void insert(const T & val, const Key & key);
     void rehash(size_t newSize);
     bool remove(const T & val);
     bool remove(const Key & key);
@@ -27,7 +28,7 @@ namespace khairullin
     size_t getSize() const noexcept;
     size_t getCount() const noexcept;
 
-    private:
+    //private:
       size_t size = 11;
       size_t count = 0;
   };
@@ -64,31 +65,47 @@ size_t khairullin::HashTable<Key, T, Hash, Equal>::findHomeSlot(const Key & key)
 }
 
 template< class Key, class T, class Hash, class Equal >
-void khairullin::HashTable<Key, T, Hash, Equal>::write(const T & val, const Key & key)
+void khairullin::HashTable<Key, T, Hash, Equal>::insert(const T & val, const Key & key)
 {
   size_t index = hasher(key) % size;
   Slot< Key, T > slot(val, key);
-  Slot< Key, T > & other = table[index];
-  if (other.Empty) {
-    other = slot;
-    return;
-  }
-  while (slot.PLS <= other.PLS) {
-    slot.PLS = slot.PLS++;
-    other = table[++index];
-  }
-  other.swap(slot);
-  index++;
-  for (size_t i = index; i < size; i++) {
-    if (table[i].Empty) {
-      slot.swap(table[i]);
+  while (!slot.Empty) {
+    Slot< Key, T > & other = table[index];
+    if (other.Empty) {
+      slot.swap(other);
+      count++;
     }
-    slot.PLS++;
+    if (slot.PSL > other.PSL) {
+      slot.swap(other);
+    }
+    slot.PSL++;
+    index = index == size ? 0 : index + 1;
   }
-  count++;
-  if (count * 2 == size) {
+  if (count * 2 > size) {
     rehash(size * 2);
   }
+}
+
+template < class Key, class T, class Hash, class Equal >
+void khairullin::HashTable<Key, T, Hash, Equal>::rehash(size_t newSize)
+{
+  HashTable< Key, T, Hash, Equal > newTable(newSize);
+  for (size_t i = 0; i < size; i++) {
+    if (!table[i].Empty) {
+      newTable.insert(table[i].value, table[i].key);
+    }
+  }
+  swap(newTable);
+}
+
+template< class Key, class T, class Hash, class Equal >
+void khairullin::HashTable<Key, T, Hash, Equal>::swap(HashTable & other)
+{
+  std::swap(table, other.table);
+  std::swap(equal, other.equal);
+  std::swap(hasher, other.hasher);
+  std::swap(size, other.size);
+  std::swap(count, other.count);
 }
 
 #endif

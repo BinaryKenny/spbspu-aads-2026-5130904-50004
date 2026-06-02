@@ -8,7 +8,7 @@ namespace khairullin {
   };
 }
 
-template< class T >
+template< class Key >
 bool khairullin::Equal< Key >::operator()(const Key & first, const Key & second)
 {
   return first == second;

@@ -7,7 +7,7 @@ namespace khairullin {
         T value;
         Key key;
         bool Empty;
-        size_t PLS;
+        size_t PSL;
 
         bool operator==(const Slot & x) const;
         void swap(Slot & other);
@@ -20,48 +20,48 @@ namespace khairullin {
     };
 }
 
-template< class T >
-khairullin::Slot< T >::Slot():
+template< class Key, class T >
+khairullin::Slot< Key, T >::Slot():
 value(),
 key(),
 Empty(true),
-PLS(0)
+PSL(0)
 {}
 
-template< class T >
-khairullin::Slot< T >::Slot(const T & value, const Key & key):
+template< class Key, class T >
+khairullin::Slot< Key, T >::Slot(const T & value, const Key & key):
 value(value),
 key(key),
 Empty(false),
-PLS(0)
+PSL(0)
 {}
 
-template< class T >
-khairullin::Slot< T >::Slot(const Slot & other):
+template< class Key, class T >
+khairullin::Slot< Key, T >::Slot(const Slot & other):
 value(other.value),
 key(other.key),
 Empty(other.Empty),
-PLS(other.PLS)
+PSL(other.PSL)
 {}
 
-template<class T>
-khairullin::Slot<T> & khairullin::Slot<T>::operator=(const Slot & slot)
+template< class Key, class T >
+khairullin::Slot< Key, T > & khairullin::Slot< Key, T>::operator=(const Slot & slot)
 {
     auto temp(slot);
     swap(temp);
     return *this;
 }
 
-template< class T >
-bool khairullin::Slot< T >::operator==(const Slot & x) const {
-    return (value == x.value && isEmpty == x.isEmpty && Tombstone == x.Tombstone);
+template< class Key, class T >
+bool khairullin::Slot< Key, T>::operator==(const Slot & other) const {
+    return (value == other.value && Empty == other.Empty && PSL == other.PSL && key == other.key);
 }
 
-template< class T >
-void khairullin::Slot< T >::swap(Slot & other) {
+template< class Key, class T >
+void khairullin::Slot< Key, T >::swap(Slot & other) {
     std::swap(value, other.value);
     std::swap(key, other.key);
-    std::swap(isEmpty, other.isEmpty);
-    std::swap(Tombstone, other.Tombstone);
+    std::swap(Empty, other.Empty);
+    std::swap(PSL, other.PSL);
 }
 #endif

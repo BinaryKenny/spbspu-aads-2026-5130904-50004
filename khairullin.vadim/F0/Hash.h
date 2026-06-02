@@ -8,7 +8,8 @@ namespace khairullin {
   };
 }
 
-size_t khairullin::Hash::operator()(Key skey) const
+template< class Key >
+size_t khairullin::Hash< Key >::operator()(Key skey) const
 {
     size_t len = skey.size();
     char * key = new char[len];
@@ -59,4 +60,4 @@ size_t khairullin::Hash::operator()(Key skey) const
 
     return h;
 }
-#endif //HASH_H
+#endif

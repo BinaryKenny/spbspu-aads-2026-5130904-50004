@@ -2,10 +2,10 @@
 #define SLOT_H
 #include <string>
 namespace khairullin {
-    template < class T >
+    template < class Key , class T >
     struct Slot {
         T value;
-        std::string key;
+        Key key;
         bool Empty;
         size_t PLS;
 
@@ -14,7 +14,7 @@ namespace khairullin {
 
         Slot();
         ~Slot() = default;
-        Slot(const T & value, const std::string & key);
+        Slot(const T & value, const Key & key);
         Slot(const Slot & other);
         Slot & operator=(const Slot & slot);
     };
@@ -23,13 +23,13 @@ namespace khairullin {
 template< class T >
 khairullin::Slot< T >::Slot():
 value(),
-key(""),
+key(),
 Empty(true),
 PLS(0)
 {}
 
 template< class T >
-khairullin::Slot< T >::Slot(const T & value, const std::string & key):
+khairullin::Slot< T >::Slot(const T & value, const Key & key):
 value(value),
 key(key),
 Empty(false),

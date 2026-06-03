@@ -17,7 +17,7 @@ namespace khairullin
     HashTable(Vector< Slot< Key, T > > & t, size_t k, size_t count);
 
     size_t findHomeSlot(const Key & key) const;
-    T & find(const Key & key) const noexcept;
+    T find(const Key & key) const;
     void insert(const T & val, const Key & key);
     void rehash(size_t newSize);
     bool remove(const Key & key);
@@ -62,7 +62,7 @@ size_t khairullin::HashTable<Key, T, Hash, Equal>::findHomeSlot(const Key & key)
 }
 
 template< class Key, class T, class Hash, class Equal >
-T & khairullin::HashTable<Key, T, Hash, Equal>::find(const Key & key) const noexcept
+T khairullin::HashTable<Key, T, Hash, Equal>::find(const Key & key) const
 {
   size_t index = hasher(key) % size;
   for (size_t i = index; i < size; i++) {
@@ -70,6 +70,7 @@ T & khairullin::HashTable<Key, T, Hash, Equal>::find(const Key & key) const noex
       return table[i].value;
     }
   }
+  throw std::out_of_range("This value does not exist");
 }
 
 template< class Key, class T, class Hash, class Equal >

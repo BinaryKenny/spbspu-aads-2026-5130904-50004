@@ -4,12 +4,12 @@
 namespace khairullin {
   template< class Key >
   struct Equal {
-    bool operator()(const Key & first, const Key & second);
+    bool operator()(const Key & first, const Key & second) const;
   };
 }
 
 template< class Key >
-bool khairullin::Equal< Key >::operator()(const Key & first, const Key & second)
+bool khairullin::Equal< Key >::operator()(const Key & first, const Key & second) const
 {
   return first == second;
 }

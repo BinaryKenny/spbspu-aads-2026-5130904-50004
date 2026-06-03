@@ -1,9 +1,9 @@
-#if defined(__GNUC__) || defined(__clang__)
-__attribute__((weak)) int main(int argc, char * argv[]);
-#endif
+//#if defined(__GNUC__) || defined(__clang__)
+//__attribute__((weak)) int main(int argc, char * argv[]);
+//#endif
 
 #define BOOST_TEST_MODULE S4
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include "Datasets.h"
 #include <sstream>
 

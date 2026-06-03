@@ -1,9 +1,8 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
-#include <cstddef>
-#include <utility>
 #include "Vector.h"
 #include "Slot.h"
+#include <iostream>
 namespace khairullin
 {
   template< class Key, class T, class Hash, class Equal >
@@ -18,17 +17,15 @@ namespace khairullin
     HashTable(Vector< Slot< Key, T > > & t, size_t k, size_t count);
 
     size_t findHomeSlot(const Key & key) const;
-    Key find(const T & val) const;
+    T & find(const Key & key) const noexcept;
     void insert(const T & val, const Key & key);
     void rehash(size_t newSize);
-    bool remove(const T & val);
     bool remove(const Key & key);
     void swap(HashTable & other);
-    void show();
     size_t getSize() const noexcept;
     size_t getCount() const noexcept;
 
-    //private:
+    private:
       size_t size = 11;
       size_t count = 0;
   };
@@ -65,10 +62,21 @@ size_t khairullin::HashTable<Key, T, Hash, Equal>::findHomeSlot(const Key & key)
 }
 
 template< class Key, class T, class Hash, class Equal >
+T & khairullin::HashTable<Key, T, Hash, Equal>::find(const Key & key) const noexcept
+{
+  size_t index = hasher(key) % size;
+  for (size_t i = index; i < size; i++) {
+    if (equal(table[i].key, key)) {
+      return table[i].value;
+    }
+  }
+}
+
+template< class Key, class T, class Hash, class Equal >
 void khairullin::HashTable<Key, T, Hash, Equal>::insert(const T & val, const Key & key)
 {
   size_t index = hasher(key) % size;
-  Slot< Key, T > slot(val, key);
+  Slot< Key, T > slot(val, key, index);
   while (!slot.Empty) {
     Slot< Key, T > & other = table[index];
     if (other.Empty) {
@@ -99,6 +107,29 @@ void khairullin::HashTable<Key, T, Hash, Equal>::rehash(size_t newSize)
 }
 
 template< class Key, class T, class Hash, class Equal >
+bool khairullin::HashTable<Key, T, Hash, Equal>::remove(const Key & key)
+{
+  Slot< Key, T > removeSlot;
+  size_t index = hasher(key) % size;
+  for (size_t i = index; i < size; i++) {
+    if (equal(table[i].key, key)) {
+      index = i;
+      removeSlot.swap(table[i]);
+      break;
+    }
+  }
+  count = 0;
+  for (size_t i = 0; i < size; i++) {
+    if (!table[i].Empty) {
+      Slot< Key, T > slot;
+      table[i].swap(slot);
+      insert(slot.value, slot.key);
+    }
+  }
+  return true;
+}
+
+template< class Key, class T, class Hash, class Equal >
 void khairullin::HashTable<Key, T, Hash, Equal>::swap(HashTable & other)
 {
   std::swap(table, other.table);
@@ -108,4 +139,15 @@ void khairullin::HashTable<Key, T, Hash, Equal>::swap(HashTable & other)
   std::swap(count, other.count);
 }
 
+template< class Key, class T, class Hash, class Equal >
+size_t khairullin::HashTable<Key, T, Hash, Equal>::getSize() const noexcept
+{
+  return size;
+}
+
+template< class Key, class T, class Hash, class Equal >
+size_t khairullin::HashTable<Key, T, Hash, Equal>::getCount() const noexcept
+{
+  return count;
+}
 #endif

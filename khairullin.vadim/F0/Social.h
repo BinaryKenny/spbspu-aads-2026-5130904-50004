@@ -7,7 +7,7 @@ namespace khairullin {
 
     Social();
 
-    std::pair< bool, size_t > hasSocial(std::string name);
+    std::pair< bool, size_t > hasSocial(const std::string & name);
 
     void makeSocial(std::istream &);
     void makeFriends(std::istream &);

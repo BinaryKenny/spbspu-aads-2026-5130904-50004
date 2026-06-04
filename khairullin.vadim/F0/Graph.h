@@ -60,11 +60,12 @@ void khairullin::Graph< Key >::addNode(const Key & key) {
   try {
     edges.pushBack(Vector< Key >());
     vertices++;
-    values.insert(vertices - 1, key);
+    values.insert(temp, key);
   }
   catch (...) {
     try {
       edges.erase(temp);
+      vertices--;
     }
     catch (...) {
       return;

@@ -5,7 +5,7 @@ khairullin::Social::Social():
 socials(Vector< Graph< std::string > >())
 {}
 
-std::pair< bool, size_t > khairullin::Social::hasSocial(std::string socialName)
+std::pair< bool, size_t > khairullin::Social::hasSocial(const std::string & socialName)
 {
   for (size_t i = 0; i < socials.getSize(); i++) {
     if (socials[i].name == socialName) {
@@ -19,6 +19,9 @@ void khairullin::Social::makeSocial(std::istream & is)
 {
   std::string name = "";
   std::getline(is, name);
+  if (name.empty()) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
   Graph< std::string > newSocial(name);
   socials.pushBack(newSocial);
 }
@@ -53,12 +56,9 @@ void khairullin::Social::addUser(std::istream & is)
 {
   std::string line = "";
   std::getline(is, line);
-  if (line.empty()) {
-    throw std::logic_error("<INVALID COMMAND>");
-  }
   std::string socialName = getToken(line);
   std::string name = getToken(line);
-  if (!line.empty() || name.empty() || socialName.empty()) {
+  if (name.empty() || socialName.empty()) {
     throw std::logic_error("<INVALID COMMAND>");
   }
   auto infoSocial = hasSocial(socialName);
@@ -66,7 +66,7 @@ void khairullin::Social::addUser(std::istream & is)
     throw std::logic_error("<INVALID COMMAND>");
   }
   Graph< std::string > & social = socials[infoSocial.second];
-  social.addNode(socialName);
+  social.addNode(name);
 }
 
 void khairullin::Social::stopFriendship(std::istream & is)
@@ -93,6 +93,7 @@ void khairullin::Social::stopFriendship(std::istream & is)
   catch (...) {
     throw std::logic_error("<INVALID COMMAND>");
   }
+  std::cout << name1 << " and " << name2 << " are not friends from that moment\n";
 }
 
 void khairullin::Social::deleteUser(std::istream & is)

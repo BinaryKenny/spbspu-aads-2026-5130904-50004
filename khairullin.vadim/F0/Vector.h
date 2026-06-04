@@ -27,6 +27,7 @@ namespace khairullin
     const T & operator[](size_t id) const noexcept;
     const T & at(size_t id) const;
     bool isEmpty() const noexcept;
+    std::pair< bool, size_t > hasValue(const T & value);
     size_t getSize() const noexcept;
     size_t getCapacity() const noexcept;
     bool operator==(const Vector<T> & rhs) const noexcept;
@@ -211,6 +212,17 @@ template<class T>
 bool khairullin::Vector<T>::isEmpty() const noexcept
 {
   return !size_;
+}
+
+template< class T >
+std::pair<bool, size_t> khairullin::Vector<T>::hasValue(const T & value)
+{
+  for (size_t i = 0; i < getSize(); i++) {
+    if (data[i] == value) {
+      return std::make_pair(true, i);
+    }
+  }
+  return std::make_pair(false, 0);
 }
 
 template<class T>

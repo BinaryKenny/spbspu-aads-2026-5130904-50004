@@ -9,60 +9,96 @@
 namespace khairullin {
   template< class Key >
   struct Graph {
-    Vector< Vector< size_t > > graph;
+    Vector< Vector< Key > > edges;
     HashTable< Key, size_t , Hash< Key >, Equal< Key > > values;
     size_t vertices = 0;
+    std::string name;
 
     Graph();
+    Graph(std::string name);
 
+    std::pair< bool, size_t > hasVertex(const Key & key);
     size_t path(const Key & start, const Key & target);
     void addNode(const Key & key);
-    void connect(size_t vertex, size_t yav);
+    void connect(const Key & key1, const Key & key2);
     void addWithConnection(const Key & key1, const Key & key2);
     bool deleteNode(const Key & key);
+    void disconnect(const Key & key1, const Key & key2);
   };
 }
 
 template< class Key >
 khairullin::Graph< Key >::Graph():
-  graph(Vector< Vector< size_t > >()),
-  values(HashTable< Key, size_t, Hash< Key >, Equal< Key > > ())
+  edges(Vector< Vector< Key > >()),
+  values(HashTable< Key, size_t, Hash< Key >, Equal< Key > > ()),
+  name("")
 {}
+
+template< class Key >
+khairullin::Graph< Key >::Graph(std::string name):
+  edges(Vector< Vector< Key > >()),
+  values(HashTable< Key, size_t, Hash< Key >, Equal< Key > > ()),
+  name(name)
+{}
+
+template< class Key >
+std::pair<bool, size_t> khairullin::Graph<Key>::hasVertex(const Key & key)
+{
+  size_t index = 0;
+  try {
+    index = values.find(key);
+  }
+  catch (...) {
+    return std::make_pair(false, 0);
+  }
+  return std::make_pair(true, index);
+}
 
 template< class Key >
 void khairullin::Graph< Key >::addNode(const Key & key) {
   size_t temp = vertices;
   try {
-    graph.pushBack(Vector< size_t >{});
+    edges.pushBack(Vector< Key >());
     vertices++;
     values.insert(vertices - 1, key);
   }
   catch (...) {
     try {
-      graph.erase(temp);
+      edges.erase(temp);
     }
     catch (...) {
-      throw;
+      return;
     }
   }
 }
 
 template< class Key >
-void khairullin::Graph< Key >::connect(size_t vertex, size_t yav) {
-    if (vertex >= vertices || yav >= vertices) {
-        throw std::out_of_range("This vertex doesn't exist");
-    }
-    graph[vertex].pushBack(yav);
-    graph[yav].pushBack(vertex);
+void khairullin::Graph<Key>::connect(const Key & key1, const Key & key2)
+{
+  size_t vertex1 = 0;
+  size_t vertex2 = 0;
+  try {
+    vertex1 = values.find(key1);
+    vertex2 = values.find(key2);
+  }
+  catch (...) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  edges[vertex1].pushBack(key2);
+  try {
+    edges[vertex2].pushBack(key1);
+  }
+  catch (...) {
+    edges[vertex2].popBack();
+  }
 }
 
 template< class Key >
 void khairullin::Graph< Key >::addWithConnection(const Key & key1, const Key & key2)
 {
   try{
-    size_t vertex = values.find(key1);
     addNode(key2);
-    connect(vertex, vertices - 1);
+    connect(key1, key2);
   }
   catch (...) {
     throw std::logic_error("Failed connection");
@@ -72,12 +108,50 @@ void khairullin::Graph< Key >::addWithConnection(const Key & key1, const Key & k
 template< class Key >
 bool khairullin::Graph< Key >::deleteNode(const Key & key) {
   size_t vertex = values.find(key);
-  if (values.remove(key)) {
-    vertices--;
-    graph.erase(vertex);
-    return true;
+  Vector< Vector< Key > > copyEdges;
+  try {
+    copyEdges = edges;
+    if (values.remove(key)) {
+      vertices--;
+      copyEdges.erase(vertex);
+      for (size_t i = 0; i < copyEdges.getSize(); i++) {
+        auto info = copyEdges[i].hasValue(key);
+        if (info.first) {
+          copyEdges[i].erase(info.second);
+        }
+      }
+    }
   }
-  return false;
+  catch (...) {
+    return false;
+  }
+  edges = std::move(copyEdges);
+  return true;
+}
+
+template< class Key >
+void khairullin::Graph<Key>::disconnect(const Key & key1, const Key & key2)
+{
+  size_t vertex1 = values.find(key1);
+  size_t vertex2 = values.find(key2);
+  auto infoVert1 = edges[vertex2].hasValue(key1);
+  auto infoVert2 = edges[vertex1].hasValue(key2);
+  if (!infoVert1.first || !infoVert2.first) {
+    throw std::logic_error("This vertexes were not connected");
+  }
+  Vector< Key > vec1;
+  Vector< Key > vec2;
+  try {
+    vec1 = edges[vertex1];
+    vec2 = edges[vertex2];
+    vec1.erase(infoVert2.second);
+    vec2.erase(infoVert1.second);
+    edges[vertex1] = std::move(vec1);
+    edges[vertex2] = std::move(vec2);
+  }
+  catch (...) {
+    throw std::bad_alloc();
+  }
 }
 
 template< class Key >
@@ -100,12 +174,13 @@ size_t khairullin::Graph< Key >::path(const Key & k1, const Key & k2) {
     if (vertex == target) {
       return distances[vertex];
     }
-    auto child = graph[vertex];
+    auto child = edges[vertex];
     for (size_t i = 0; i < child.getSize(); i++) {
-      if (!visited[child[i]]) {
-        queue.push(child[i]);
-        visited[child[0]] = true;
-        distances[child[0]] = distances[vertex] + 1;
+      size_t temp = values.find(child[i]);
+      if (!visited[temp]) {
+        queue.push(temp);
+        visited[temp] = true;
+        distances[temp] = distances[vertex] + 1;
       }
     }
   }

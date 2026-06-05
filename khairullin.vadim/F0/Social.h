@@ -16,7 +16,6 @@ namespace khairullin {
     void stopFriendship(std::istream &);
     void deleteUser(std::istream &);
     void getRecommendation(std::istream &);
-    // getRecommendation <social> <username> <parameter> ("other", "deep")
     void seekPotentialFriends(std::istream &);
     void showFriends(std::istream &);
     void findUser(std::istream &);

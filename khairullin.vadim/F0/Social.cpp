@@ -239,6 +239,61 @@ void khairullin::Social::getRecommendation(std::istream & is)
   std::cout << recUser[randomizer(gen)] << "\n";
 }
 
+void khairullin::Social::seekPotentialFriends(std::istream & is)
+{
+  std::string line = "";
+  std::getline(is, line);
+  std::string socialName = getToken(line);
+  std::string name = getToken(line);
+  std::string parameter = getToken(line);
+  if (socialName.empty() || name.empty() || parameter.empty()) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  Vector< std::string > recUser;
+  if (parameter == "other") {
+    try {
+      recUser = recommendations(socialName, name);
+    }
+    catch (std::logic_error & e) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+  }
+  else {
+    size_t depth = 0;
+    try {
+      depth = std::stoi(parameter);
+    }
+    catch (...) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    try {
+      recUser = recommendations(socialName, name, depth);
+    }
+    catch (std::logic_error & e) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+  }
+  std::string temp = getToken(line);
+  size_t count = recUser.getSize();
+  if (!temp.empty()) {
+    try {
+      count = std::stoi(temp);
+    }
+    catch (...) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+  }
+  if (count == 0) {
+    std::cout << "No recommendations\n";
+    return;
+  }
+  std::cout << recUser[0];
+  for (size_t i = 1; i < count; i++) {
+    std::cout << ", " << recUser[i];
+  }
+  std::cout << "\n";
+}
+
 void khairullin::Social::showFriends(std::istream & is)
 {
   std::string line = "";

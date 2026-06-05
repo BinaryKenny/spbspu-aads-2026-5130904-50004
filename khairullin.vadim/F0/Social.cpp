@@ -207,33 +207,13 @@ void khairullin::Social::getRecommendation(std::istream & is)
   if (socialName.empty() || name.empty() || parameter.empty() || !line.empty()) {
     throw std::logic_error("<INVALID COMMAND>");
   }
-  Vector< std::string > potentialFriends;
+  Vector< std::string > recUser;
   if (parameter == "other") {
-    for (size_t i = 0; i < socials.getSize(); i++) {
-      Graph< std::string > & social = socials[i];
-      auto infoName = social.hasVertex(name);
-      if (!infoName.first) {
-        continue;
-      }
-      Vector< std::string > & friends = social.edges[infoName.second];
-      for (size_t j = 0; j < friends.getSize(); i++) {
-        std::string people = friends[j];
-        if (!potentialFriends.hasValue(people).first) {
-          try {
-            potentialFriends.pushBack(people);
-          }
-          catch (...) {
-            if (potentialFriends.getSize() >= 1) {
-              std::uniform_int_distribution< size_t > randomizer(0, potentialFriends.getSize() - 1);
-              size_t temp = randomizer(gen);
-              std::cout << potentialFriends[temp] << "\n";
-            }
-            else {
-              std::cout << "No recomendations\n";
-            }
-          }
-        }
-      }
+    try {
+      recUser = recommendations(socialName, name);
+    }
+    catch (std::logic_error & e) {
+      throw std::logic_error("<INVALID COMMAND>");
     }
   }
   else {
@@ -244,23 +224,19 @@ void khairullin::Social::getRecommendation(std::istream & is)
     catch (...) {
       throw std::logic_error("<INVALID COMMAND>");
     }
-    auto infoSocial = hasSocial(socialName);
-    if (!infoSocial.first) {
-      throw std::logic_error("<INVALID COMMAND>");
+    try {
+      recUser = recommendations(socialName, name, depth);
     }
-    Graph< std::string > & social = socials[infoSocial.second];
-    auto infoUser = social.hasVertex(name);
-    if (!infoUser.first) {
+    catch (std::logic_error & e) {
       throw std::logic_error("<INVALID COMMAND>");
-    }
-    Vector< std::string > & friends = social.edges[infoUser.second];
-    for (size_t i = 0; i < depth; i++) {
-      std::uniform_int_distribution< size_t > randomizer(0, friends.getSize() - 1);
-      std::string people = friends[randomizer(gen)];
-      size_t index = social.values.find(people);
-
     }
   }
+  if (recUser.isEmpty()) {
+    std::cout << "No recommendations\n";
+    return;
+  }
+  std::uniform_int_distribution< size_t > randomizer(0, recUser.getSize() - 1);
+  std::cout << recUser[randomizer(gen)] << "\n";
 }
 
 void khairullin::Social::showFriends(std::istream & is)

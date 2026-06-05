@@ -1,5 +1,6 @@
 #include "Social.h"
 #include "Functions.h"
+#include <random>
 
 khairullin::Social::Social():
 socials(Vector< Graph< std::string > >())
@@ -13,6 +14,82 @@ std::pair< bool, size_t > khairullin::Social::hasSocial(const std::string & soci
     }
   }
   return std::make_pair(false, 0);
+}
+
+khairullin::Vector<std::string> khairullin::Social::recommendations(std::string nameSocial,
+    std::string username)
+{
+  auto infoSocial = hasSocial(nameSocial);
+  if (!infoSocial.first) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  Graph< std::string > & mainSocial = socials[infoSocial.second];
+  auto infoUser = mainSocial.hasVertex(username);
+  if (!infoUser.first) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  Vector< std::string > & currentFriends =  mainSocial.edges[infoUser.second];
+  Vector< std::string > potentialFriends;
+  for (size_t i = 0; i < socials.getSize(); i++) {
+    Graph< std::string > & social = socials[i];
+    auto infoName = social.hasVertex(username);
+    if (!infoName.first) {
+      continue;
+    }
+    Vector< std::string > & friends = social.edges[infoName.second];
+    for (size_t j = 0; j < friends.getSize(); i++) {
+      std::string people = friends[j];
+      bool chance = !potentialFriends.hasValue(people).first;
+      chance = chance && mainSocial.hasVertex(people).first;
+      chance = chance && !currentFriends.hasValue(people).first;
+      if (chance) {
+        try {
+          potentialFriends.pushBack(people);
+        }
+        catch (...) {
+          return potentialFriends;
+        }
+      }
+    }
+  }
+  return potentialFriends;
+}
+
+khairullin::Vector<std::string> khairullin::Social::recommendations(std::string nameSocial,
+    std::string username, size_t depth)
+{
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  auto infoSocial = hasSocial(nameSocial);
+  if (!infoSocial.first) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  Graph< std::string > & social = socials[infoSocial.second];
+  auto infoUser = social.hasVertex(username);
+  if (!infoUser.first) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  Vector< std::string > & currentFriends = social.edges[infoUser.second];
+  Vector< std::string > potentialFriends;
+  Vector< std::string > & temp = currentFriends;
+  for (size_t i = 0; i < depth + 1; i++) {
+    std::uniform_int_distribution< size_t > randomizer(0, temp.getSize() - 1);
+    std::string people = temp[randomizer(gen)];
+    size_t peopleIndex = social.hasVertex(people).first;
+    temp = social.edges[peopleIndex];
+  }
+  for (size_t i = 0; i < temp.getSize(); i++) {
+    std::string user = temp[i];
+    if (!currentFriends.hasValue(user).first) {
+      try {
+        potentialFriends.pushBack(user);
+      }
+      catch (...) {
+        return potentialFriends;
+      }
+    }
+  }
+  return potentialFriends;
 }
 
 void khairullin::Social::makeSocial(std::istream & is)
@@ -118,6 +195,74 @@ void khairullin::Social::deleteUser(std::istream & is)
   }
 }
 
+void khairullin::Social::getRecommendation(std::istream & is)
+{
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::string line = "";
+  std::getline(is, line);
+  std::string socialName = getToken(line);
+  std::string name = getToken(line);
+  std::string parameter = getToken(line);
+  if (socialName.empty() || name.empty() || parameter.empty() || !line.empty()) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  Vector< std::string > potentialFriends;
+  if (parameter == "other") {
+    for (size_t i = 0; i < socials.getSize(); i++) {
+      Graph< std::string > & social = socials[i];
+      auto infoName = social.hasVertex(name);
+      if (!infoName.first) {
+        continue;
+      }
+      Vector< std::string > & friends = social.edges[infoName.second];
+      for (size_t j = 0; j < friends.getSize(); i++) {
+        std::string people = friends[j];
+        if (!potentialFriends.hasValue(people).first) {
+          try {
+            potentialFriends.pushBack(people);
+          }
+          catch (...) {
+            if (potentialFriends.getSize() >= 1) {
+              std::uniform_int_distribution< size_t > randomizer(0, potentialFriends.getSize() - 1);
+              size_t temp = randomizer(gen);
+              std::cout << potentialFriends[temp] << "\n";
+            }
+            else {
+              std::cout << "No recomendations\n";
+            }
+          }
+        }
+      }
+    }
+  }
+  else {
+    size_t depth = 0;
+    try {
+      depth = std::stoi(parameter);
+    }
+    catch (...) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    auto infoSocial = hasSocial(socialName);
+    if (!infoSocial.first) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    Graph< std::string > & social = socials[infoSocial.second];
+    auto infoUser = social.hasVertex(name);
+    if (!infoUser.first) {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    Vector< std::string > & friends = social.edges[infoUser.second];
+    for (size_t i = 0; i < depth; i++) {
+      std::uniform_int_distribution< size_t > randomizer(0, friends.getSize() - 1);
+      std::string people = friends[randomizer(gen)];
+      size_t index = social.values.find(people);
+
+    }
+  }
+}
+
 void khairullin::Social::showFriends(std::istream & is)
 {
   std::string line = "";
@@ -144,6 +289,32 @@ void khairullin::Social::showFriends(std::istream & is)
   std::cout << vec[0];
   for (size_t i = 1; i < vec.getSize(); i++) {
     std::cout << " " << vec[i];
+  }
+  std::cout << "\n";
+}
+
+void khairullin::Social::findUser(std::istream & is)
+{
+  std::string line = "";
+  std::getline(is, line);
+  std::string name = getToken(line);
+  if (name.empty() || !line.empty()) {
+    throw std::logic_error("<INVALID COMMAND>");
+  }
+  std::string output = "";
+  size_t counter = 0;
+  for (size_t i = 0; i < socials.getSize(); i++) {
+    Graph< std::string > & social = socials[i];
+    if (social.hasVertex(name).first) {
+      output = output + social.name + " ";
+      counter++;
+    }
+  }
+  for (size_t i = 0; i < counter; i++) {
+    std::cout << getToken(output);
+  }
+  if (counter == 0) {
+    std::cout << "This person doesn't have socials";
   }
   std::cout << "\n";
 }

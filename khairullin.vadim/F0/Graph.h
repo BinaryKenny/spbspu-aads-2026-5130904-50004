@@ -113,12 +113,19 @@ bool khairullin::Graph< Key >::deleteNode(const Key & key) {
   try {
     copyEdges = edges;
     if (values.remove(key)) {
-      vertices--;
       copyEdges.erase(vertex);
       for (size_t i = 0; i < copyEdges.getSize(); i++) {
         auto info = copyEdges[i].hasValue(key);
         if (info.first) {
           copyEdges[i].erase(info.second);
+        }
+        for (size_t j = 0; j < copyEdges[i].getSize(); j++) {
+          Key & k = copyEdges[i][j];
+          size_t weight = values.find(k);
+          if (weight > vertex) {
+            values.remove(k);
+            values.insert(weight - 1, k);
+          }
         }
       }
     }

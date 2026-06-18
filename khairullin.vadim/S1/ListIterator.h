@@ -5,12 +5,8 @@
 
 namespace khairullin {
   template< class T >
-  struct ListIterator {
-    using value_type = T;
-    using difference_type = std::ptrdiff_t;
-    using pointer = T *;
-    using reference = T &;
-    using iterator_category = std::forward_iterator_tag;
+  struct ListIterator : public std::iterator<std::forward_iterator_tag, T>
+  {
 
     ListIterator() noexcept;
     ListIterator(Node< T > * curr) noexcept;

@@ -5,13 +5,8 @@
 
 namespace khairullin {
   template< class T >
-  struct ConstListIterator {
-    using value_type = T;
-    using difference_type = std::ptrdiff_t;
-    using pointer = const T *;
-    using reference = const T &;
-    using iterator_category = std::forward_iterator_tag;
-
+  struct ConstListIterator : public std::iterator< std::forward_iterator_tag, const T >
+  {
     ConstListIterator() noexcept;
     ConstListIterator(Node< T > * curr) noexcept;
     ~ConstListIterator() = default;
@@ -34,20 +29,17 @@ namespace khairullin {
 template< class T >
 khairullin::ConstListIterator< T >::ConstListIterator() noexcept:
   current(nullptr)
-{
-}
+{}
 
 template< class T >
 khairullin::ConstListIterator< T >::ConstListIterator(Node< T > * curr) noexcept:
   current(curr)
-{
-}
+{}
 
 template< class T >
 khairullin::ConstListIterator< T >::ConstListIterator(const ConstListIterator & other) noexcept:
   current(other.current)
-{
-}
+{}
 
 template< class T >
 khairullin::ConstListIterator< T > & khairullin::ConstListIterator< T >::operator=

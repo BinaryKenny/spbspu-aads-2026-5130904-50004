@@ -8,7 +8,8 @@
 
 namespace khairullin {
   template< class T >
-  struct List {
+  struct List
+  {
     List();
     ~List() noexcept;
     List(const List & other);

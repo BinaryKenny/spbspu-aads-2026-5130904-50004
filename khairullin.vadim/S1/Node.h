@@ -4,7 +4,8 @@
 #include <algorithm>
 namespace khairullin {
   template< class T >
-  struct Node {
+  struct Node
+  {
     T val;
     Node *next = nullptr;
     Node(const T &val);

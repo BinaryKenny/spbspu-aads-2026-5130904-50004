@@ -85,6 +85,9 @@ void khairullin::Graph<Key>::connect(const Key & key1, const Key & key2)
   catch (...) {
     throw std::logic_error("<INVALID COMMAND>");
   }
+  if (edges[vertex1].hasValue(key2).first) {
+    throw std::out_of_range("invalid");
+  }
   edges[vertex1].pushBack(key2);
   try {
     edges[vertex2].pushBack(key1);

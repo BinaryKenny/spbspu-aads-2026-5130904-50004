@@ -160,7 +160,13 @@ void khairullin::Social::makeFriends(std::string & line)
   if (!infoName1.first || !infoName2.first) {
     throw std::logic_error("<LOGIC>\t No such name(s)");
   }
-  social.connect(name1, name2);
+  try {
+    social.connect(name1, name2);
+  }
+  catch (const std::out_of_range & e) {
+    throw std::logic_error("They are already friends in the " + socialName);
+  }
+  std::cout << "From now on, " << name1 << " and " << name2 << " are friends in " << socialName << "\n";
 }
 
 void khairullin::Social::addUser(std::string & line)
@@ -175,7 +181,11 @@ void khairullin::Social::addUser(std::string & line)
     throw std::logic_error("<LOGIC>\t No such Social net");
   }
   Graph< std::string > & social = socials[infoSocial.second];
+  if (social.hasVertex(name).first) {
+    throw std::logic_error("<LOGIC>\t The name " + name + " was occupied");
+  }
   social.addNode(name);
+  std::cout << "User " << name << " was successfully added\n";
 }
 
 void khairullin::Social::stopFriendship(std::string & line)
@@ -198,7 +208,7 @@ void khairullin::Social::stopFriendship(std::string & line)
     social.disconnect(name1, name2);
   }
   catch (...) {
-    throw std::logic_error("<LOGIC>\t No such user(s)");
+    throw std::logic_error("They was not friends");
   }
   std::cout << name1 << " and " << name2 << " are not friends from this moment\n";
 }
@@ -218,6 +228,9 @@ void khairullin::Social::deleteUser(std::string & line)
     throw std::logic_error("<LOGIC>\t No such Social net");
   }
   Graph< std::string > & social = socials[infoSocial.second];
+  if (!social.hasVertex(name).first) {
+    throw std::logic_error("No such user");
+  }
   if (!social.deleteNode(name)) {
     throw std::bad_alloc();
   }
@@ -362,7 +375,7 @@ void khairullin::Social::findUser(std::string & line)
     }
   }
   if (counter == 0) {
-    std::cout << "This person doesn't have socials\n";
+    std::cout << "This is no such user\n";
     return;
   }
   std::cout << getToken(output);

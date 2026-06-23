@@ -17,7 +17,7 @@ namespace khairullin
     List<T> * erase(List<T> * h) noexcept;
     List<T> * clear(List<T> * h);
     void swap(List & other);
-    List(List & other);
+    List(const List & other);
     List & operator=(List & other);
     List(List && other);
     List & operator=(List && other);
@@ -41,7 +41,7 @@ void khairullin::List<T>::swap(khairullin::List<T> & other)
 }
 
 template<class T>
-khairullin::List<T>::List(khairullin::List<T> & other):
+khairullin::List<T>::List(const List<T> & other):
 val(other.val),
 next(nullptr),
 prev(nullptr)

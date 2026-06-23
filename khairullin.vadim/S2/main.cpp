@@ -2,7 +2,6 @@
 #include <limits>
 #include <fstream>
 #include <cstddef>
-#include "List.hpp"
 #include "Stack.hpp"
 #include "Queue.hpp"
 #include "functions.hpp"
@@ -124,7 +123,7 @@ int main(int argc, char ** argv)
           int_ll val_2 = res_stack.drop().value();
           int_ll result = 0;
           bool can_multiply = ((val_1 > 0 && val_2 > 0) && (MAX / val_1 >= val_2)) || (val_1 == 0 || val_2 == 0);
-          can_multiply = can_multiply || ((val_1 < 0 and val_2 < 0) && (MIN / (-val_1) <= val_2));
+          can_multiply = can_multiply || ((val_1 < 0 && val_2 < 0) && (MIN / (-val_1) <= val_2));
           can_multiply = can_multiply || ((val_1 > 0 && val_2 < 0) && (MIN / val_1 <= val_2));
           can_multiply = can_multiply || ((val_1 < 0 && val_2 > 0) && (MIN/ val_1 >= val_2));
           can_multiply = can_multiply || (val_1 == 0 || val_2 == 0);

@@ -134,7 +134,8 @@ int_ll khairullin::reverse(int_ll number)
   int_ll sign = number >= 0 ? 1 : -1;
   number = number * sign;
   size_t counter = 0;
-  int_ll temp[10] = {0};
+  const size_t MAX_SIZE = 20;
+  int_ll temp[MAX_SIZE] = {0};
   while (number)
   {
     temp[counter] = number % 10;

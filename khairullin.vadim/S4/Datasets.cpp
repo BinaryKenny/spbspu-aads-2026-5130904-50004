@@ -84,7 +84,7 @@ void khairullin::Datasets::addDataset(std::string name,
   vectorOfDatasets.pushBack(std::make_pair(name, tree));
 }
 
-std::pair< bool, size_t > khairullin::Datasets::hasDataset(std::string name)
+std::pair< bool, size_t > khairullin::Datasets::hasDataset(const std::string & name) const
 {
   for (size_t i = 0; i < vectorOfDatasets.getSize(); i++) {
     if (vectorOfDatasets[i].first == name) {

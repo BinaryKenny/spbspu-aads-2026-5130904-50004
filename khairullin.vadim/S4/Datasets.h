@@ -18,7 +18,7 @@ namespace khairullin {
 
     void addDataset(std::istream & file);
     void addDataset(std::string name, BSTree< size_t, std::string, Compare< size_t > > * tree);
-    std::pair< bool, size_t > hasDataset(std::string name);
+    std::pair< bool, size_t > hasDataset(const std::string & name) const;
 
     void print(std::string & line);
     void complement(std::string & line);

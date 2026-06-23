@@ -49,9 +49,9 @@ namespace khairullin
     void popBack();
     void pushFront(const T &);
 
-    T max();
-    T min();
-    std::pair< bool, size_t > has(const T & value);
+    T max() const;
+    T min() const;
+    std::pair< bool, size_t > has(const T & value) const;
 
     Iterator< T > begin();
     Iterator< T > end();
@@ -464,7 +464,7 @@ void khairullin::Vector< T >::pushFront(const T & t)
 }
 
 template< class T >
-T khairullin::Vector< T >::max()
+T khairullin::Vector< T >::max() const
 {
   auto maximum = data[0];
   for (size_t i = 1; i < size_; i++) {
@@ -476,7 +476,7 @@ T khairullin::Vector< T >::max()
 }
 
 template< class T >
-T khairullin::Vector< T >::min()
+T khairullin::Vector< T >::min() const
 {
   auto minimum = data[0];
   for (size_t i = 1; i < size_; i++) {
@@ -488,7 +488,7 @@ T khairullin::Vector< T >::min()
 }
 
 template< class T >
-std::pair< bool, size_t > khairullin::Vector< T >::has(const T & value)
+std::pair< bool, size_t > khairullin::Vector< T >::has(const T & value) const
 {
   for (size_t i = 0; i < size_ - 1; i++) {
     if (data[i] == value) {

@@ -3,6 +3,8 @@
 #include "Vector.h"
 #include "Slot.h"
 #include <iostream>
+
+const size_t DEFAULT_TABLE_SIZE = 11;
 namespace khairullin
 {
   template< class Key, class T, class Hash, class Equal >
@@ -26,7 +28,7 @@ namespace khairullin
     size_t getCount() const noexcept;
 
     private:
-      size_t size = 11;
+      size_t size = DEFAULT_TABLE_SIZE;
       size_t count = 0;
   };
 }

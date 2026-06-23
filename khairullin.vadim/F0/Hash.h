@@ -1,6 +1,5 @@
 #ifndef HASH_H
 #define HASH_H
-#include <cstddef>
 namespace khairullin {
   template< class Key >
   struct Hash {
@@ -57,7 +56,7 @@ size_t khairullin::Hash< Key >::operator()(Key skey) const
     h ^= h >> 13;
     h *= m;
     h ^= h >> 15;
-
+    delete [] key;
     return h;
 }
 #endif

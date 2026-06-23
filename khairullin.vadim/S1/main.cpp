@@ -13,7 +13,7 @@ using const_iterator = khairullin::ConstListIterator<ull>;
 using listsIterator = khairullin::ListIterator< numberList >;
 using stringIterator = khairullin::ListIterator<std::string>;
 
-static ull MAX = std::numeric_limits<ull>::max();
+static const ull MAX = std::numeric_limits<ull>::max();
 int main()
 {
   strList stringList;

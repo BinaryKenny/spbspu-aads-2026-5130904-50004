@@ -8,7 +8,7 @@ namespace khairullin {
     List * next;
 
     List(const T & value, List * next);
-    bool operator==(const List * other);
+    bool operator==(const List * other) const;
 
     List * add(const T & value, List * head);
     List * insert(const T & value, List * head);
@@ -25,7 +25,7 @@ khairullin::List< T >::List(const T & value, List * next):
 {}
 
 template< class T >
-bool khairullin::List< T >::operator==(const List * other)
+bool khairullin::List< T >::operator==(const List * other) const
 {
   List< T > * List = *this;
   auto otherList = other;

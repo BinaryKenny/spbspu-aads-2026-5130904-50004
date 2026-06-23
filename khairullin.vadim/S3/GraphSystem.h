@@ -16,7 +16,7 @@ namespace khairullin {
     ~GraphSystem() = default;
 
     void func(std::string & line);
-    std::pair< bool, size_t > graphExists(std::string & name);
+    std::pair< bool, size_t > graphExists(const std::string & name) const;
 
     void graphs(std::string & line);
     void vertexes(std::string & line);

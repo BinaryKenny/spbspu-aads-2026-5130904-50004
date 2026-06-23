@@ -5,6 +5,8 @@
 #include "Equal.h"
 #include "Hash.h"
 
+static const size_t DEFAULT_TABLE_SIZE = 20;
+
 namespace khairullin {
   template< class T, class Key, class Hash, class Equal >
   struct HashTable {
@@ -13,7 +15,7 @@ namespace khairullin {
     Hash hasher;
 
     void add(const Key & key, const T & value);
-    size_t findIndex(const Key & key);
+    size_t findIndex(const Key & key) const;
     Vector< T > drop(const Key & key);
     void cut(const Key & key, const T & value);
     bool has(const Key & key, const T & value);
@@ -31,7 +33,7 @@ namespace khairullin {
     bool operator!=(const HashTable & other) const noexcept;
 
     private:
-      size_t size = 20;
+      size_t size = DEFAULT_TABLE_SIZE;
       size_t count = 0;
   };
 }
@@ -264,7 +266,7 @@ void khairullin::HashTable< T, Key, Hash, Equal >::rehash(size_t new_size)
 }
 
 template< class T, class Key, class Hash, class Equal >
-size_t khairullin::HashTable< T, Key, Hash, Equal >::findIndex(const Key & key)
+size_t khairullin::HashTable< T, Key, Hash, Equal >::findIndex(const Key & key) const
 {
   size_t index = hasher(key) % size;
   return index;

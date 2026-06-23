@@ -57,7 +57,7 @@ bool khairullin::Graph::operator==(const Graph & other) const noexcept
   return true;
 }
 
-std::pair< bool, size_t > khairullin::Graph::hasVertex(const std::string & vert)
+std::pair< bool, size_t > khairullin::Graph::hasVertex(const std::string & vert) const
 {
   for (size_t i = 0; i < vertexes.getSize(); i++) {
     if (vertexes[i] == vert) {
@@ -67,7 +67,7 @@ std::pair< bool, size_t > khairullin::Graph::hasVertex(const std::string & vert)
   return std::make_pair(false, 0);
 }
 
-bool khairullin::Graph::hasConnection(const std::string & vert1, const std::string & vert2)
+bool khairullin::Graph::hasConnection(const std::string & vert1, const std::string & vert2) const
 {
   size_t index = edges.findIndex(vert1 + vert2);
   auto slot = edges.table[index];

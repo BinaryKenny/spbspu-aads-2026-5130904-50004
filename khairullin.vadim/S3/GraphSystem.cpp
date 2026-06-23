@@ -41,7 +41,7 @@ void khairullin::GraphSystem::graphs(std::string & )
   }
 }
 
-std::pair< bool, size_t > khairullin::GraphSystem::graphExists(std::string & name)
+std::pair< bool, size_t > khairullin::GraphSystem::graphExists(const std::string & name) const
 {
   for (size_t i = 0; i < vectorOfGraphs.getSize(); i++) {
     if (vectorOfGraphs[i].name == name) {

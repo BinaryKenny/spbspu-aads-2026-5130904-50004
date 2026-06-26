@@ -20,7 +20,25 @@ int main(int argc, char ** argv)
 
   khairullin::Stack<int_ll> output_stack;
   while (std::getline(*in, line)) {
-    int_ll res = khairullin::result(line);
+    if (line.empty()) {
+      continue;
+    }
+    int_ll res = 0;
+    try {
+      khairullin::result(line);
+    }
+    catch (const std::logic_error & e) {
+      std::cout << e.what();
+      return 2;
+    }
+    catch (const std::out_of_range & e) {
+      std::cout << e.what();
+      return 1;
+    }
+    catch (...) {
+      std::cout << "Bad allocation";
+      return 2;
+    }
     output_stack.push(res);
   }
   if (!output_stack.empty())

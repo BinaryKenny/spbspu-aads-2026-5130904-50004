@@ -183,8 +183,7 @@ int_ll khairullin::result(std::string line)
     input_queue = input(line);
   }
   catch (const std::exception & err) {
-    std::cerr << err.what() << "\n";
-    return 1;
+    throw std::logic_error("Wrong expression");
   }
   Queue< Data > postfix_queue;
   try
@@ -193,8 +192,7 @@ int_ll khairullin::result(std::string line)
   }
   catch (const std::bad_alloc & err)
   {
-    std::cerr << err.what() << "\n";
-    return 2;
+    throw;
   }
   Stack< Data > res_stack;
   try
@@ -222,12 +220,11 @@ int_ll khairullin::result(std::string line)
         if (MAX - val_1 >= val_2)
         {
           result = val_1 + val_2;
-          res_stack.push(khairullin::Data(result));
+          res_stack.push(Data(result));
         }
         else
         {
-          std::cerr << "Overflow\n";
-          return 2;
+          throw std::out_of_range("Underflow");
         }
       }
       else if (oper == '-')
@@ -244,8 +241,7 @@ int_ll khairullin::result(std::string line)
           }
           else
           {
-            std::cerr << "Underflow\n";
-            return 2;
+            throw std::out_of_range("Underflow");
           }
         }
         else
@@ -257,8 +253,7 @@ int_ll khairullin::result(std::string line)
           }
           else
           {
-            std::cerr << "Overflow\n";
-            return 2;
+            throw std::out_of_range("Overflow");
           }
         }
       }
@@ -275,12 +270,11 @@ int_ll khairullin::result(std::string line)
         if (can_multiply)
         {
           result = val_1 * val_2;
-          res_stack.push(khairullin::Data(result));
+          res_stack.push(Data(result));
         }
         else
         {
-          std::cerr << "Overflow\n";
-          return 2;
+          throw std::out_of_range("Overflow");
         }
       }
       else if (oper == '/')
@@ -294,8 +288,7 @@ int_ll khairullin::result(std::string line)
         }
         else
         {
-          std::cerr << "Divide 0\n";
-          return 1;
+          throw std::logic_error("Divide 0");
         }
       }
       else if (oper == '%')
@@ -313,20 +306,17 @@ int_ll khairullin::result(std::string line)
         }
         else
         {
-          std::cerr << "Divide 0\n";
-          return 1;
+          throw std::logic_error("Divide 0");
         }
       }
       else
       {
-        std::cerr << "Fail input\n";
-        return 1;
+        throw std::logic_error("Wrong expression");
       }
     }
   }
   catch (...) {
-    std::cerr << "Exception\n";
-    return 2;
+    throw std::logic_error("Exception thrown");
   }
   return res_stack.drop().value();
 }

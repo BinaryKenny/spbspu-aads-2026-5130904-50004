@@ -16,5 +16,6 @@ namespace khairullin
   void postfix(Queue< Data > & q, Queue< Data > & q1);
   int_ll pow(int_ll n1, int_ll n2);
   int_ll reverse(int_ll number);
+  int_ll result(std::string line);
 }
 #endif

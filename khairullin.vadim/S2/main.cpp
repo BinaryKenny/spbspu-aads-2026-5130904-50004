@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
     }
     int_ll res = 0;
     try {
-      khairullin::result(line);
+      res = khairullin::result(line);
     }
     catch (const std::out_of_range & e) {
       std::cout << e.what();

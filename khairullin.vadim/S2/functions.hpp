@@ -1,6 +1,7 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 #include "../common/Queue.hpp"
+#include "../common/Stack.hpp"
 #include "Data.hpp"
 #include <string>
 

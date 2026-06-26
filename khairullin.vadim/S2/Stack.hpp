@@ -1,17 +1,19 @@
 #ifndef STACK_HPP
 #define STACK_HPP
-#include "List.hpp"
+#include "NodeList.hpp"
 namespace khairullin
 {
-template <class T>
+template < class T >
   class Stack
   {
     public:
       void push(const T & rhs);
+      void pop();
+      T & top();
       T drop();
-      const T & value() const;
+      size_t size() const;
       void swap(Stack & other);
-      bool not_empty() const;
+      bool empty() const;
       Stack() = default;
       Stack(const T & rhs);
       Stack(Stack & other);
@@ -20,47 +22,41 @@ template <class T>
       Stack & operator=(Stack && other) noexcept;
       ~Stack();
     private:
-      List<T> * head = nullptr;
+      NodeList<T> * head = nullptr;
   };
 }
 
-template<class T>
-khairullin::Stack<T>::Stack(const T & rhs):
-head(new khairullin::List<T>(rhs, nullptr, nullptr))
+template< class T >
+khairullin::Stack< T >::Stack(const T & rhs):
+head(new NodeList< T >(rhs, nullptr, nullptr))
 {}
 
-template<class T>
-const T & khairullin::Stack<T>::value() const
-{
-  return head->val;
-}
-
-template<class T>
-void khairullin::Stack<T>::swap(khairullin::Stack<T> & other)
+template< class T >
+void khairullin::Stack< T >::swap(Stack & other)
 {
   std::swap(head, other.head);
 }
 
-template<class T>
-bool khairullin::Stack<T>::not_empty() const
+template< class T >
+bool khairullin::Stack< T >::empty() const
 {
-  return head;
+  return !head;
 }
 
-template<class T>
-khairullin::Stack<T>::Stack(Stack<T> & other):
+template< class T >
+khairullin::Stack< T >::Stack(Stack & other):
 head(nullptr)
 {
-  if (other.not_empty())
+  if (!other.empty())
   {
     try
     {
-      head = new khairullin::List<T>(other.head->val, nullptr, nullptr);
-      khairullin::List<T> * tail = head;
-      khairullin::List<T> * copy = other.head->prev;
+      head = new NodeList< T >(other.head->val, nullptr, nullptr);
+      NodeList< T > * tail = head;
+      NodeList< T > * copy = other.head->prev;
       while (copy)
       {
-        tail->prev = new khairullin::List<T>(copy->val, tail, nullptr);
+        tail->prev = new NodeList< T >(copy->val, tail, nullptr);
         tail = tail->prev;
         copy = copy->prev;
       }
@@ -72,41 +68,41 @@ head(nullptr)
   }
 }
 
-template<class T>
-khairullin::Stack<T> & khairullin::Stack<T>::operator=(khairullin::Stack<T> & other)
+template< class T >
+khairullin::Stack< T > & khairullin::Stack< T >::operator=(Stack & other)
 {
   if (this != &other)
   {
-    Stack<T> temp(other);
+    Stack temp(other);
     swap(temp);
   }
   return *this;
 }
 
-template<class T>
-khairullin::Stack<T>::Stack(khairullin::Stack<T> && other) noexcept:
+template< class T >
+khairullin::Stack< T >::Stack(Stack && other) noexcept:
 head(other.head)
 {
     other.head = nullptr;
 }
 
-template<class T>
-khairullin::Stack<T> & khairullin::Stack<T>::operator=(khairullin::Stack<T> && other) noexcept
+template< class T >
+khairullin::Stack< T > & khairullin::Stack<T>::operator=(Stack< T > && other) noexcept
 {
   if (this != &other)
   {
-    Stack<T> temp(std::move(other));
+    Stack temp(std::move(other));
     swap(temp);
   }
   return *this;
 }
 
-template<class T>
-khairullin::Stack<T>::~Stack()
+template< class T >
+khairullin::Stack< T >::~Stack()
 {
   while (head)
   {
-    khairullin::List<T> * prev = head->prev;
+    NodeList< T > * prev = head->prev;
     delete head;
     head = prev;
     if (head)
@@ -116,8 +112,8 @@ khairullin::Stack<T>::~Stack()
   }
 }
 
-template<class T>
-void khairullin::Stack<T>::push(const T & rhs)
+template< class T >
+void khairullin::Stack< T >::push(const T & rhs)
 {
   try
   {
@@ -127,7 +123,7 @@ void khairullin::Stack<T>::push(const T & rhs)
     }
     else
     {
-      head = new List<T>(rhs, nullptr, nullptr);
+      head = new NodeList< T >(rhs, nullptr, nullptr);
     }
   }
   catch(...)
@@ -136,8 +132,31 @@ void khairullin::Stack<T>::push(const T & rhs)
   }
 }
 
-template<class T>
-T khairullin::Stack<T>::drop()
+template< class T >
+void khairullin::Stack<T>::pop()
+{
+  if (!head) {
+    throw std::logic_error("The stack is empty");
+  }
+  NodeList< T > * prev = head->prev;
+  delete head;
+  head = prev;
+  if (head) {
+    head->next = nullptr;
+  }
+}
+
+template< class T >
+T & khairullin::Stack<T>::top()
+{
+  if (!head) {
+    throw std::logic_error("The stack is empty");
+  }
+  return head->val;
+}
+
+template< class T >
+T khairullin::Stack< T >::drop()
 {
   try
   {
@@ -146,7 +165,7 @@ T khairullin::Stack<T>::drop()
       throw std::logic_error("The stack is empty");
     }
     T val = head->val;
-    List<T> * prev = head->prev;
+    NodeList< T > * prev = head->prev;
     delete head;
     head = prev;
     if (head)
@@ -161,4 +180,14 @@ T khairullin::Stack<T>::drop()
   }
 }
 
+template< class T >
+size_t khairullin::Stack<T>::size() const
+{
+  auto begin = head;
+  size_t counter = 0;
+  while (begin) {
+    ++counter;
+    begin = begin->prev;
+  }
+}
 #endif

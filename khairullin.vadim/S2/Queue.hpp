@@ -1,6 +1,6 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
-#include "List.hpp"
+#include "NodeList.hpp"
 namespace khairullin
 {
   template <class T>
@@ -8,9 +8,12 @@ namespace khairullin
   {
     public:
       void push(const T & rhs);
+      T & front() const;
+      T & back() const;
       T drop();
-      const T & value() const;
-      bool not_empty() const;
+      void pop();
+      size_t size() const;
+      bool empty() const;
       void swap(Queue & other) noexcept;
       Queue(const T & rhs);
       Queue() = default;
@@ -20,46 +23,40 @@ namespace khairullin
       Queue & operator=(Queue && other) noexcept;
       ~Queue();
     private:
-      List<T> * head = nullptr;
-      List<T> * tail = nullptr;
+      NodeList< T > * head = nullptr;
+      NodeList< T > * tail = nullptr;
   };
 }
 
-template<class T>
-khairullin::Queue<T>::Queue(const T & rhs):
-head(new khairullin::List<T>(rhs, nullptr, nullptr)),
+template< class T >
+khairullin::Queue< T >::Queue(const T & rhs):
+head(new NodeList< T >(rhs, nullptr, nullptr)),
 tail(head)
 {}
 
-template<class T>
-bool khairullin::Queue<T>::not_empty() const
+template< class T >
+bool khairullin::Queue< T >::empty() const
 {
-  return head;
+  return !head;
 }
 
-template<class T>
-const T & khairullin::Queue<T>::value() const
-{
-  return head->val;
-}
-
-template<class T>
-void khairullin::Queue<T>::swap(khairullin::Queue<T> & other) noexcept
+template< class T >
+void khairullin::Queue< T >::swap(Queue & other) noexcept
 {
   std::swap(head, other.head);
   std::swap(tail, other.tail);
 }
 
-template<class T>
-khairullin::Queue<T>::Queue(Queue<T> & other):
+template< class T >
+khairullin::Queue< T >::Queue(Queue & other):
 head(nullptr),
 tail(nullptr)
 {
-  if (other.not_empty())
+  if (!other.empty())
   {
     try
     {
-      head = new List<T>(*other.head);
+      head = new NodeList< T >(*other.head);
       tail = head;
       while (tail->next)
       {
@@ -77,8 +74,8 @@ tail(nullptr)
   }
 }
 
-template<class T>
-khairullin::Queue<T> & khairullin::Queue<T>::operator=(khairullin::Queue<T> & other)
+template< class T >
+khairullin::Queue< T > & khairullin::Queue< T >::operator=(Queue & other)
 {
   if (this != & other)
   {
@@ -95,8 +92,8 @@ khairullin::Queue<T> & khairullin::Queue<T>::operator=(khairullin::Queue<T> & ot
   return *this;
 }
 
-template<class T>
-khairullin::Queue<T>::Queue(khairullin::Queue<T> && other) noexcept:
+template< class T >
+khairullin::Queue< T >::Queue(Queue && other) noexcept:
 head(nullptr),
 tail(nullptr)
 {
@@ -107,7 +104,7 @@ tail(nullptr)
 }
 
 template<class T>
-khairullin::Queue<T> & khairullin::Queue<T>::operator=(khairullin::Queue<T> && other) noexcept
+khairullin::Queue< T > & khairullin::Queue< T >::operator=(Queue && other) noexcept
 {
   if (this != &other)
   {
@@ -118,7 +115,7 @@ khairullin::Queue<T> & khairullin::Queue<T>::operator=(khairullin::Queue<T> && o
 }
 
 template<class T>
-void khairullin::Queue<T>::push(const T & rhs)
+void khairullin::Queue< T >::push(const T & rhs)
 {
   try
   {
@@ -128,7 +125,7 @@ void khairullin::Queue<T>::push(const T & rhs)
     }
     else
     {
-      head = new List<T>(rhs, nullptr, nullptr);
+      head = new NodeList< T >(rhs, nullptr, nullptr);
       tail = head;
     }
   }
@@ -138,8 +135,28 @@ void khairullin::Queue<T>::push(const T & rhs)
   }
 }
 
-template<class T>
-T khairullin::Queue<T>::drop()
+template< class T >
+T & khairullin::Queue<T>::front() const
+{
+  if (!head) {
+    throw std::out_of_range("The queue is empty");
+  }
+  T & result = head->val;
+  return result;
+}
+
+template< class T >
+T & khairullin::Queue<T>::back() const
+{
+  if (!tail) {
+    throw std::out_of_range("The queue is empty");
+  }
+  T & result = tail->val;
+  return result;
+}
+
+template< class T >
+T khairullin::Queue< T >::drop()
 {
   try
   {
@@ -148,7 +165,7 @@ T khairullin::Queue<T>::drop()
       throw std::logic_error("The queue is empty");
     }
     T val = head->val;
-    List<T> * next = head->next;
+    NodeList< T > * next = head->next;
     delete head;
     head = next;
     if (!head)
@@ -167,8 +184,37 @@ T khairullin::Queue<T>::drop()
   }
 }
 
+template< class T >
+void khairullin::Queue<T>::pop()
+{
+  if (empty()) {
+    throw std::out_of_range("The queue is empty");
+  }
+  NodeList< T > * next = head->next;
+  delete head;
+  head = next;
+  if (empty()) {
+    tail = nullptr;
+  }
+  else {
+    head->prev = nullptr;
+  }
+}
+
+template< class T >
+size_t khairullin::Queue<T>::size() const
+{
+  auto begin = head;
+  size_t counter = 0;
+  while (begin != tail) {
+    counter++;
+    begin = begin->next;
+  }
+  return counter;
+}
+
 template<class T>
-khairullin::Queue<T>::~Queue()
+khairullin::Queue< T >::~Queue()
 {
   if (head)
   {

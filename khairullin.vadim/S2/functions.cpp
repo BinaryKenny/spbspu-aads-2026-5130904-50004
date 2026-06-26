@@ -35,9 +35,9 @@ khairullin::Queue< khairullin::Data > khairullin::input(std::string line)
   while(i < line.length())
   {
     char temp = line[i];
-    if (khairullin::operandIsChar(temp))
+    if (operandIsChar(temp))
     {
-      q.push(khairullin::Data(temp));
+      q.push(Data(temp));
       i++;
     }
     else
@@ -92,7 +92,7 @@ bool khairullin::cmpPriority(const char op1, const char op2)
 void khairullin::postfix(Queue< Data > & q, Queue< Data > & q1)
 {
   Stack< Data > s2;
-  while (q.not_empty())
+  while (!q.empty())
   {
     Data val = q.drop();
     if (val.is_int())
@@ -105,26 +105,26 @@ void khairullin::postfix(Queue< Data > & q, Queue< Data > & q1)
     }
     else if (val.char_value() == ')')
     {
-      while (s2.not_empty() && s2.value().char_value() != '(')
+      while (!s2.empty() && s2.top().char_value() != '(')
       {
         q1.push(s2.drop());
       }
-      if (s2.not_empty() && s2.value().char_value() == '(')
+      if (!s2.empty() && s2.top().char_value() == '(')
       {
         s2.drop();
       }
     }
     else
     {
-      while (s2.not_empty() && s2.value().char_value() != '('
-        && khairullin::priority(s2.value().char_value(), val.char_value()))
+      while (!s2.empty() && s2.top().char_value() != '('
+        && cmpPriority(s2.top().char_value(), val.char_value()))
       {
         q1.push(s2.drop());
       }
       s2.push(val);
     }
   }
-  while (s2.not_empty())
+  while (!s2.empty())
   {
     q1.push(s2.drop());
   }
@@ -142,7 +142,7 @@ int_ll khairullin::pow(int_ll n1, int_ll n2)
 }
 int_ll khairullin::reverse(int_ll number)
 {
-  int_ll MAX = std::numeric_limits<int_ll>::max();
+  int_ll MAX_NUM = std::numeric_limits<int_ll>::max();
   int_ll result = 0;
   int_ll sign = number >= 0 ? 1 : -1;
   number = number * sign;
@@ -159,10 +159,10 @@ int_ll khairullin::reverse(int_ll number)
   int_ll grade = static_cast<int_ll>(counter - 1);
   while(id < counter)
   {
-    if (temp[id] > MAX / pow(10, grade)) {
+    if (temp[id] > MAX_NUM / pow(10, grade)) {
       throw std::out_of_range("Some problems with the number");
     }
-    if (result > MAX - temp[id] * pow(10, grade)) {
+    if (result > MAX_NUM - temp[id] * pow(10, grade)) {
       throw std::out_of_range("Some problems with the number");
     }
     result += temp[id] * pow(10, grade);

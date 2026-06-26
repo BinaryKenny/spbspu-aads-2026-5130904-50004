@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstddef>
 #include "Stack.hpp"
 #include "Queue.hpp"
 #include "functions.hpp"
@@ -35,7 +34,7 @@ int main(int argc, char ** argv)
       std::cerr << err.what() << "\n";
       return 1;
     }
-    if (!input_queue.not_empty())
+    if (input_queue.empty())
     {
       continue;
     }
@@ -52,13 +51,13 @@ int main(int argc, char ** argv)
     khairullin::Stack<khairullin::Data> res_stack;
     try
     {
-      while (postfix_queue.not_empty())
+      while (!postfix_queue.empty())
       {
-        while(postfix_queue.not_empty() && postfix_queue.value().is_int())
+        while(!postfix_queue.empty() && postfix_queue.front().is_int())
         {
           res_stack.push(postfix_queue.drop());
         }
-        if (!postfix_queue.not_empty())
+        if (postfix_queue.empty())
         {
           break;
         }
@@ -178,7 +177,7 @@ int main(int argc, char ** argv)
         }
       }
       output_stack.push(res_stack.drop().value());
-      if (res_stack.not_empty())
+      if (!res_stack.empty())
       {
         std::cerr << "Wrong\n";
         return 3;
@@ -190,11 +189,11 @@ int main(int argc, char ** argv)
       return 2;
     }
   }
-  if (output_stack.not_empty())
+  if (!output_stack.empty())
   {
     std::cout << output_stack.drop();
   }
-  while (output_stack.not_empty())
+  while (!output_stack.empty())
   {
     std::cout << " " << output_stack.drop();
   }

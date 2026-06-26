@@ -189,5 +189,6 @@ size_t khairullin::Stack<T>::size() const
     ++counter;
     begin = begin->prev;
   }
+  return counter;
 }
 #endif

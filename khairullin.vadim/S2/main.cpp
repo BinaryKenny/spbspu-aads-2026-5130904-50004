@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include "Stack.hpp"
-#include "Queue.hpp"
+#include "../common/Stack.hpp"
+#include "../common/Queue.hpp"
 #include "functions.hpp"
 #include "Data.hpp"
 

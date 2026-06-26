@@ -1,10 +1,8 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
-#include "Queue.hpp"
-#include "Stack.hpp"
+#include "../common/Queue.hpp"
 #include "Data.hpp"
 #include <string>
-#include <cstddef>
 
 using int_ll = long long int;
 namespace khairullin

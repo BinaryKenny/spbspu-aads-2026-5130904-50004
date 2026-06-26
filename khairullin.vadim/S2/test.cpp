@@ -3,8 +3,8 @@ __attribute__((weak)) int main(int argc, char* argv[]);
 #endif
 
 #define BOOST_TEST_MODULE S2
-#include "Queue.hpp"
-#include "Stack.hpp"
+#include "../common/Queue.hpp"
+#include "../common/Stack.hpp"
 #include "functions.hpp"
 #include "Data.hpp"
 #include <boost/test/included/unit_test.hpp>

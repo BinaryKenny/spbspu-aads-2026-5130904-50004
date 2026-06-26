@@ -27,13 +27,13 @@ int main(int argc, char ** argv)
     try {
       khairullin::result(line);
     }
-    catch (const std::logic_error & e) {
-      std::cout << e.what();
-      return 2;
-    }
     catch (const std::out_of_range & e) {
       std::cout << e.what();
       return 1;
+    }
+    catch (const std::logic_error & e) {
+      std::cout << e.what();
+      return 2;
     }
     catch (...) {
       std::cout << "Bad allocation";

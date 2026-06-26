@@ -1,28 +1,41 @@
 #include "functions.hpp"
+#include <limits>
 
 using int_ll = long long int;
 
-bool khairullin::is_char(const char c)
+bool khairullin::operandIsChar(const char c)
 {
-  bool cond = c == '(';
-  cond = cond || c == ')';
-  cond = cond || c == '+';
-  cond = cond || c == '-';
-  cond = cond || c == '*';
-  cond = cond || c == '/';
-  cond = cond || c == '%';
-  cond = cond || c == '#';
-  return cond;
+  switch (c)
+  {
+    case '(':
+      return true;
+    case ')':
+      return true;
+     case '+':
+      return true;
+    case '-':
+      return true;
+    case '*':
+      return true;
+    case '/':
+      return true;
+    case '%':
+      return true;
+    case '#':
+      return true;
+    default:
+      return false;
+  }
 }
 
-khairullin::Queue<khairullin::Data> khairullin::input(std::string line)
+khairullin::Queue< khairullin::Data > khairullin::input(std::string line)
 {
-  khairullin::Queue<khairullin::Data> q{};
+  Queue< Data > q;
   size_t i = 0;
   while(i < line.length())
   {
     char temp = line[i];
-    if (khairullin::is_char(temp))
+    if (khairullin::operandIsChar(temp))
     {
       q.push(khairullin::Data(temp));
       i++;
@@ -44,7 +57,7 @@ khairullin::Queue<khairullin::Data> khairullin::input(std::string line)
       {
         throw std::out_of_range("Some problems with the number");
       }
-      q.push(khairullin::Data(num));
+      q.push(Data(num));
     }
     if (i < line.length() && line[i] == ' ')
     {
@@ -54,7 +67,7 @@ khairullin::Queue<khairullin::Data> khairullin::input(std::string line)
   return q;
 }
 
-size_t khairullin::get_priority(const char & op)
+size_t khairullin::getPriority(const char op)
 {
   if (op == '+' || op == '-')
   {
@@ -71,18 +84,17 @@ size_t khairullin::get_priority(const char & op)
   return 0;
 }
 
-bool khairullin::priority(const char & op1, const char & op2)
+bool khairullin::cmpPriority(const char op1, const char op2)
 {
-  return khairullin::get_priority(op1) >= khairullin::get_priority(op2);
+  return getPriority(op1) >= getPriority(op2);
 }
 
-void khairullin::postfix(khairullin::Queue<khairullin::Data> & q,
-  khairullin::Queue<khairullin::Data> & q1)
+void khairullin::postfix(Queue< Data > & q, Queue< Data > & q1)
 {
-  khairullin::Stack<khairullin::Data> s2;
+  Stack< Data > s2;
   while (q.not_empty())
   {
-    khairullin::Data val = q.drop();
+    Data val = q.drop();
     if (val.is_int())
     {
       q1.push(val);
@@ -118,7 +130,7 @@ void khairullin::postfix(khairullin::Queue<khairullin::Data> & q,
   }
 }
 
-int_ll khairullin::degree(int_ll n1, int_ll n2)
+int_ll khairullin::pow(int_ll n1, int_ll n2)
 {
   int_ll result = 1;
   while (n2 != 0)
@@ -130,11 +142,12 @@ int_ll khairullin::degree(int_ll n1, int_ll n2)
 }
 int_ll khairullin::reverse(int_ll number)
 {
+  int_ll MAX = std::numeric_limits<int_ll>::max();
   int_ll result = 0;
   int_ll sign = number >= 0 ? 1 : -1;
   number = number * sign;
   size_t counter = 0;
-  const size_t MAX_SIZE = 20;
+  const size_t MAX_SIZE = 19;
   int_ll temp[MAX_SIZE] = {0};
   while (number)
   {
@@ -146,7 +159,13 @@ int_ll khairullin::reverse(int_ll number)
   int_ll grade = static_cast<int_ll>(counter - 1);
   while(id < counter)
   {
-    result += temp[id] * khairullin::degree(10, grade);
+    if (temp[id] > MAX / pow(10, grade)) {
+      throw std::out_of_range("Some problems with the number");
+    }
+    if (result > MAX - temp[id] * pow(10, grade)) {
+      throw std::out_of_range("Some problems with the number");
+    }
+    result += temp[id] * pow(10, grade);
     id++;
     grade--;
   }

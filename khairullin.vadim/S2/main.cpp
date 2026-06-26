@@ -1,5 +1,4 @@
 #include <iostream>
-#include <limits>
 #include <fstream>
 #include <cstddef>
 #include "Stack.hpp"

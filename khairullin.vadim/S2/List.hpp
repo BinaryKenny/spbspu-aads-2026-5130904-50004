@@ -5,19 +5,19 @@
 #include <stdexcept>
 namespace khairullin
 {
-  template <class T>
-  struct List
+  template< class T >
+  struct NodeList
   {
     T val;
-    List<T> * next, * prev;
-    List(const T & val, List<T> * n, List<T> * b);
-    List<T> * add(const T & val, List<T> * n, List<T> * b);
-    List<T> * insert(const T & val, List<T> * h);
-    List<T> * cut(List<T> * h) noexcept;
-    List<T> * erase(List<T> * h) noexcept;
-    List<T> * clear(List<T> * h);
-    void swap(List & other);
-    List(const List & other);
+    NodeList<T> * next, * prev;
+    NodeList(const T & val, List<T> * n, List<T> * b);
+    NodeList<T> * add(const T & val, List<T> * n, List<T> * b);
+    NodeList<T> * insert(const T & val, List<T> * h);
+    NodeList<T> * cut(List<T> * h) noexcept;
+    NodeList<T> * erase(List<T> * h) noexcept;
+    NodeList<T> * clear(List<T> * h);
+    void swap(NodeList & other);
+    NodeList(const List & other);
     List & operator=(List & other);
     List(List && other);
     List & operator=(List && other);

@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include <algorithm>
+#include <stdexcept>
 namespace khairullin
 {
   template< class T >

@@ -1,5 +1,6 @@
 #ifndef HASH_H
 #define HASH_H
+#include <cstddef>
 namespace khairullin {
   template< class Key >
   struct Hash {

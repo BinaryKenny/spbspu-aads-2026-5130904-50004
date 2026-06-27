@@ -22,7 +22,7 @@ size_t khairullin::Hash< Key >::operator()(Key skey) const
 
     unsigned int h = seed ^ len;
 
-    const unsigned char * data = (const unsigned char *)key;
+    const unsigned char * data = reinterpret_cast< const unsigned char * >(key);
     unsigned int k = 0;
 
     while (len >= 4)

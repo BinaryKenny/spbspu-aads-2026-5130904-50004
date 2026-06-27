@@ -3,10 +3,8 @@
 khairullin::Graph::Graph():
   name(""),
   vertexes(Vector< std::string >()),
-  edges(HashTable< size_t, std::string, Hash, Equal< std::pair< size_t,
-    std::string > > >())
-{
-}
+  edges(HashTable< size_t, std::string, Hash, Equal< std::pair< size_t, std::string > > >())
+{}
 
 khairullin::Graph::Graph(const Graph & other):
   Graph(other.name)
@@ -117,8 +115,10 @@ void khairullin::Graph::addVertex(const std::string & vert)
   }
   try {
     vertexes.pushBack(vert);
-  } catch (...) {
-    throw std::bad_alloc();
+  }
+  catch (...)
+  {
+    throw;
   }
 }
 

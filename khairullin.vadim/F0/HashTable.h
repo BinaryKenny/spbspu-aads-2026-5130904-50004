@@ -1,6 +1,6 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
-#include "Vector.h"
+#include "../common/Vector.h"
 #include "Slot.h"
 #include <iostream>
 

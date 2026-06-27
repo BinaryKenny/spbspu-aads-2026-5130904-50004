@@ -1,7 +1,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
-#include "Vector.h"
-#include "Queue.h"
+#include "../common/Vector.h"
+#include "../common/Queue.hpp"
 #include "Hash.h"
 #include "Equal.h"
 #include "HashTable.h"
@@ -180,7 +180,7 @@ size_t khairullin::Graph< Key >::path(const Key & k1, const Key & k2) {
   Queue< size_t > queue;
   queue.push(start);
   Vector< size_t > distances(vertices, 0);
-  while (queue.notEmpty()) {
+  while (!queue.empty()) {
     size_t vertex = queue.drop();
     if (vertex == target) {
       return distances[vertex];

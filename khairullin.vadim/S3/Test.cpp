@@ -2,15 +2,16 @@
 __attribute__((weak)) int main(int argc, char * argv[]);
 #endif
 
-#define BOOST_TEST_MODULE S2
+#define BOOST_TEST_MODULE S4
 #include <boost/test/included/unit_test.hpp>
 #include "GraphSystem.h"
 #include <sstream>
 
-BOOST_AUTO_TEST_SUITE (main_test)
+BOOST_AUTO_TEST_CASE(main_test)
 {
   khairullin::HashTable< int, std::string, khairullin::Hash, khairullin::Equal< std::pair< int,
         std::string > > > hashTable;
+  std::string null = "";
   hashTable.add("hello", 100);
   khairullin::Vector< int > result = hashTable.drop("hello");
   BOOST_TEST(result[0] == 100);
@@ -51,23 +52,32 @@ BOOST_AUTO_TEST_SUITE (main_test)
   BOOST_TEST(system.vectorOfGraphs[0] == testGraph);
   std::stringstream stream;
   std::streambuf * buffer = std::cout.rdbuf(stream.rdbuf());
-  system.graphs(command);
-  BOOST_TEST(stream.str() == "graph1");
+  system.graphs(null);
+  BOOST_TEST(stream.str() == "graph1\n");
+  stream.str(null);
   stream.clear();
-  std::string temp = "";
+  std::string temp = "graph1";
   system.vertexes(temp);
   BOOST_TEST(stream.str() == "a\nb\nc\nd\n");
+  stream.str(null);
+  stream.clear();
   std::string boundTemp = "graph1 a";
   stream.clear();
   system.outbound(boundTemp);
-  BOOST_TEST(stream.str() == "");
-  system.inbound(boundTemp);
+  std::string n = "\n";
+  BOOST_TEST(stream.str() == n);
+  stream.str(null);
   stream.clear();
-  BOOST_TEST(stream.str() == "");
+  boundTemp = "graph1 a";
+  system.inbound(boundTemp);
+  BOOST_TEST(stream.str() == null);
+  stream.str(null);
+  stream.clear();
 
   std::string bindTemp = "graph1 a b 100";
   system.bind(bindTemp);
   BOOST_TEST(system.vectorOfGraphs[0].hasConnection("a", "b") == true);
+  bindTemp = "graph1 a b 100";
   system.cut(bindTemp);
   BOOST_TEST(system.vectorOfGraphs[0].hasConnection("a", "b") == false);
 
@@ -76,6 +86,8 @@ BOOST_AUTO_TEST_SUITE (main_test)
   std::string mergeTemp = "gr3 graph1 gr2";
   system.merge(mergeTemp);
   std::string gr3 = "gr3";
+  stream.str("");
+  stream.clear();
   system.vertexes(gr3);
   BOOST_TEST(stream.str() == "a\nb\nc\nd\ne\n");
   std::cout.rdbuf(buffer);

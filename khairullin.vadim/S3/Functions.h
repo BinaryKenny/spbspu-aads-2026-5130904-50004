@@ -2,15 +2,15 @@
 #define FUNCTIONS_H
 #include <iostream>
 #include <string>
-#include "Vector.h"
+#include "../common/Vector.h"
 
 namespace khairullin {
-  std::string getToken(std::string & line)
+  inline std::string getToken(std::string & line)
   {
     std::string token = "";
     std::string result = "";
     size_t new_start = 0;
-    for (size_t i = 0; i < line.length() && line[i] != ' '; i++) {
+    for (size_t i = 0; i < line.length() && line[i] != ' ' && line[i] != '\n'; i++) {
       token += line[i];
       new_start = i;
     }
@@ -19,7 +19,7 @@ namespace khairullin {
       return token;
     }
     new_start += 2;
-    for (size_t i = new_start; i < line.length() && line[i] != '\0'; i++) {
+    for (size_t i = new_start; i < line.length() && (line[i] != '\0' && line[i] != '\n'); i++) {
       result += line[i];
     }
     line = result;
@@ -27,7 +27,7 @@ namespace khairullin {
   }
 
   template< class T, class U >
-  void sortPair(khairullin::Vector< std::pair< T, U > > & vector)
+  void sortPair(Vector< std::pair< T, U > > & vector)
   {
     for (size_t i = 0; i < vector.getSize() - 1; i++) {
       for (size_t j = 0; j < vector.getSize() - i - 1; j++) {
@@ -39,7 +39,7 @@ namespace khairullin {
   }
 
   template< class T >
-  void sortVector(khairullin::Vector< T > & vector)
+  void sortVector(Vector< T > & vector)
   {
     for (size_t i = 0; i < vector.getSize() - 1; i++) {
       for (size_t j = 0; j < vector.getSize() - i - 1; j++) {

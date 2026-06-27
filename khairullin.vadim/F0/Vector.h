@@ -16,11 +16,11 @@ namespace khairullin
     Vector();
     ~Vector();
     Vector(size_t size, const T & value);
-    Vector(const Vector<T> & rhs);
-    Vector(Vector<T> && rhs) noexcept;
-    Vector<T> & operator=(const Vector<T> & rhs);
-    Vector<T> & operator=(Vector<T> && rhs) noexcept;
-    void swap(Vector<T> & rhs) noexcept;
+    Vector(const Vector & rhs);
+    Vector(Vector && rhs) noexcept;
+    Vector & operator=(const Vector & rhs);
+    Vector & operator=(Vector && rhs) noexcept;
+    void swap(Vector & rhs) noexcept;
 
     T & operator[](size_t id) noexcept;
     T & at(size_t id);
@@ -30,11 +30,11 @@ namespace khairullin
     std::pair< bool, size_t > hasValue(const T & value);
     size_t getSize() const noexcept;
     size_t getCapacity() const noexcept;
-    bool operator==(const Vector<T> & rhs) const noexcept;
-    bool operator!=(const Vector<T> & rhs) const noexcept;
+    bool operator==(const Vector & rhs) const noexcept;
+    bool operator!=(const Vector & rhs) const noexcept;
 
     void insert(size_t id, const T & t);
-    void insert(size_t id, const Vector<T> & rhs, size_t beg, size_t end);
+    void insert(size_t id, const Vector & rhs, size_t beg, size_t end);
     void insert(Iterator<T> pos, const T & value);
     void insert(Iterator<T> pos, CIterator<T> begin, CIterator<T> end);
     void insert(Iterator< T > pos, const T & value, size_t k);
@@ -44,7 +44,6 @@ namespace khairullin
     void erase(Iterator< T > pos);
     void erase(Iterator< T > begin, Iterator< T > end);
     void erase(CIterator< T > begin, size_t k);
-    
     void pushBack(const T &);
     void popBack();
     void pushFront(const T &);
@@ -73,8 +72,8 @@ namespace khairullin
     void write(const T & value);
     void cut();
     T & operator*() const noexcept;
-    bool operator==(const Iterator< T > & rhs) const noexcept;
-    bool operator!=(const Iterator< T > & rhs) const noexcept;
+    bool operator==(const Iterator & rhs) const noexcept;
+    bool operator!=(const Iterator & rhs) const noexcept;
 
     Vector<T> & vector;
     size_t id;
@@ -88,8 +87,8 @@ namespace khairullin
     void operator-=(size_t i);
     T & read();
     T & operator*() const noexcept;
-    bool operator==(const CIterator< T > & rhs) const noexcept;
-    bool operator!=(const CIterator< T > & rhs) const noexcept;
+    bool operator==(const CIterator & rhs) const noexcept;
+    bool operator!=(const CIterator & rhs) const noexcept;
 
     Vector< T > & vector;
     size_t id;

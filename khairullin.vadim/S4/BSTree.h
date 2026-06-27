@@ -38,7 +38,7 @@ namespace khairullin {
     void clear(BSTree * root);
 
     size_t height() const;
-    size_t height(BSTree * root) const;
+    size_t height(const BSTree * root) const;
 
     BSTree * fallLeft();
     BSTree * fallRight();
@@ -361,7 +361,7 @@ void khairullin::BSTree<Key, T, Compare>::clear(BSTree * root)
 }
 
 template< class Key, class T, class Compare >
-size_t khairullin::BSTree<Key, T, Compare>::height(BSTree * root) const
+size_t khairullin::BSTree<Key, T, Compare>::height(const BSTree * root) const
 {
   if (root == nullptr) {
     return 0;
@@ -372,8 +372,7 @@ size_t khairullin::BSTree<Key, T, Compare>::height(BSTree * root) const
 template< class Key, class T, class Compare >
 size_t khairullin::BSTree<Key, T, Compare>::height() const
 {
-  auto root = this;
-  return height(root);
+  return height(this);
 }
 
 template< class Key, class T, class Compare >

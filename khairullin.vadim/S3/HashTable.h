@@ -186,7 +186,7 @@ khairullin::Vector< T > khairullin::HashTable< T, Key, Hash, Equal >::drop(const
   auto slot = table[index];
   Vector< T > result;
   while (slot) {
-    if (slot->value.second == key) {
+    if (slot->val.second == key) {
       try {
         result.pushBack(slot->val.first);
       } catch (...) {

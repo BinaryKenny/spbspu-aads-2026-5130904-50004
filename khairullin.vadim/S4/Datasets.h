@@ -1,7 +1,7 @@
 #ifndef DATASETS_H
 #define DATASETS_H
 #include "BSTree.h"
-#include "Vector.h"
+#include "../common/Vector.h"
 #include "Functions.h"
 #include <iostream>
 

@@ -5,9 +5,6 @@ __attribute__((weak)) int main(int argc, char * argv[]);
 #define BOOST_TEST_MODULE S4
 #include <boost/test/included/unit_test.hpp>
 #include "Datasets.h"
-#include <sstream>
-
-using namespace khairullin;
 
 BOOST_AUTO_TEST_CASE(main_test)
 {

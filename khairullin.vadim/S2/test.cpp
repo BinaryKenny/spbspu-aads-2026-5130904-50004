@@ -3,8 +3,8 @@ __attribute__((weak)) int main(int argc, char* argv[]);
 #endif
 
 #define BOOST_TEST_MODULE S2
-#include "Queue.hpp"
-#include "Stack.hpp"
+#include "../common/Queue.hpp"
+#include "../common/Stack.hpp"
 #include "functions.hpp"
 #include "Data.hpp"
 #include <boost/test/included/unit_test.hpp>
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   BOOST_TEST(new_q.drop() == first);
 
   khairullin::Stack<int> stack;
-  while(q.not_empty())
+  while(!q.empty())
   {
     stack.push(q.drop());
   }
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(main_test)
   in << "4 * 3 - 17 / 10";
   q1 = khairullin::input(in.str());
   khairullin::postfix(q1, q2);
-  while (q2.not_empty())
+  while (!q2.empty())
   {
     khairullin::Data val = q2.drop();
     if (val.is_int())

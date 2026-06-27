@@ -358,7 +358,7 @@ size_t khairullin::BSTree<Key, T, Compare>::height(BSTree * root)
 template< class Key, class T, class Compare >
 size_t khairullin::BSTree<Key, T, Compare>::height()
 {
-  auto root = this;
+  auto root = *this;
   return height(root);
 }
 

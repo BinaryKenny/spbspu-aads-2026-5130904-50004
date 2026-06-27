@@ -1,26 +1,104 @@
 #if defined(__GNUC__) || defined(__clang__)
-__attribute__((weak)) int main(int argc, char* argv[]);
+__attribute__((weak)) int main(int argc, char * argv[]);
 #endif
 
 #define BOOST_TEST_MODULE S1
 #include <boost/test/included/unit_test.hpp>
 #include "List.hpp"
-#include "List.cpp"
-#include "LIter.hpp"
-#include "LIter.cpp"
-#include "CLIter.hpp"
-#include "CLIter.cpp"
-
 BOOST_AUTO_TEST_CASE(List_test)
 {
-  int number = 1000;
-  int number_2 = 1001;
-  khairullin::List<int> * head = new khairullin::List<int>(number, nullptr);
-  khairullin::LIter<int> iter = khairullin::LIter<int>(head);
-  khairullin::CLIter<int> const_iter = khairullin::CLIter<int>(head);
-  BOOST_TEST(iter.value() == number);
-  BOOST_TEST(const_iter.value() == number);
-  BOOST_TEST(const_iter.hasNext() == false);
-  iter = iter.insert_value(number_2);
-  BOOST_TEST(iter.value() == number_2);
+  khairullin::List< int > intList;
+  intList.push_front(6);
+  intList.push_front(7);
+  intList.push_back(89);
+  intList.push_front(10);
+  intList.push_front(20);
+  intList.push_front(30);
+  intList.push_back(1321);
+
+  auto iter = intList.begin();
+  auto citer = intList.cbegin();
+  BOOST_TEST(*iter == *citer);
+  BOOST_TEST(*iter == 30);
+  iter++;
+  iter.insert(39);
+  iter++;
+  BOOST_TEST(*iter == 39);
+
+  khairullin::List< int > otherList(intList);
+  BOOST_TEST(intList == otherList);
+  auto it1 = intList.begin();
+  auto it2 = otherList.begin();
+  while (it1 != intList.end()) {
+    BOOST_TEST(*it1 == *it2);
+    it1++;
+    it2++;
+  }
+  otherList.clear();
+
+  otherList = intList;
+  BOOST_TEST(intList == otherList);
+  it1 = intList.begin();
+  it2 = otherList.begin();
+  while (it1 != intList.end()) {
+    BOOST_TEST(*it1 == *it2);
+    it1++;
+    it2++;
+  }
+
+  khairullin::List< int > copy(std::move(intList));
+  BOOST_TEST(copy == otherList);
+  copy.clear();
+  intList = otherList;
+  copy = std::move(intList);
+  BOOST_TEST(otherList == copy);
+  it1 = intList.begin();
+  it2 = copy.begin();
+  while (it1 != intList.end()) {
+    BOOST_TEST(*it1 == *it2);
+    it1++;
+    it2++;
+  }
+}
+
+BOOST_AUTO_TEST_CASE(List_test2)
+{
+  khairullin::List< int > list1;
+  khairullin::List< int > list2;
+  list1.push_front(6);
+  list1.push_front(7);
+  list1.push_back(89);
+  list2.push_front(6);
+  list2.push_front(7);
+  list2.push_back(89);
+  auto it1 = list1.begin();
+  auto it2 = list2.begin();
+  for (size_t i = 0; i < 3; i++) {
+    BOOST_TEST(*it1 == *it2);
+    it1++;
+    it2++;
+  }
+  list1.cut(7);
+  BOOST_TEST(*(list1.begin()) == 6);
+
+  list1.push_back(2143);
+  list1.push_back(2144);
+  auto iter = list1.begin();
+  BOOST_TEST(iter.hasNext() == true);
+  while (iter.hasNext()) {
+    iter++;
+  }
+  BOOST_TEST(*iter == 2144);
+
+  list2.cut(7);
+  BOOST_TEST(*(list2.cbegin()) == 6);
+
+  list2.push_back(2143);
+  list2.push_back(2144);
+  auto citer = list2.cbegin();
+  BOOST_TEST(citer.hasNext() == true);
+  while (citer.hasNext()) {
+    citer++;
+  }
+  BOOST_TEST(*citer == 2144);
 }

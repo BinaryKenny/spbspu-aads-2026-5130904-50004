@@ -2,7 +2,7 @@
 #define FUNCTIONS_H
 #include <iostream>
 #include <string>
-#include "Vector.h"
+#include "../common/Vector.h"
 
 namespace khairullin {
   inline std::string getToken(std::string & line)

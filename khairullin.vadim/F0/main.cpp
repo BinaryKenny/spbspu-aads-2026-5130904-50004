@@ -3,6 +3,10 @@
 int main(int argc, char * argv[])
 {
   khairullin::Social Space;
+  if (argc < 2) {
+    std::cerr << "You should input a file\n";
+    return 1;
+  }
   std::ifstream input(argv[1]);
   while (input) {
     try {

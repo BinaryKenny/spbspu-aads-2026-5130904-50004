@@ -1,7 +1,7 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 #include "../common/NodeList.hpp"
-#include "Vector.h"
+#include "../common/Vector.h"
 #include "Equal.h"
 #include "Hash.h"
 
@@ -62,7 +62,7 @@ khairullin::HashTable< T, Key, Hash, Equal >::HashTable(const HashTable & other)
     NodeList< std::pair< T, Key > > * head = nullptr;
     if (slot) {
       try {
-        head = new NodeList< std::pair< T, Key > >(slot->value, nullptr);
+        head = new NodeList< std::pair< T, Key > >(slot->val, nullptr, nullptr);
         slot = slot->next;
       } catch (...) {
         throw std::bad_alloc();
@@ -71,7 +71,7 @@ khairullin::HashTable< T, Key, Hash, Equal >::HashTable(const HashTable & other)
     auto tail = head;
     while (slot) {
       try {
-        tail = tail->insert(slot->value, tail);
+        tail = tail->insert(slot->val, tail);
         slot = slot->next;
       } catch (...) {
         throw std::bad_alloc();
@@ -133,7 +133,7 @@ bool khairullin::HashTable< T, Key, Hash, Equal >::operator==(
     NodeList< std::pair< T, Key > > * otherSlot = other.table[i];
     NodeList< std::pair< T, Key > > * Slot = table[i];
     while (Slot != nullptr && otherSlot != nullptr) {
-      if (Slot->value != otherSlot->value) {
+      if (Slot->val != otherSlot->val) {
         return false;
       }
       Slot = Slot->next;
@@ -168,7 +168,7 @@ void khairullin::HashTable< T, Key, Hash, Equal >::add(const Key & key, const T 
 {
   size_t index = hasher(key) % size;
   if (table[index] == nullptr) {
-    table[index] = new NodeList< std::pair< T, Key > >(std::make_pair(value, key), nullptr);
+    table[index] = new NodeList< std::pair< T, Key > >(std::make_pair(value, key), nullptr, nullptr);
   } else {
     auto tail = table[index];
     while (tail->next != nullptr) {
@@ -188,7 +188,7 @@ khairullin::Vector< T > khairullin::HashTable< T, Key, Hash, Equal >::drop(const
   while (slot) {
     if (slot->value.second == key) {
       try {
-        result.pushBack(slot->value.first);
+        result.pushBack(slot->val.first);
       } catch (...) {
         throw std::bad_alloc();
       }
@@ -206,12 +206,12 @@ void khairullin::HashTable< T, Key, Hash, Equal >::cut(const Key & key, const T 
     throw std::logic_error("<INVALID COMMAND>");
   }
   auto slot = table[index];
-  if (equal(slot->value, std::make_pair(value, key))) {
+  if (equal(slot->val, std::make_pair(value, key))) {
     table[index] = slot->cut(slot);
   } else {
     NodeList< std::pair< T, Key > > * prev = slot;
     slot = slot->next;
-    while (slot && !equal(slot->value, std::make_pair(value, key))) {
+    while (slot && !equal(slot->val, std::make_pair(value, key))) {
       prev = slot;
       slot = slot->next;
     }
@@ -225,7 +225,7 @@ bool khairullin::HashTable< T, Key, Hash, Equal >::has(const Key & key, const T 
 {
   size_t index = hasher(key) % size;
   auto slot = table[index];
-  while (slot && !equal(slot->value, std::make_pair(value, key))) {
+  while (slot && !equal(slot->val, std::make_pair(value, key))) {
     slot = slot->next;
   }
   return slot;
@@ -243,16 +243,16 @@ void khairullin::HashTable< T, Key, Hash, Equal >::rehash(size_t new_size)
   for (size_t i = 0; i < size; i++) {
     auto slot = table[i];
     while (slot != nullptr) {
-      size_t index = hasher(slot->value.second) % new_size;
+      size_t index = hasher(slot->val.second) % new_size;
       if (new_table[index] == nullptr) {
-        new_table[index] = new NodeList< std::pair< T, Key > >(std::make_pair(slot->value.first,
-            slot->value.second), nullptr);
+        new_table[index] = new NodeList< std::pair< T, Key > >(std::make_pair(slot->val.first,
+            slot->val.second), nullptr);
       } else {
         auto tail = new_table[index];
         while (tail->next != nullptr) {
           tail = tail->next;
         }
-        tail->insert(std::make_pair(slot->value.first, slot->value.second), tail);
+        tail->insert(std::make_pair(slot->val.first, slot->val.second), tail);
       }
       slot = slot->next;
     }

@@ -69,7 +69,7 @@ bool khairullin::Graph::hasConnection(const std::string & vert1, const std::stri
 {
   size_t index = edges.findIndex(vert1 + vert2);
   auto slot = edges.table[index];
-  while (slot && slot->value.second != vert1 + vert2) {
+  while (slot && slot->val.second != vert1 + vert2) {
     slot = slot->next;
   }
   if (!slot) {

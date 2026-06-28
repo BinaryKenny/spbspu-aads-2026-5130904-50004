@@ -9,21 +9,26 @@
 namespace khairullin {
   template< class Key >
   struct Graph {
-    Vector< Vector< Key > > edges;
-    HashTable< Key, size_t , Hash< Key >, Equal< Key > > values;
-    size_t vertices = 0;
-    std::string name;
+    public:
+      Vector< Vector< Key > > edges;
+      HashTable< Key, size_t , Hash< Key >, Equal< Key > > values;
 
-    Graph();
-    Graph(std::string name);
+      explicit Graph();
+      explicit Graph(const std::string & name);
 
-    std::pair< bool, size_t > hasVertex(const Key & key);
-    size_t path(const Key & start, const Key & target);
-    void addNode(const Key & key);
-    void connect(const Key & key1, const Key & key2);
-    void addWithConnection(const Key & key1, const Key & key2);
-    bool deleteNode(const Key & key);
-    void disconnect(const Key & key1, const Key & key2);
+      size_t getVertices() const noexcept;
+      std::string getName() const noexcept;
+
+      std::pair< bool, size_t > hasVertex(const Key & key);
+      size_t path(const Key & start, const Key & target);
+      void addNode(const Key & key);
+      void connect(const Key & key1, const Key & key2);
+      void addWithConnection(const Key & key1, const Key & key2);
+      bool deleteNode(const Key & key);
+      void disconnect(const Key & key1, const Key & key2);
+    private:
+      size_t vertices = 0;
+      std::string name;
   };
 }
 
@@ -35,18 +40,31 @@ khairullin::Graph< Key >::Graph():
 {}
 
 template< class Key >
-khairullin::Graph< Key >::Graph(std::string name):
+khairullin::Graph< Key >::Graph(const std::string & name):
   edges(Vector< Vector< Key > >()),
   values(HashTable< Key, size_t, Hash< Key >, Equal< Key > > ()),
   name(name)
 {}
 
 template< class Key >
+size_t khairullin::Graph<Key>::getVertices() const noexcept
+{
+  return vertices;
+}
+
+template< class Key >
+std::string khairullin::Graph<Key>::getName() const noexcept
+{
+  return name;
+}
+
+template< class Key >
 std::pair<bool, size_t> khairullin::Graph<Key>::hasVertex(const Key & key)
 {
   size_t index = 0;
   try {
-    index = values.find(key);
+    auto iterator = values.find(key);
+    index = iterator.value();
   }
   catch (...) {
     return std::make_pair(false, 0);
@@ -55,32 +73,30 @@ std::pair<bool, size_t> khairullin::Graph<Key>::hasVertex(const Key & key)
 }
 
 template< class Key >
-void khairullin::Graph< Key >::addNode(const Key & key) {
+void khairullin::Graph< Key >::addNode(const Key & key)
+{
   size_t temp = vertices;
+  edges.pushBack(Vector< Key >());
   try {
-    edges.pushBack(Vector< Key >());
     vertices++;
     values.insert(temp, key);
   }
   catch (...) {
-    try {
-      edges.erase(temp);
-      vertices--;
-    }
-    catch (...) {
-      return;
-    }
+    edges.popBack();
+    vertices--;
   }
 }
 
 template< class Key >
-void khairullin::Graph<Key>::connect(const Key & key1, const Key & key2)
+void khairullin::Graph< Key >::connect(const Key & key1, const Key & key2)
 {
   size_t vertex1 = 0;
   size_t vertex2 = 0;
   try {
-    vertex1 = values.find(key1);
-    vertex2 = values.find(key2);
+    auto iter1 = values.find(key1);
+    auto iter2= values.find(key2);
+    vertex1 = iter1.value();
+    vertex2 = iter2.value();
   }
   catch (...) {
     throw std::logic_error("<INVALID COMMAND>");
@@ -93,7 +109,7 @@ void khairullin::Graph<Key>::connect(const Key & key1, const Key & key2)
     edges[vertex2].pushBack(key1);
   }
   catch (...) {
-    edges[vertex2].popBack();
+    edges[vertex1].popBack();
   }
 }
 
@@ -105,13 +121,20 @@ void khairullin::Graph< Key >::addWithConnection(const Key & key1, const Key & k
     connect(key1, key2);
   }
   catch (...) {
-    throw std::logic_error("Failed connection");
+    throw;
   }
 }
 
 template< class Key >
 bool khairullin::Graph< Key >::deleteNode(const Key & key) {
-  size_t vertex = values.find(key);
+  size_t vertex = 0;
+  try {
+    auto iter = values.find(key);
+    vertex = iter.value();
+  }
+  catch (...) {
+    throw std::logic_error("<LOGIC> This node doesn't exist");
+  }
   Vector< Vector< Key > > copyEdges;
   try {
     copyEdges = edges;
@@ -124,7 +147,7 @@ bool khairullin::Graph< Key >::deleteNode(const Key & key) {
         }
         for (size_t j = 0; j < copyEdges[i].getSize(); j++) {
           Key & k = copyEdges[i][j];
-          size_t weight = values.find(k);
+          size_t weight = (values.find(k)).value();
           if (weight > vertex) {
             values.remove(k);
             values.insert(weight - 1, k);
@@ -143,8 +166,17 @@ bool khairullin::Graph< Key >::deleteNode(const Key & key) {
 template< class Key >
 void khairullin::Graph<Key>::disconnect(const Key & key1, const Key & key2)
 {
-  size_t vertex1 = values.find(key1);
-  size_t vertex2 = values.find(key2);
+  size_t vertex1 = 0;
+  size_t vertex2 = 0;
+  try {
+    auto iter1 = values.find(key1);
+    auto iter2 = values.find(key2);
+    vertex1 = iter1.value();
+    vertex2 = iter2.value();
+  }
+  catch (...) {
+    throw std::logic_error("This node(s) doesn't exist");
+  }
   auto infoVert1 = edges[vertex2].hasValue(key1);
   auto infoVert2 = edges[vertex1].hasValue(key2);
   if (!infoVert1.first || !infoVert2.first) {
@@ -161,14 +193,23 @@ void khairullin::Graph<Key>::disconnect(const Key & key1, const Key & key2)
     edges[vertex2] = std::move(vec2);
   }
   catch (...) {
-    throw std::bad_alloc();
+    throw;
   }
 }
 
 template< class Key >
 size_t khairullin::Graph< Key >::path(const Key & k1, const Key & k2) {
-  size_t start = values.find(k1);
-  size_t target = values.find(k2);
+  size_t start = 0;
+  size_t target = 0;
+  try {
+    auto iter1 = values.find(k1);
+    auto iter2 = values.find(k2);
+    start = iter1.value();
+    target = iter2.value();
+  }
+  catch (...) {
+    throw std::logic_error("This node(s) doesn't exist");
+  }
   if (start >= vertices || target >= vertices) {
     return vertices;
   }
@@ -187,7 +228,13 @@ size_t khairullin::Graph< Key >::path(const Key & k1, const Key & k2) {
     }
     auto child = edges[vertex];
     for (size_t i = 0; i < child.getSize(); i++) {
-      size_t temp = values.find(child[i]);
+      size_t temp = 0;
+      try {
+        temp = (values.find(child[i])).value();
+      }
+      catch (...) {
+        throw std::logic_error("This node(s) doesn't exist");
+      }
       if (!visited[temp]) {
         queue.push(temp);
         visited[temp] = true;

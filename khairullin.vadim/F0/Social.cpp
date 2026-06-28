@@ -3,6 +3,9 @@
 #include <iomanip>
 #include <random>
 
+static std::random_device rd;
+static std::mt19937 gen(rd());
+
 khairullin::Social::Social():
 socials(Vector< Graph< std::string > >()),
 commands(HashTable< std::string, process_t, Hash< std::string >, Equal< std::string > >())
@@ -23,7 +26,7 @@ commands(HashTable< std::string, process_t, Hash< std::string >, Equal< std::str
 std::pair< bool, size_t > khairullin::Social::hasSocial(const std::string & socialName)
 {
   for (size_t i = 0; i < socials.getSize(); i++) {
-    if (socials[i].name == socialName) {
+    if (socials[i].getName() == socialName) {
       return std::make_pair(true, i);
     }
   }
@@ -62,7 +65,7 @@ khairullin::Vector<std::string> khairullin::Social::recommendations(std::string 
           potentialFriends.pushBack(people);
         }
         catch (...) {
-          return potentialFriends;
+          return Vector< std::string >();
         }
       }
     }
@@ -73,8 +76,6 @@ khairullin::Vector<std::string> khairullin::Social::recommendations(std::string 
 khairullin::Vector<std::string> khairullin::Social::recommendations(std::string nameSocial,
     std::string username, size_t depth)
 {
-  std::random_device rd;
-  std::mt19937 gen(rd());
   auto infoSocial = hasSocial(nameSocial);
   if (!infoSocial.first) {
     throw std::logic_error("<INVALID COMMAND>");
@@ -100,7 +101,7 @@ khairullin::Vector<std::string> khairullin::Social::recommendations(std::string 
         potentialFriends.pushBack(user);
       }
       catch (...) {
-        return potentialFriends;
+        return Vector< std::string >();
       }
     }
   }
@@ -121,7 +122,8 @@ void khairullin::Social::processor(std::istream & is)
   }
   process_t function = nullptr;
   try {
-    function = commands.find(command);
+    auto iter= commands.find(command);
+    function = iter.value();
   }
   catch (...) {
     throw std::logic_error("<UNKNOWN COMMAND>");
@@ -238,8 +240,6 @@ void khairullin::Social::deleteUser(std::string & line)
 
 void khairullin::Social::getRecommendation(std::string & line)
 {
-  std::random_device rd;
-  std::mt19937 gen(rd());
   std::string socialName = getToken(line);
   std::string name = getToken(line);
   std::string parameter = getToken(line);
@@ -370,7 +370,7 @@ void khairullin::Social::findUser(std::string & line)
   for (size_t i = 0; i < socials.getSize(); i++) {
     Graph< std::string > & social = socials[i];
     if (social.hasVertex(name).first) {
-      output = output + social.name + ' ';
+      output = output + social.getName() + ' ';
       counter++;
     }
   }

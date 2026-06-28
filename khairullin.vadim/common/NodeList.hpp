@@ -1,5 +1,5 @@
-#ifndef LIST_HPP
-#define LIST_HPP
+#ifndef NODELIST_HPP
+#define NODELIST_HPP
 #include <algorithm>
 #include <stdexcept>
 namespace khairullin

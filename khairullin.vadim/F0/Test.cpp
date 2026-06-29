@@ -1,7 +1,3 @@
-#if defined(__GNUC__) || defined(__clang__)
-__attribute__((weak)) int main(int argc, char * argv[]);
-#endif
-
 #define BOOST_TEST_MODULE F0
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
@@ -63,7 +59,24 @@ BOOST_AUTO_TEST_CASE(main_tests)
   social.makeSocial(yasoc);
   social.addUser(line);
   social.findUser(name);
-  BOOST_TEST(tester.is_equal("Twitter, Facebook"));
-  std::cout.rdbuf(output);
-  
+  BOOST_TEST(tester.is_equal("Twitter, Facebook\n"));
+  name = "Kyle";
+  social.addUser(name);
+  line = "Twitter Cartman Kyle";
+  std::string line2 = "Twitter Cartman";
+  social.makeFriends(line);
+  BOOST_TEST(tester.is_equal("From now on, Cartman and Kyle are friends in Twitter\n"));
+  social.checkFriendship(line);
+  BOOST_TEST(tester.is_equal("They are friends in the Twitter\n"));
+  social.countOfFriends(line2);
+  BOOST_TEST(tester.is_equal("1"));
+  social.stopFriendship(line);
+  BOOST_TEST(tester.is_equal("Cartman and Kyle are not friends from this moment\n"));
+  social.checkFriendship(line);
+  BOOST_TEST(tester.is_equal("Cartman and Kyle are NOT friends in the Twitter\n"));
+  line2 += " other";
+  social.getRecommendation(line2);
+  BOOST_CHECK(!tester.is_empty());
+  social.seekPotentialFriends(line2);
+  BOOST_TEST(!tester.is_empty());
 }

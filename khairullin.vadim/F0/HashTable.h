@@ -1,6 +1,6 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
-#include "../common/Vector.h"
+#include "Vector.h"
 #include "Slot.h"
 #include <iostream>
 #include <initializer_list>
@@ -143,7 +143,11 @@ khairullin::ConstTIterator< Key, T, Hash, Equal >
 {
   size_t index = hasher(key) % size;
   for (size_t i = index; i < size; i++) {
-    if (equal(table[i].key, key)) {
+    size_t yai = (i + index) % size;
+    if (table[yai].Empty) {
+      break;
+    }
+    if (equal(table[yai].key, key)) {
       return ConstTIterator< Key, T, Hash, Equal >{i, *this};
     }
   }

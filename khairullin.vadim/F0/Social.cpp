@@ -1,5 +1,5 @@
 #include "Social.h"
-#include "../common/Functions.h"
+#include "Functions.h"
 #include <iomanip>
 #include <random>
 

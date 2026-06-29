@@ -1,5 +1,5 @@
 #include "Social.h"
-#include "Functions.h"
+#include "../common/Functions.h"
 #include <iomanip>
 #include <random>
 
@@ -88,6 +88,9 @@ khairullin::Vector<std::string> khairullin::Social::recommendations(std::string 
   Vector< std::string > & currentFriends = social.edges[infoUser.second];
   Vector< std::string > potentialFriends;
   Vector< std::string > temp = currentFriends;
+  if (temp.isEmpty()) {
+    return Vector< std::string >();
+  }
   for (size_t i = 0; i < depth + 1; i++) {
     std::uniform_int_distribution< size_t > randomizer(0, temp.getSize() - 1);
     std::string people = temp[randomizer(gen)];

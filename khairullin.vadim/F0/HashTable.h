@@ -1,6 +1,6 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
-#include "Vector.h"
+#include "../common/Vector.h"
 #include "Slot.h"
 #include <iostream>
 #include <initializer_list>
@@ -24,6 +24,10 @@ namespace khairullin
     HashTable(size_t k);
     HashTable(std::initializer_list< std::pair< T, Key > > list);
     ~HashTable() = default;
+    HashTable(const HashTable & other);
+    HashTable & operator=(const HashTable & other);
+    HashTable(HashTable && other) noexcept;
+    HashTable & operator=(HashTable && other) noexcept;
     HashTable(Vector< Slot< Key, T > > & t, size_t k, size_t count);
     bool operator==(const HashTable & other) const;
     bool operator!=(const HashTable & other) const;
@@ -105,6 +109,51 @@ HashTable(list.size() * 2)
   }
 }
 
+template< class Key, class T, class Hash, class Equal >
+khairullin::HashTable<Key, T, Hash, Equal>::HashTable(const HashTable & other):
+  table(other.table),
+  equal(other.equal),
+  hasher(other.hasher),
+  size(other.size),
+  count(other.count)
+{}
+
+template< class Key, class T, class Hash, class Equal >
+khairullin::HashTable<Key, T, Hash, Equal> & khairullin::HashTable<Key, T, Hash, Equal>::operator=(
+    const HashTable & other)
+{
+  if (*this == other) {
+    return *this;
+  }
+  auto temp = other;
+  swap(temp);
+  return *this;
+}
+
+template< class Key, class T, class Hash, class Equal >
+khairullin::HashTable<Key, T, Hash, Equal>::HashTable(HashTable && other) noexcept:
+  table(std::move(other.table)),
+  equal(other.equal),
+  hasher(other.hasher),
+  size(other.size),
+  count(other.count)
+{
+  other.count = 0;
+  other.size = 0;
+}
+
+template< class Key, class T, class Hash, class Equal >
+khairullin::HashTable<Key, T, Hash, Equal> & khairullin::HashTable<Key, T, Hash, Equal>::operator=(
+    HashTable && other) noexcept
+{
+  if (*this == other) {
+    return *this;
+  }
+  auto temp= std::move(other);
+  swap(temp);
+  return *this;
+}
+
 template < class Key, class T, class Hash, class Equal >
 khairullin::HashTable< Key, T, Hash, Equal >::HashTable(Vector< Slot < Key, T > > & t, size_t k, size_t count):
   table(t),
@@ -117,6 +166,9 @@ khairullin::HashTable< Key, T, Hash, Equal >::HashTable(Vector< Slot < Key, T > 
 template< class Key, class T, class Hash, class Equal >
 bool khairullin::HashTable<Key, T, Hash, Equal>::operator==(const HashTable & other) const
 {
+  if (size != other.size || count != other.count) {
+    return false;
+  }
   for (size_t i = 0; i < size; i++) {
     if (table[i] != other.table[i]) {
       return false;
@@ -142,7 +194,7 @@ khairullin::ConstTIterator< Key, T, Hash, Equal >
   khairullin::HashTable< Key, T, Hash, Equal >::find(const Key & key) const
 {
   size_t index = hasher(key) % size;
-  for (size_t i = index; i < size; i++) {
+  for (size_t i = 0; i < size; i++) {
     size_t yai = (i + index) % size;
     if (table[yai].Empty) {
       break;
@@ -157,32 +209,49 @@ khairullin::ConstTIterator< Key, T, Hash, Equal >
 template< class Key, class T, class Hash, class Equal >
 void khairullin::HashTable<Key, T, Hash, Equal>::insert(const T & val, const Key & key)
 {
-  size_t index = hasher(key) % size;
+  auto copy = *this;
+  size_t index = hasher(key) % copy.size;
   Slot< Key, T > slot(val, key, index);
-  while (!slot.Empty) {
-    Slot< Key, T > & other = table[index];
+  while (true) {
+    Slot< Key, T > & other = copy.table[index];
     if (other.Empty) {
       slot.swap(other);
-      count++;
+      copy.count++;
+      break;
     }
     if (slot.PSL > other.PSL) {
       slot.swap(other);
     }
     slot.PSL++;
-    index = index == size ? 0 : index + 1;
+    index = index == copy.size ? 0 : index + 1;
   }
-  if (count * 2 > size) {
-    rehash(size * 2);
+  if (copy.count * 2 > copy.size) {
+    copy.rehash(copy.size * 2);
   }
+  swap(copy);
 }
 
 template < class Key, class T, class Hash, class Equal >
 void khairullin::HashTable<Key, T, Hash, Equal>::rehash(size_t newSize)
 {
-  HashTable< Key, T, Hash, Equal > newTable(newSize);
+  HashTable newTable(newSize);
   for (size_t i = 0; i < size; i++) {
     if (!table[i].Empty) {
-      newTable.insert(table[i].value, table[i].key);
+      size_t index = hasher(table[i].key) % newTable.size;
+      Slot< Key, T > slot(table[i].value, table[i].key, index);
+      while (true) {
+        Slot< Key, T > & other = newTable.table[index];
+        if (other.Empty) {
+          slot.swap(other);
+          newTable.count++;
+          break;
+        }
+        if (slot.PSL > other.PSL) {
+          slot.swap(other);
+        }
+        slot.PSL++;
+        index = index == newTable.size ? 0 : index + 1;
+      }
     }
   }
   swap(newTable);
@@ -191,23 +260,25 @@ void khairullin::HashTable<Key, T, Hash, Equal>::rehash(size_t newSize)
 template< class Key, class T, class Hash, class Equal >
 bool khairullin::HashTable<Key, T, Hash, Equal>::remove(const Key & key)
 {
+  auto copy = *this;
   Slot< Key, T > removeSlot;
-  size_t index = hasher(key) % size;
-  for (size_t i = index; i < size; i++) {
-    if (equal(table[i].key, key)) {
+  size_t index = hasher(key) % copy.size;
+  for (size_t i = index; i < copy.size; i++) {
+    if (equal(copy.table[i].key, key)) {
       index = i;
-      removeSlot.swap(table[i]);
+      removeSlot.swap(copy.table[i]);
       break;
     }
   }
-  count = 0;
-  for (size_t i = 0; i < size; i++) {
-    if (!table[i].Empty) {
+  copy.count = 0;
+  for (size_t i = 0; i < copy.size; i++) {
+    if (!copy.table[i].Empty) {
       Slot< Key, T > slot;
-      table[i].swap(slot);
-      insert(slot.value, slot.key);
+      copy.table[i].swap(slot);
+      copy.insert(slot.value, slot.key);
     }
   }
+  (*this).swap(copy);
   return true;
 }
 

@@ -2,23 +2,24 @@
 #define SLOT_H
 #include <string>
 namespace khairullin {
-    template < class Key , class T >
-    struct Slot {
-        T value;
-        Key key;
-        bool Empty;
-        size_t PSL;
-        size_t home;
+  template < class Key , class T >
+  struct Slot {
+    T value;
+    Key key;
+    bool Empty;
+    size_t PSL;
+    size_t home;
 
-        bool operator==(const Slot & x) const;
-        void swap(Slot & other);
+    bool operator==(const Slot & x) const;
+    bool operator!=(const Slot & x) const;
+    void swap(Slot & other);
 
-        Slot();
-        ~Slot() = default;
-        Slot(const T & value, const Key & key, size_t home);
-        Slot(const Slot & other);
-        Slot & operator=(const Slot & slot);
-    };
+    Slot();
+    ~Slot() = default;
+    Slot(const T & value, const Key & key, size_t home);
+    Slot(const Slot & other);
+    Slot & operator=(const Slot & slot);
+  };
 }
 
 template< class Key, class T >
@@ -60,6 +61,12 @@ template< class Key, class T >
 bool khairullin::Slot< Key, T>::operator==(const Slot & other) const {
     return (value == other.value && Empty == other.Empty && PSL == other.PSL
       && key == other.key && home == other.home);
+}
+
+template< class Key, class T >
+bool khairullin::Slot<Key, T>::operator!=(const Slot & x) const
+{
+  return !(*this == x);
 }
 
 template< class Key, class T >

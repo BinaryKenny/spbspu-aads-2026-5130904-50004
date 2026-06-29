@@ -1,5 +1,5 @@
 #include "Social.h"
-#include "Functions.h"
+#include "../common/Functions.h"
 #include <iomanip>
 #include <random>
 
@@ -8,20 +8,20 @@ static std::mt19937 gen(rd());
 
 khairullin::Social::Social():
 socials(Vector< Graph< std::string > >()),
-commands(HashTable< std::string, process_t, Hash< std::string >, Equal< std::string > >())
-{
-  commands.insert(&Social::makeSocial, "makeSocial");
-  commands.insert(&Social::addUser, "addUser");
-  commands.insert(&Social::makeFriends, "makeFriends");
-  commands.insert(&Social::stopFriendship, "stopFriendship");
-  commands.insert(&Social::deleteUser, "deleteUser");
-  commands.insert(&Social::getRecommendation, "getRec");
-  commands.insert(&Social::seekPotentialFriends, "seekPF");
-  commands.insert(&Social::showFriends, "showFriends");
-  commands.insert(&Social::findUser, "findUser");
-  commands.insert(&Social::countOfFriends, "countOfFriends");
-  commands.insert(&Social::checkFriendship, "checkFriendship");
-}
+commands({
+  {&Social::makeSocial, "makeSocial"},
+  {&Social::addUser, "addUser"},
+  {&Social::makeFriends, "makeFriends"},
+  {&Social::stopFriendship, "stopFriendship"},
+  {&Social::deleteUser, "deleteUser"},
+  {&Social::getRecommendation, "getRec"},
+  {&Social::seekPotentialFriends, "seekPF"},
+  {&Social::showFriends, "showFriends"},
+  {&Social::findUser, "findUser"},
+  {&Social::countOfFriends, "countOfFriends"},
+  {&Social::checkFriendship, "checkFriendship"}
+})
+{}
 
 std::pair< bool, size_t > khairullin::Social::hasSocial(const std::string & socialName)
 {

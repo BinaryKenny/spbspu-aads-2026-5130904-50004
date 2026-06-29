@@ -12,7 +12,12 @@ int main(int argc, char * argv[])
     try {
       Space.processor(input);
     }
-    catch (...) {
+    catch (const std::logic_error & e) {
+      std::cout << e.what() << "\n";
+    }
+    catch (const std::exception & e) {
+      std::cerr << e.what() << "\n";
+      return 2;
     }
   }
   while (std::cin) {

@@ -3,6 +3,7 @@
 #include "../common/Vector.h"
 #include "Slot.h"
 #include <iostream>
+#include <initializer_list>
 
 const size_t DEFAULT_TABLE_SIZE = 11;
 namespace khairullin
@@ -21,6 +22,7 @@ namespace khairullin
 
     HashTable();
     HashTable(size_t k);
+    HashTable(std::initializer_list< std::pair< T, Key > > list);
     ~HashTable() = default;
     HashTable(Vector< Slot< Key, T > > & t, size_t k, size_t count);
     bool operator==(const HashTable & other) const;
@@ -93,6 +95,15 @@ khairullin::HashTable< Key, T, Hash, Equal >::HashTable(size_t k):
   hasher(Hash{}),
   size(k)
 {}
+
+template< class Key, class T, class Hash, class Equal >
+khairullin::HashTable<Key, T, Hash, Equal>::HashTable(std::initializer_list<std::pair< T, Key>> list):
+HashTable(list.size() * 2)
+{
+  for (const auto & i : list) {
+    insert(i.first, i.second);
+  }
+}
 
 template < class Key, class T, class Hash, class Equal >
 khairullin::HashTable< Key, T, Hash, Equal >::HashTable(Vector< Slot < Key, T > > & t, size_t k, size_t count):

@@ -58,8 +58,8 @@ template< class Key >
 khairullin::Graph<Key>::Graph(const Graph & other):
   edges(other.edges),
   values(other.values),
-  name(other.name),
-  vertices(other.vertices)
+  vertices(other.vertices),
+  name(other.name)
 {}
 
 template< class Key >
@@ -77,8 +77,8 @@ template< class Key >
 khairullin::Graph<Key>::Graph(Graph && other) noexcept:
 edges(std::move(other.edges)),
 values(std::move(other.values)),
-name(other.name),
-vertices(other.vertices)
+vertices(other.vertices),
+name(other.name)
 {}
 
 template< class Key >

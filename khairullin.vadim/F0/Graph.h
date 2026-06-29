@@ -1,7 +1,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
-#include "../common/Vector.h"
-#include "../common/Queue.hpp"
+#include "Vector.h"
+#include "Queue.hpp"
 #include "Hash.h"
 #include "Equal.h"
 #include "HashTable.h"

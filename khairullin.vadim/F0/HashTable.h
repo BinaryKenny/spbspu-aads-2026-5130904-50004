@@ -1,6 +1,6 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
-#include "../common/Vector.h"
+#include "Vector.h"
 #include "Slot.h"
 #include <iostream>
 #include <initializer_list>

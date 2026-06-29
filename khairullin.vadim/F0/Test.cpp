@@ -1,3 +1,7 @@
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((weak)) int main(int argc, char * argv[]);
+#endif
+
 #define BOOST_TEST_MODULE F0
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>

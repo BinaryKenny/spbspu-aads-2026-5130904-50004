@@ -3,6 +3,7 @@
 #include <utility>
 #include <stdexcept>
 #include <algorithm>
+
 #include "Compare.h"
 
 namespace khairullin {

@@ -148,7 +148,7 @@ khairullin::ConstTIterator< Key, T, Hash, Equal >
       break;
     }
     if (equal(table[yai].key, key)) {
-      return ConstTIterator< Key, T, Hash, Equal >{i, *this};
+      return ConstTIterator< Key, T, Hash, Equal >{yai, *this};
     }
   }
   throw std::out_of_range("This value does not exist");

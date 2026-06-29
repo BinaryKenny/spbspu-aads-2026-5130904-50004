@@ -79,4 +79,5 @@ BOOST_AUTO_TEST_CASE(main_tests)
   BOOST_CHECK(!tester.is_empty());
   social.seekPotentialFriends(line2);
   BOOST_TEST(!tester.is_empty());
+  std::cout.rdbuf(output);
 }
